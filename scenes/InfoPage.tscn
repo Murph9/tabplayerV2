@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://4oxc04hinr0"]
 
-[ext_resource type="Script" path="res://InfoPage.cs" id="1_7ddm5"]
+[ext_resource type="Script" path="res://scenes/InfoPage.cs" id="1_7ddm5"]
 
 [node name="InfoPage" type="Control"]
 layout_mode = 3

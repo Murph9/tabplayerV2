@@ -17,6 +17,16 @@ namespace murph9.TabPlayer {
 		{
 		}
 
+		public void StartButton_Pressed() {
+			PackedScene packedScene = ResourceLoader.Load("res://scenes/SongScene.tscn") as PackedScene;
+			var scene = packedScene.Instantiate() as SongScene;
+			scene.init(null, null);
+			
+			GetTree().Root.AddChild(scene);
+
+			GetTree().Root.RemoveChild(this);
+		}
+
 		public void InfoButton_Pressed() {
 			GetTree().ChangeSceneToFile("res://InfoPage.tscn");
 		}

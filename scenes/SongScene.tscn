@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3 uid="uid://1274mds3lc08"]
+
+[ext_resource type="Script" path="res://scenes/SongScene.cs" id="1_jxipg"]
+
+[node name="SongScene" type="Node3D"]
+script = ExtResource("1_jxipg")
+
+[node name="ControlsLabel" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "dwdwd"
+
+[node name="RunningDetailsLabel" type="Label" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 40.0
+grow_vertical = 0
+text = "AAAA"
+
+[node name="SongInfoLabel" type="Label" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 23.0
+grow_horizontal = 0
+text = "dddd"

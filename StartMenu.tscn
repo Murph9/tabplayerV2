@@ -49,4 +49,5 @@ text = "Info"
 layout_mode = 2
 text = "Made by murph9"
 
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/StartButton" to="." method="StartButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/InfoButton" to="." method="InfoButton_Pressed"]
