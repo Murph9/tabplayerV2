@@ -1,7 +1,7 @@
 <Project Sdk="Godot.NET.Sdk/4.0.3">
-  <ItemGroup>
+  <!--<ItemGroup>
     <ProjectReference Include="TabPlayer.SomeImportantStuff\TabPlayer.SomeImportantStuff.csproj" />
-  </ItemGroup>
+  </ItemGroup>-->
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>

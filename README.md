@@ -8,5 +8,5 @@ Yay
 ```
 dotnet new classlib -o TabPlayer.SomeImportantStuff
 dotnet sln '.\TabPlayer.sln' add .\TabPlayer.SomeImportantStuff\TabPlayer.SomeImportantStuff.csproj
-dotnet add '.\TabPlayer.csproj' reference .\TabPlayer.SomeImportantStuff\TabPlayer.SomeImportantStuff.csproj
+### not needed as godot does "stuff": dotnet add '.\TabPlayer.csproj' reference .\TabPlayer.SomeImportantStuff\TabPlayer.SomeImportantStuff.csproj
 ```
