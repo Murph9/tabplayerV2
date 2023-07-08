@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=3 uid="uid://b10de88hnec5h"]
+
+[ext_resource type="Script" path="res://StartMenu.cs" id="1_wbodt"]
+
+[node name="StartMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_wbodt")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Title" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Tab Player"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Start"
+
+[node name="ConvertButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Convert"
+
+[node name="ReloadButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Reload Song List"
+
+[node name="InfoButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Info"
+
+[node name="Generic Info" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Made by murph9"
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/InfoButton" to="." method="InfoButton_Pressed"]

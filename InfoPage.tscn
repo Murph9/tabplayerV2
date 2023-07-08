@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://4oxc04hinr0"]
+
+[ext_resource type="Script" path="res://InfoPage.cs" id="1_7ddm5"]
+
+[node name="InfoPage" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7ddm5")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Tab Player by murph9
+
+Can load psarc files from Rocksmith2014 and play them along with the music
+
+Licence: godotengine.org/license"
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_top = 142.0
+offset_right = 45.0
+offset_bottom = 173.0
+text = "Back
+"
+
+[connection signal="pressed" from="Button" to="." method="BackButton_Pressed"]
