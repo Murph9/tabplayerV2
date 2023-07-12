@@ -19,14 +19,22 @@ public partial class ConvertMenu : Node2D
 	}
 
 	public void Dir_Selected(string dir) {
-		GD.Print(dir);
+		Files_Selected(Directory.GetFiles(dir, "*.wem"));
 	}
 
 	public void File_Selected(string path) {
-		GD.Print(path);
+		Files_Selected(new string[] {path});
 	}
 	public void Files_Selected(String[] paths) {
 		GD.Print(paths);
+		using var fileS = File.Open(@"C:\Users\murph\AppData\Local\murph9.TabPlayer\3-Doors-Down_Kryptonite\768764903.wem", FileMode.Open);
+		using var outS = File.Open(@"C:\Users\murph\Desktop\temp.ogg", FileMode.Create);
+		var a = new WEMSharp.WEMFile(fileS, WEMSharp.WEMForcePacketFormat.NoForcePacketFormat);
+		try {
+			a.GenerateOGG(outS, false, false);
+		} catch (Exception e) {
+			GD.Print(e, "ogg file not converted :(");
+		}
 	}
 
 	public void BackButton_Pressed() {

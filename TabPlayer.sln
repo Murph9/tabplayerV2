@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabPlayer.SomeImportantStuf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabPlayer.Songs", "TabPlayer.Songs\TabPlayer.Songs.csproj", "{4EA99C3A-3E56-46A1-9E8B-7EA5E09A337E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEMSharp", "WEMSharp\WEMSharp\WEMSharp.csproj", "{37300E67-62F5-4B57-BF41-B28454D12973}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,5 +33,14 @@ Global
 		{4EA99C3A-3E56-46A1-9E8B-7EA5E09A337E}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
 		{4EA99C3A-3E56-46A1-9E8B-7EA5E09A337E}.ExportRelease|Any CPU.ActiveCfg = Debug|Any CPU
 		{4EA99C3A-3E56-46A1-9E8B-7EA5E09A337E}.ExportRelease|Any CPU.Build.0 = Debug|Any CPU
+		{37300E67-62F5-4B57-BF41-B28454D12973}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{37300E67-62F5-4B57-BF41-B28454D12973}.Debug|Any CPU.Build.0 = Debug|x64
+		{37300E67-62F5-4B57-BF41-B28454D12973}.ExportDebug|Any CPU.ActiveCfg = Debug|x64
+		{37300E67-62F5-4B57-BF41-B28454D12973}.ExportDebug|Any CPU.Build.0 = Debug|x64
+		{37300E67-62F5-4B57-BF41-B28454D12973}.ExportRelease|Any CPU.ActiveCfg = Debug|x64
+		{37300E67-62F5-4B57-BF41-B28454D12973}.ExportRelease|Any CPU.Build.0 = Debug|x64
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{37300E67-62F5-4B57-BF41-B28454D12973} = {F85E8002-39E0-4538-A100-DB3947CC150F}
 	EndGlobalSection
 EndGlobal
