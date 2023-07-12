@@ -2,6 +2,7 @@ using Godot;
 using murph9.TabPlayer.Songs;
 using murph9.TabPlayer.Songs.Models;
 using System;
+using System.IO;
 
 public partial class SongScene : Node
 {

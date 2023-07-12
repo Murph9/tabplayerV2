@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace murph9.TabPlayer.Songs.Models;
 
 public class NoteHelper

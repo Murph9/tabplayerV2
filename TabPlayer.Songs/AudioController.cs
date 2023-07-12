@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Threading;
 using NAudio.Wave;
 
 namespace murph9.TabPlayer.Songs

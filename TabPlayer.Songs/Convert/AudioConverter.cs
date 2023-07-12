@@ -1,7 +1,12 @@
 using NAudio.Vorbis;
 using NAudio.Wave;
+using System;
 using System.Diagnostics;
+using System.IO;
 using System.IO.Packaging;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace murph9.TabPlayer.Songs.Convert;
 

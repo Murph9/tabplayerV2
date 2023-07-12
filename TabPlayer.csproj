@@ -3,9 +3,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <RootNamespace>murph9.TabPlayer</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>    
   </PropertyGroup>
@@ -15,5 +13,6 @@
     <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
     <PackageReference Include="NAudio.WinMM" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="SharpZipLib" Version="1.4.1" />
   </ItemGroup>
 </Project>

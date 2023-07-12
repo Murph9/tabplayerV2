@@ -2,13 +2,13 @@
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabPlayer", "TabPlayer.csproj", "{98545B83-EB56-489A-AEEA-62CA60390DC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabPlayer.SomeImportantStuff", "TabPlayer.SomeImportantStuff\TabPlayer.SomeImportantStuff.csproj", "{095C0C41-9B4A-4173-9BF1-93EAA3BBF9BB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabPlayer.Songs", "TabPlayer.Songs\TabPlayer.Songs.csproj", "{4EA99C3A-3E56-46A1-9E8B-7EA5E09A337E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WEMSharp", "WEMSharp", "{F85E8002-39E0-4538-A100-DB3947CC150F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEMSharp", "WEMSharp\WEMSharp\WEMSharp.csproj", "{37300E67-62F5-4B57-BF41-B28454D12973}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocksmith2014PsarcLib", "PsarcLib\Rocksmith2014PsarcLib.csproj", "{BC92D049-3F3E-436D-A781-113684E819A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +41,12 @@ Global
 		{37300E67-62F5-4B57-BF41-B28454D12973}.ExportDebug|Any CPU.Build.0 = Debug|x64
 		{37300E67-62F5-4B57-BF41-B28454D12973}.ExportRelease|Any CPU.ActiveCfg = Debug|x64
 		{37300E67-62F5-4B57-BF41-B28454D12973}.ExportRelease|Any CPU.Build.0 = Debug|x64
+		{BC92D049-3F3E-436D-A781-113684E819A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC92D049-3F3E-436D-A781-113684E819A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC92D049-3F3E-436D-A781-113684E819A9}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC92D049-3F3E-436D-A781-113684E819A9}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
+		{BC92D049-3F3E-436D-A781-113684E819A9}.ExportRelease|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC92D049-3F3E-436D-A781-113684E819A9}.ExportRelease|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{37300E67-62F5-4B57-BF41-B28454D12973} = {F85E8002-39E0-4538-A100-DB3947CC150F}
