@@ -28,7 +28,11 @@ namespace murph9.TabPlayer {
 		}
 
 		public void InfoButton_Pressed() {
-			GetTree().ChangeSceneToFile("res://InfoPage.tscn");
+			GetTree().ChangeSceneToFile("res://scenes/InfoPage.tscn");
+		}
+
+		public void ConvertButton_Pressed() {
+			GetTree().ChangeSceneToFile("res://scenes/ConvertMenu.tscn");
 		}
 	}
 }
