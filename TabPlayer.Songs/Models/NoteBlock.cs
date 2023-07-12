@@ -4,7 +4,7 @@ namespace murph9.TabPlayer.Songs.Models;
 
 public class NoteBlock
 {
-    public string Label { get; set; }
+    public string? Label { get; set; }
     public float Time { get; set; }
     [JsonPropertyAttribute("fws")] // these take up quite the space in the json file
     public int FretWindowStart { get; set; }

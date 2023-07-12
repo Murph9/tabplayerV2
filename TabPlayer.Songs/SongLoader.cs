@@ -12,7 +12,7 @@ public class SongLoader {
         var noteInfo = JsonConvert.DeserializeObject<SongInfo>(File.ReadAllText(noteInfoFile.FullName));
 
         var wavFile = folder.GetFiles("*.wav").SingleOrDefault();
-        Stream stream = null;
+        Stream stream;
         if (wavFile != null) {
             stream = File.OpenRead(wavFile.FullName);
         } else {
@@ -26,14 +26,14 @@ public class SongLoader {
         
         return new SongState() {
             SongInfo = noteInfo,
-            Instrument = noteInfo.Instruments.First(x => x.Name == instrumentType),
+            Instrument = noteInfo?.Instruments.First(x => x.Name == instrumentType),
             AudioStream = stream
         };
     }
 }
 
 public class SongState {
-    public SongInfo SongInfo;
-    public Instrument Instrument;
-    public Stream AudioStream;
+    public SongInfo? SongInfo;
+    public Instrument? Instrument;
+    public Stream? AudioStream;
 }

@@ -26,4 +26,22 @@ anchor_right = 1.0
 offset_left = -40.0
 offset_bottom = 23.0
 grow_horizontal = 0
-text = "dddd"
+text = "dddd (1889)
+asdawdasdaaaaaa"
+horizontal_alignment = 2
+
+[node name="SongDetailsLabel" type="Label" parent="SongInfoLabel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -143.0
+offset_top = 52.0
+offset_bottom = 104.0
+grow_horizontal = 0
+text = "Playing: a string thing
+and some other stuff
+probably
+...
+..."
+horizontal_alignment = 2
