@@ -17,6 +17,10 @@ text = "This page allows you to select a single .psarc file or all in a folder"
 layout_mode = 2
 text = "Go"
 
+[node name="InfoLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = " "
+
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open a File or Directory"
 size = Vector2i(450, 162)

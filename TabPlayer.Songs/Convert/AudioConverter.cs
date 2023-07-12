@@ -5,12 +5,11 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Packaging;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace murph9.TabPlayer.Songs.Convert;
 
-public class AudioConverter
+internal class AudioConverter
 {
     public static void ConvertOggToWav(FileInfo oggFile, Stream stream)
     {
@@ -20,52 +19,24 @@ public class AudioConverter
         }
     }
 
-    public static async Task<string> ConvertWemToOgg(string file, bool runOggPerf = false, bool forceConvert = false)
+    public static string ConvertWemToOgg(string file, bool forceConvert = false)
     {
         var outputFile = Path.Join(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file)) + ".ogg";
+		
         if (File.Exists(outputFile) && !forceConvert)
         {
             return outputFile;
         }
 
-        var p = new Process
-        {
-            StartInfo =
-                    {
-                        FileName = "ww2ogg.exe",
-                        Arguments = $"\"{file}\" --pcb ./packed_codebooks_aoTuV_603.bin",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        CreateNoWindow = true
-                    }
-        };
-        p.Start();
-        await p.WaitForExitAsync();
-
-        var oggFile = Directory.GetFiles(Path.GetDirectoryName(file), "*.ogg").SingleOrDefault();
-        if (oggFile == null)
-        {
-            throw new Exception($"ww2ogg.exe has failed could not convert {oggFile}");
-        }
-
-        if (runOggPerf)
-        {
-            var result = false;
-            int attempts = 10;
-            while (!result && attempts > 0)
-            {
-                // try again
-                result = await Revorb(oggFile);
-                attempts -= 1;
-                Thread.Sleep(10); // wait a very short time for file locks to clear
-            }
-            if (attempts == 0)
-            {
-                throw new Exception($"revorb could not convert {oggFile}");
-            }
-        }
-
-        return oggFile;
+		try {
+		    using var fileS = File.Open(file, FileMode.Open);
+            var wemClass = new WEMSharp.WEMFile(fileS, WEMSharp.WEMForcePacketFormat.NoForcePacketFormat);
+            using var outS = File.Open(outputFile, FileMode.Create);
+			wemClass.GenerateOGG(outS, false, false);
+		} catch (Exception e) {
+			throw new Exception($"We have failed to convert {outputFile}");
+		}
+        return outputFile;
     }
 
     private static async Task<bool> Revorb(string file)

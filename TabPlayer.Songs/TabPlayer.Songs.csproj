@@ -14,4 +14,9 @@
     <PackageReference Include="NAudio.WinMM" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WEMSharp\WEMSharp\WEMSharp.csproj" />
+    <ProjectReference Include="..\PsarcLib\Rocksmith2014PsarcLib.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,6 +1,10 @@
 using Godot;
+using murph9.TabPlayer.Songs.Convert;
 using System;
 using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 public partial class ConvertMenu : Node2D
 {
@@ -15,6 +19,9 @@ public partial class ConvertMenu : Node2D
 	}
 
 	public void GoButton_Pressed() {
+		var infoLabel = GetNode<Label>("VBoxContainer/InfoLabel");
+		infoLabel.Text = "";
+		
 		var a = GetNode<FileDialog>("FileDialog");
 		var windowSize = GetWindow().Size;
 		a.Size = new Vector2I((int)Math.Round(windowSize.X*0.8f), (int)Math.Round(windowSize.Y*0.8f));
@@ -22,23 +29,30 @@ public partial class ConvertMenu : Node2D
 		a.Show();
 	}
 
-	public void Dir_Selected(string dir) {
-		Files_Selected(Directory.GetFiles(dir, "*.wem"));
-	}
+	public async void Dir_Selected(string dir) => await ConvertFiles(Directory.GetFiles(dir, "*.psarc"));
+	public async void File_Selected(string path) => await ConvertFiles(new string[] {path});
+	public async void Files_Selected(String[] paths) => await ConvertFiles(paths);
 
-	public void File_Selected(string path) {
-		Files_Selected(new string[] {path});
-	}
-	public void Files_Selected(String[] paths) {
-		GD.Print(paths);
-		using var fileS = File.Open(@"C:\Users\murph\AppData\Local\murph9.TabPlayer\3-Doors-Down_Kryptonite\768764903.wem", FileMode.Open);
-		using var outS = File.Open(@"C:\Users\murph\Desktop\temp.ogg", FileMode.Create);
-		var a = new WEMSharp.WEMFile(fileS, WEMSharp.WEMForcePacketFormat.NoForcePacketFormat);
-		try {
-			a.GenerateOGG(outS, false, false);
-		} catch (Exception e) {
-			GD.Print(e, "ogg file not converted :(");
+	private async Task ConvertFiles(string[] files) {
+		var infoLabel = GetNode<Label>("VBoxContainer/InfoLabel");
+
+		files = files.Where(x => x.EndsWith(".psarc")).ToArray();
+		if (!files.Any()) {
+			infoLabel.Text = "No valid .psarc files found";
+			return;
 		}
+		
+		foreach (var psarc in files) {
+			try {
+				// TODO config (maybe from the page this time?)
+				await SongConvertManager.ConvertFile(SongConvertManager.SongType.Psarc, psarc, false, false, (string str) => {infoLabel.Text = str;});
+			} catch (Exception e) {
+				GD.Print(e, "ogg file not converted: " + psarc);
+				infoLabel.Text = "Failed to convert psarc file: " + psarc;
+				Thread.Sleep(300); // so you can read it i guess
+			}
+		}
+		infoLabel.Text = $"Completed {files.Length} file(s)";
 	}
 
 	public void BackButton_Pressed() {
