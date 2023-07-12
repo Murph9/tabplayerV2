@@ -15,7 +15,10 @@ public partial class ConvertMenu : Node2D
 
 	public void GoButton_Pressed() {
 		var a = GetNode<FileDialog>("FileDialog");
-		a.Visible = true;
+		var windowSize = GetWindow().Size;
+		a.Size = new Vector2I((int)Math.Round(windowSize.X*0.8f), (int)Math.Round(windowSize.Y*0.8f));
+		a.PopupCentered();
+		a.Show();
 	}
 
 	public void Dir_Selected(string dir) {

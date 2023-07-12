@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabPlayer.SomeImportantStuf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabPlayer.Songs", "TabPlayer.Songs\TabPlayer.Songs.csproj", "{4EA99C3A-3E56-46A1-9E8B-7EA5E09A337E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WEMSharp", "WEMSharp", "{F85E8002-39E0-4538-A100-DB3947CC150F}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEMSharp", "WEMSharp\WEMSharp\WEMSharp.csproj", "{37300E67-62F5-4B57-BF41-B28454D12973}"
 EndProject
 Global
