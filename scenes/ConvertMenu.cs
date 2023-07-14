@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 public partial class ConvertMenu : Node2D
 {
+	private bool _recreate;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -17,6 +19,8 @@ public partial class ConvertMenu : Node2D
 	public override void _Process(double delta)
 	{
 	}
+
+	public void Recreate_Toggled(bool state) => _recreate = state;
 
 	public void GoButton_Pressed() {
 		var infoLabel = GetNode<Label>("VBoxContainer/InfoLabel");
@@ -44,8 +48,7 @@ public partial class ConvertMenu : Node2D
 		
 		foreach (var psarc in files) {
 			try {
-				// TODO config (maybe from the page this time?)
-				await SongConvertManager.ConvertFile(SongConvertManager.SongType.Psarc, psarc, false, false, (string str) => {infoLabel.Text = str;});
+				await SongConvertManager.ConvertFile(SongConvertManager.SongType.Psarc, psarc, _recreate, (string str) => {infoLabel.Text = str;});
 			} catch (Exception e) {
 				GD.Print(e, "ogg file not converted: " + psarc);
 				infoLabel.Text = "Failed to convert psarc file: " + psarc;

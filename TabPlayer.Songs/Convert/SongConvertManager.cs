@@ -11,14 +11,14 @@ namespace murph9.TabPlayer.Songs.Convert
         public enum SongType {
             Psarc, Midi
         }
-        public static async Task<bool> ConvertFile(SongType type, string location, bool reconvert, bool forceAudioConversion, Action<string> output) {
+        public static async Task<bool> ConvertFile(SongType type, string location, bool reconvert, Action<string> output) {
             bool success = false;
             
             try {
                 if (type == SongType.Midi)
                     success = SongConvertManager.ExportMidi(new DirectoryInfo(location), output);
                 if (type == SongType.Psarc)
-                    success = await SongConvertManager.ExportPsarc(new FileInfo(location), reconvert, forceAudioConversion, output);
+                    success = await SongConvertManager.ExportPsarc(new FileInfo(location), reconvert, output);
             } catch (Exception e) {
                 Console.WriteLine(e);
                 Console.WriteLine($"Failed to convert file '{location}'");
@@ -28,7 +28,7 @@ namespace murph9.TabPlayer.Songs.Convert
             return success;
         }
 
-        private static async Task<bool> ExportPsarc(FileInfo file, bool reconvert, bool forceAudioConversion, Action<string> output) {
+        private static async Task<bool> ExportPsarc(FileInfo file, bool reconvert, Action<string> output) {
             PsarcFile p = null;
             try {
                 output("Converting: " + file.FullName);
@@ -36,11 +36,11 @@ namespace murph9.TabPlayer.Songs.Convert
 
                 var songNames = p.ExtractArrangementManifests().Select(x => x.Attributes.BlockAsset).Distinct();
                 if (songNames.Count() <= 1)
-                    await ExportSinglePsarc(p, null, reconvert, forceAudioConversion, output);
+                    await ExportSinglePsarc(p, null, reconvert, output);
                 else
                     foreach (var name in songNames) {
                         try {
-                            await ExportSinglePsarc(p, name.Split(':').Last(), reconvert, forceAudioConversion, output);
+                            await ExportSinglePsarc(p, name.Split(':').Last(), reconvert, output);
                         } catch (System.IO.IOException e) {
                             Console.WriteLine(e);
                             output("Failed to convert: " + name.Split(':').Last());
@@ -67,7 +67,7 @@ namespace murph9.TabPlayer.Songs.Convert
             return true;
         }
 
-        private static async Task<bool> ExportSinglePsarc(PsarcFile p, string songFilter, bool reconvert, bool forceAudioConversion, Action<string> output)
+        private static async Task<bool> ExportSinglePsarc(PsarcFile p, string songFilter, bool reconvert, Action<string> output)
         {
             var converter = new PsarcFileConverter(p, songFilter);
             var noteInfo = converter.ConvertToSongInfo();
@@ -86,8 +86,8 @@ namespace murph9.TabPlayer.Songs.Convert
 
             output("Writing audio to " + outputFolder.FullName);
 
-            var wemFile = converter.ExportPsarcMainWem(outputFolder.FullName, forceConvert: forceAudioConversion);
-            var oggFile = AudioConverter.ConvertWemToOgg(wemFile, forceConvert: forceAudioConversion);
+            var wemFile = converter.ExportPsarcMainWem(outputFolder.FullName, forceConvert: reconvert);
+            var oggFile = AudioConverter.ConvertWemToOgg(wemFile, forceConvert: reconvert);
             Console.WriteLine($"Created ogg file: {oggFile}");
 
             output("Wrote " + noteInfo?.Metadata?.Name + " info to " + outputFolder.FullName);

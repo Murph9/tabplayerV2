@@ -13,6 +13,10 @@ offset_bottom = 40.0
 layout_mode = 2
 text = "This page allows you to select a single .psarc file or all in a folder"
 
+[node name="RecreateRadio" type="CheckButton" parent="VBoxContainer"]
+layout_mode = 2
+text = "Overwrite existing files"
+
 [node name="Button" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 text = "Go"
@@ -36,6 +40,7 @@ offset_bottom = 391.0
 text = "Back
 "
 
+[connection signal="toggled" from="VBoxContainer/RecreateRadio" to="." method="Recreate_Toggled"]
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="GoButton_Pressed"]
 [connection signal="dir_selected" from="FileDialog" to="." method="Dir_Selected"]
 [connection signal="file_selected" from="FileDialog" to="." method="File_Selected"]
