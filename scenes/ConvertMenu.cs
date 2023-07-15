@@ -46,16 +46,22 @@ public partial class ConvertMenu : Node2D
 			return;
 		}
 		
+		var completed = new List<string>();
 		foreach (var psarc in files) {
 			try {
-				await SongConvertManager.ConvertFile(SongConvertManager.SongType.Psarc, psarc, _recreate, (string str) => {infoLabel.Text = str;});
+				var success = await SongConvertManager.ConvertFile(SongConvertManager.SongType.Psarc, psarc, _recreate, (string str) => {infoLabel.Text = str;});
+				if (success)
+					completed.Add(psarc);
 			} catch (Exception e) {
 				GD.Print(e, "ogg file not converted: " + psarc);
 				infoLabel.Text = "Failed to convert psarc file: " + psarc;
 				Thread.Sleep(300); // so you can read it i guess
 			}
 		}
-		infoLabel.Text = $"Completed {files.Length} file(s)";
+		if (completed.Count < 1)
+			infoLabel.Text = $"Completed none :(";
+		else
+			infoLabel.Text = $"Completed: {String.Join('\n', completed)}";
 	}
 
 	public void BackButton_Pressed() {
