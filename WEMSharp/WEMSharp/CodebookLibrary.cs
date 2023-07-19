@@ -128,7 +128,7 @@ namespace WEMSharp
 
         internal void Rebuild(uint index, OggStream ogg)
         {
-            byte[] codebook = GetCodebook(index);
+            var codebook = GetCodebook(index);
             uint codebookSize = GetCodebookSize(index);
 
             if (codebookSize == 0xFFFFFFFF || codebook == null)
@@ -228,7 +228,7 @@ namespace WEMSharp
             }
         }
 
-        internal byte[] GetCodebook(uint index)
+        internal byte[]? GetCodebook(uint index)
         {
             if (_codebookData == null || _codebookOffsets == null)
             {
