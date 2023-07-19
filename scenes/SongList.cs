@@ -1,11 +1,13 @@
 using Godot;
 using murph9.TabPlayer.Songs;
 using murph9.TabPlayer.Songs.Models;
+using Newtonsoft.Json;
 using System;
 
 public partial class SongList : Control
 {
 	private SongFile[] _songList;
+	private SongFile _selectedSong;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -24,16 +26,29 @@ public partial class SongList : Control
 	{
 	}
 
-	public void StartButton_Pressed() {
+	public void ItemActivated(int index) {
+		_selectedSong = _songList[index];
+		GD.Print(_selectedSong.SongName + " i:" + index);
+		
+		var menu = GetNode<PopupMenu>("PopupMenu");
+		menu.Clear();
+		foreach (var i in _selectedSong.Instruments) {
+			menu.AddItem(i.Name + " | Tuning:" + i.Tuning + " | Note Count:" + i.NoteCount);
+		}
+		menu.Title = "Select the instrument to play in: " + _selectedSong.SongName;
+
+		menu.PopupCentered();
+	}
+
+	private void SelectedItem_LoadSong(int index) {
+		var selectedInstrument = _selectedSong.Instruments.ToArray()[index].Name;
+		var songState = SongLoader.Load(new DirectoryInfo(Path.Combine(SongFileManager.SONG_FOLDER, _selectedSong.FolderName)), selectedInstrument);
+
 		PackedScene packedScene = ResourceLoader.Load<PackedScene>("res://scenes/SongScene.tscn");
 		var scene = packedScene.Instantiate<SongScene>();
-		scene.init(null, null); // TODO get from Table
+		scene.init(songState);
 		
 		GetTree().Root.AddChild(scene);
 		GetTree().Root.RemoveChild(this);
-	}
-
-	public void ItemActivated(int index) {
-		GD.Print(_songList[index].SongName + " i:" + index);
 	}
 }

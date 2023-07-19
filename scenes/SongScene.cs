@@ -9,10 +9,8 @@ public partial class SongScene : Node
 	private SongState _state;
 	private AudioController _audioController;
 
-	public void init(SongInfo info, Instrument i) {
-		// TODO this needs to be given a SongInfo but for now we hard code load one
-		var d = new DirectoryInfo(@"C:\Users\murph\AppData\Local\murph9.TabPlayer\3-Doors-Down_Kryptonite");
-		this._state = SongLoader.Load(d, "combo");
+	public void init(SongState state) {
+		_state = state;
 
 		_audioController = new AudioController(_state.AudioStream);
 

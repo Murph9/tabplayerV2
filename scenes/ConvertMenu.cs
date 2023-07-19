@@ -30,7 +30,6 @@ public partial class ConvertMenu : Node2D
 		var windowSize = GetWindow().Size;
 		a.Size = new Vector2I((int)Math.Round(windowSize.X*0.8f), (int)Math.Round(windowSize.Y*0.8f));
 		a.PopupCentered();
-		a.Show();
 	}
 
 	public async void Dir_Selected(string dir) => await ConvertFiles(Directory.GetFiles(dir, "*.psarc"));
