@@ -44,7 +44,7 @@ offset_left = -40.0
 offset_bottom = 23.0
 grow_horizontal = 0
 text = "dddd (1889)
-asdawdasdaaaaaa"
+some artist"
 horizontal_alignment = 2
 
 [node name="SongDetailsLabel" type="Label" parent="."]

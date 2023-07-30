@@ -41,6 +41,11 @@ public partial class SongScene : Node
 		var guitarChart = GD.Load<CSharpScript>("res://scenes/song/GuitarChart.cs");
 		GetTree().Root.AddChild(guitarChart.New().As<GuitarChart>());
 
+		var noteGraph = GD.Load<CSharpScript>("res://scenes/song/NoteGraph.cs");
+		var noteGraphScene = noteGraph.New().As<NoteGraph>();
+		noteGraphScene._init(_state, _audioController);
+		GetTree().Root.AddChild(noteGraphScene);
+
 		try {
 			var songScene = GD.Load<CSharpScript>("res://scenes/song/SongChart.cs");
 			var s = songScene.New().As<SongChart>();
@@ -61,10 +66,8 @@ public partial class SongScene : Node
 		var newPos = new Vector3((float)_audioController.SongPosition*_state.Instrument.Config.NoteSpeed, guiScene.Position.Y, guiScene.Position.Z);
 		guiScene.Position = newPos;
 
-		var a = GetNode<Label>("RunningDetailsLabel");
-		a.Text = Engine.GetFramesPerSecond() + "fps @ " + GetTree().Root.GetCamera3D().GlobalTransform.Origin+"\nYo?";
-
 		var nextNote = NextNoteBlock();
+
 		var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - _audioController.SongPosition, 1);
 
 		var debugText = @$"{_audioController.SongPosition.ToMinSec(true)}
@@ -72,7 +75,7 @@ Obj #: {GetTree().Root.GetChildCount()}
 {Engine.GetFramesPerSecond()}fps | {(delta*1000).ToString("000.0")}ms
 {noteText}
 ";
-		a.Text = debugText;
+		GetNode<Label>("RunningDetailsLabel").Text = debugText;
 	}
 
 	private void setUILabels(SongInfo info) {
@@ -92,8 +95,9 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}";
 	}
 
 	private NoteBlock NextNoteBlock() {
+		var songPos = _audioController.SongPosition;
 		foreach (var b in _state.Instrument.Notes) {
-			if (b.Time > _audioController.SongPosition)
+			if (b.Time > songPos)
 				return b;
 		}
 		return null;
