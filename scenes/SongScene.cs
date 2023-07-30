@@ -76,6 +76,8 @@ Obj #: {GetTree().Root.GetChildCount()}
 {noteText}
 ";
 		GetNode<Label>("RunningDetailsLabel").Text = debugText;
+
+		UpdateLyrics(GetNode<RichTextLabel>("LyricsLabel"));
 	}
 
 	private void setUILabels(SongInfo info) {
@@ -101,5 +103,49 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}";
 				return b;
 		}
 		return null;
+	}
+
+	private void UpdateLyrics(RichTextLabel label) {
+		label.Clear();
+		label.PushFontSize(20);
+		
+		//TODO don't move to the next lyrics until the next set starts
+		var songPos = _audioController.SongPosition;
+		var curList = GetCurLines(_state, songPos);
+		if (curList.Length < 1) {
+			label.Text = null;
+			return;
+		}
+
+		if (curList[0] != null) {
+			var (partA, partB) = curList[0].GetParts(songPos);
+			label.PushColor(Colors.Red);
+			label.AddText(partA);
+			label.PushColor(Colors.Yellow);
+			label.AddText(partB);
+		}
+
+		if (curList.Length > 1) {
+			label.AddText("\n" + curList[1]?.ToString());
+		}
+	}
+
+	private LyricLine[] GetCurLines(SongState state, double songPos) {
+		var lyrics = state.SongInfo.Lyrics;
+		if (lyrics == null || !lyrics.Lines.Any())
+			return new LyricLine[0];
+
+		if (lyrics.Lines.First().StartTime > songPos) {
+			// its the first one time
+			return lyrics.Lines.Take(2).ToArray();
+		}
+
+		foreach (var s in lyrics.Lines) {
+			if (s.EndTime < songPos)
+				continue;
+			return lyrics.Lines.SkipWhile(x => x != s).Take(2).ToArray();
+		}
+
+		return new LyricLine[0];
 	}
 }

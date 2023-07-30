@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://1274mds3lc08"]
+[gd_scene load_steps=4 format=3 uid="uid://1274mds3lc08"]
 
 [ext_resource type="Script" path="res://scenes/SongScene.cs" id="1_jxipg"]
 
@@ -7,10 +7,6 @@ line_spacing = 0.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_smbfm"]
 line_spacing = 0.0
-
-[sub_resource type="LabelSettings" id="LabelSettings_a0750"]
-line_spacing = 0.0
-font_color = Color(1, 1, 0.490196, 1)
 
 [node name="SongScene" type="Node3D"]
 script = ExtResource("1_jxipg")
@@ -63,9 +59,10 @@ probably
 label_settings = SubResource("LabelSettings_smbfm")
 horizontal_alignment = 2
 
-[node name="LyricsLabel" type="Label" parent="."]
+[node name="LyricsLabel" type="RichTextLabel" parent="."]
 offset_top = 182.0
-offset_right = 199.0
-offset_bottom = 208.0
-text = "<lyric spot>"
-label_settings = SubResource("LabelSettings_a0750")
+offset_right = 466.0
+offset_bottom = 222.0
+text = "<lyrics here pls>"
+fit_content = true
+autowrap_mode = 0
