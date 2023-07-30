@@ -10,7 +10,7 @@ public partial class GuitarChart : Node3D {
         GetTree().Root.AddChild(sceneRoot);
 
         var material = new StandardMaterial3D() {
-            AlbedoColor = new Color("#D2B48C") //tan
+            AlbedoColor = Colors.Tan
         };
 
         var planeMesh = new PlaneMesh() {
@@ -29,23 +29,23 @@ public partial class GuitarChart : Node3D {
         };
         sceneRoot.AddChild(camera);
 
-        var light = new OmniLight3D() {
-            Transform = new Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 3.9219f, 8),
-            OmniRange = 15f
+        var light = new DirectionalLight3D() {
+            Transform = new Transform3D(-0.177838f, 0.752991f, -0.633544f, -0.317607f, 0.565433f, 0.761191f, 0.931397f, 0.336587f, 0.1386f, 0, 0, 0)
         };
         sceneRoot.AddChild(light);
 
         // set strings
         int index = 0;
+        const int STRING_LENGTH = 50;
         foreach (var colour in new[] { "red", "yellow", "blue", "orange", "green", "purple"}) {
             var stringMaterial = GD.Load<StandardMaterial3D>("res://scenes/materials/" + colour + ".tres");
             
             var stringMesh = new BoxMesh() {
-                Size = new Vector3(0.1f, 0.1f, 25),
+                Size = new Vector3(0.08f, 0.08f, STRING_LENGTH),
                 Material = stringMaterial
             };
             var stringObj = new MeshInstance3D() {
-                Transform = new Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, index, 12.5f),
+                Transform = new Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, index, STRING_LENGTH/2f),
                 Mesh = stringMesh
             };
             sceneRoot.AddChild(stringObj);
@@ -55,28 +55,28 @@ public partial class GuitarChart : Node3D {
         
         // set frets and fret lines
         var fretMaterial = new StandardMaterial3D() {
-            AlbedoColor = new Color("#D2B48C") //tan
+            AlbedoColor = Colors.Tan
         };
         var fretMesh = new BoxMesh() {
-            Size = new Vector3(0.03f, 6, 0.03f),
+            Size = new Vector3(0.03f, 5 + Math.Abs(DisplayConst.TRACK_BOTTOM_WORLD * 2), 0.03f),
             Material = fretMaterial
         };
         var pathMaterial = new StandardMaterial3D() {
-            AlbedoColor = new Color("#333333")
+            AlbedoColor = Colors.DarkGray
         };
         var pathMesh = new BoxMesh() {
             Size = new Vector3(0.03f, 6, 0.03f),
             Material = pathMaterial
         };
-        for(int i = 0; i < 26; i++) {
-            var meshObj = new MeshInstance3D() {
-                Transform = new Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5f, i),
+        for (int i = 0; i < 25; i++) {
+            var fretObj = new MeshInstance3D() {
+                Transform = new Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5f, DisplayConst.CalcFretPosZ(i)),
                 Mesh = fretMesh
             };
-            sceneRoot.AddChild(meshObj);
+            sceneRoot.AddChild(fretObj);
 
             var pathObj = new MeshInstance3D() {
-                Transform = new Transform3D(0, 5, 0, -1, 0, 0, 0, 0, 1, 15, -0.5f, i),
+                Transform = new Transform3D(0, 5, 0, -1, 0, 0, 0, 0, 1, 15, DisplayConst.TRACK_BOTTOM_WORLD, DisplayConst.CalcFretPosZ(i)),
                 Mesh = pathMesh
             };
             sceneRoot.AddChild(pathObj);
@@ -87,7 +87,7 @@ public partial class GuitarChart : Node3D {
                 Text = i.ToString(),
                 FontSize = 200,
                 Shaded = true,
-                Transform = new Transform3D(0, 1, 0, 0, 0, 1, 1, 0, 0, -0.251861f, -0.5f, i-0.5f)
+                Transform = new Transform3D(0, 1, 0, 0, 0, 1, 1, 0, 0, -0.25f, -0.5f, DisplayConst.CalcInFretPosZ(i))
             };
 
             sceneRoot.AddChild(label3d);

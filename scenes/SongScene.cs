@@ -41,7 +41,7 @@ public partial class SongScene : Node
 		
 		var guitarChart = GD.Load<CSharpScript>("res://scenes/song/GuitarChart.cs");
 		GetTree().Root.AddChild(guitarChart.New().As<GuitarChart>());
-/*
+
 		try {
 			var songScene = GD.Load<CSharpScript>("res://scenes/song/SongChart.cs");
 			var s = songScene.New().As<SongChart>();
@@ -50,9 +50,9 @@ public partial class SongScene : Node
 		} catch (Exception e) {
 			GD.Print(e);
 		}
-*/
+
 		// TODO test
-		// var obj = MeshGenerator.Box(new Color("red"), new Vector3(20, 0, 7));
+		// var obj = MeshGenerator.Box(Colors.Red, new Vector3(20, 0, 7));
 		// GetTree().Root.AddChild(obj);
 	}
 
@@ -63,6 +63,6 @@ public partial class SongScene : Node
 		guiScene.Position = newPos;
 
 		var a = GetNode<Label>("RunningDetailsLabel");
-		a.Text = GetTree().Root.GetCamera3D().GlobalTransform.Origin+"";
+		a.Text = Engine.GetFramesPerSecond() + "fps @ " + GetTree().Root.GetCamera3D().GlobalTransform.Origin;
 	}
 }
