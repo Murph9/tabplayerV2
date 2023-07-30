@@ -32,8 +32,7 @@ public partial class SongScene : Node
 	public override void _Ready()
 	{
 		var info = _state.SongInfo;
-		var a = GetNode<Label>("SongInfoLabel");
-		a.Text = $"{info.Metadata.Name} ({info.Metadata.Year})\n{info.Metadata.Artist}";
+		setUILabels(info);
 
 		_audioController.Play();
 
@@ -63,6 +62,40 @@ public partial class SongScene : Node
 		guiScene.Position = newPos;
 
 		var a = GetNode<Label>("RunningDetailsLabel");
-		a.Text = Engine.GetFramesPerSecond() + "fps @ " + GetTree().Root.GetCamera3D().GlobalTransform.Origin;
+		a.Text = Engine.GetFramesPerSecond() + "fps @ " + GetTree().Root.GetCamera3D().GlobalTransform.Origin+"\nYo?";
+
+		var nextNote = NextNoteBlock();
+		var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - _audioController.SongPosition, 1);
+
+		var debugText = @$"{_audioController.SongPosition.ToMinSec(true)}
+Obj #: {GetTree().Root.GetChildCount()}
+{Engine.GetFramesPerSecond()}fps | {(delta*1000).ToString("000.0")}ms
+{noteText}
+";
+		a.Text = debugText;
+	}
+
+	private void setUILabels(SongInfo info) {
+		var infoLabel = GetNode<Label>("SongInfoLabel");
+		infoLabel.Text = $"{info.Metadata.Name} ({info.Metadata.Year})\n{info.Metadata.Artist}";
+
+		var detailsLabel = GetNode<Label>("SongDetailsLabel");
+		var guitarTuning = "Tuning: " + _state.Instrument.CalcFullTuningStr();
+		var chordCount = _state.Instrument.Notes.Where(x => x.Notes.Count() > 1).Count();
+		var singleNoteCount = _state.Instrument.Notes.Count() - chordCount;
+		detailsLabel.Text = $@"Playing: {_state.Instrument.Name}
+Notes: {singleNoteCount}
+Chords: {chordCount}
+{guitarTuning}
+First note @ {_state.Instrument.Notes.First().Time.ToMinSec()}
+Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}";
+	}
+
+	private NoteBlock NextNoteBlock() {
+		foreach (var b in _state.Instrument.Notes) {
+			if (b.Time > _audioController.SongPosition)
+				return b;
+		}
+		return null;
 	}
 }

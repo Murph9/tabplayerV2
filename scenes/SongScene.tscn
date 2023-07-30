@@ -1,6 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://1274mds3lc08"]
+[gd_scene load_steps=5 format=3 uid="uid://1274mds3lc08"]
 
 [ext_resource type="Script" path="res://scenes/SongScene.cs" id="1_jxipg"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_42vc3"]
+line_spacing = 0.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_smbfm"]
+line_spacing = 0.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_a0750"]
+line_spacing = 0.0
+font_color = Color(1, 1, 0.490196, 1)
 
 [node name="SongScene" type="Node3D"]
 script = ExtResource("1_jxipg")
@@ -8,7 +18,14 @@ script = ExtResource("1_jxipg")
 [node name="ControlsLabel" type="Label" parent="."]
 offset_right = 40.0
 offset_bottom = 23.0
-text = "dwdwd"
+text = "[Esc] to open pause menu
+1
+2
+3
+4
+5
+6"
+label_settings = SubResource("LabelSettings_42vc3")
 
 [node name="RunningDetailsLabel" type="Label" parent="."]
 anchors_preset = 2
@@ -30,18 +47,25 @@ text = "dddd (1889)
 asdawdasdaaaaaa"
 horizontal_alignment = 2
 
-[node name="SongDetailsLabel" type="Label" parent="SongInfoLabel"]
-layout_mode = 1
+[node name="SongDetailsLabel" type="Label" parent="."]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -143.0
+offset_left = -167.0
 offset_top = 52.0
-offset_bottom = 104.0
+offset_bottom = 182.0
 grow_horizontal = 0
 text = "Playing: a string thing
 and some other stuff
 probably
 ...
 ..."
+label_settings = SubResource("LabelSettings_smbfm")
 horizontal_alignment = 2
+
+[node name="LyricsLabel" type="Label" parent="."]
+offset_top = 182.0
+offset_right = 199.0
+offset_bottom = 208.0
+text = "<lyric spot>"
+label_settings = SubResource("LabelSettings_a0750")
