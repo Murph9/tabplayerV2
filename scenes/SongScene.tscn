@@ -2,26 +2,14 @@
 
 [ext_resource type="Script" path="res://scenes/SongScene.cs" id="1_jxipg"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_42vc3"]
+[sub_resource type="LabelSettings" id="LabelSettings_smbfm"]
 line_spacing = 0.0
 
-[sub_resource type="LabelSettings" id="LabelSettings_smbfm"]
+[sub_resource type="LabelSettings" id="LabelSettings_42vc3"]
 line_spacing = 0.0
 
 [node name="SongScene" type="Node3D"]
 script = ExtResource("1_jxipg")
-
-[node name="ControlsLabel" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
-text = "[Esc] to open pause menu
-1
-2
-3
-4
-5
-6"
-label_settings = SubResource("LabelSettings_42vc3")
 
 [node name="RunningDetailsLabel" type="Label" parent="."]
 anchors_preset = 2
@@ -66,3 +54,42 @@ offset_bottom = 222.0
 text = "<lyrics here pls>"
 fit_content = true
 autowrap_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Button" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Pause"
+
+[node name="ControlsLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "Or [Esc] to open pause menu"
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="PopupPanel" type="PopupPanel" parent="."]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupPanel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ResumeButton" type="Button" parent="PopupPanel/VBoxContainer"]
+layout_mode = 2
+text = "Resume"
+
+[node name="QuitButton" type="Button" parent="PopupPanel/VBoxContainer"]
+layout_mode = 2
+text = "Quit"
+
+[connection signal="pressed" from="HBoxContainer/Button" to="." method="Pause"]
+[connection signal="popup_hide" from="PopupPanel" to="." method="Resume"]
+[connection signal="pressed" from="PopupPanel/VBoxContainer/ResumeButton" to="." method="Resume"]
+[connection signal="pressed" from="PopupPanel/VBoxContainer/QuitButton" to="." method="Quit"]

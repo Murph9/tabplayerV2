@@ -23,14 +23,12 @@ public partial class NoteGraph : Node2D {
 
 	public override void _Ready()
 	{
-        var screenRect = GetViewportRect();
-
         var barNode = new Control() {
             Name = "BarNode",
             LayoutMode = 3,
             AnchorsPreset = 3,
         };
-        GetTree().Root.AddChild(barNode);
+        AddChild(barNode);
         
         // TODO align to section starts
         var noteBuckets = _songState.Instrument.Notes.ToLookup(x => Math.Round(x.Time/BUCKET_SIZE));

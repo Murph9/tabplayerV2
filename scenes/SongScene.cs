@@ -15,6 +15,37 @@ public partial class SongScene : Node
 		_audioController = new AudioController(_state.AudioStream);
 	}
 
+	public void Pause() {
+		_audioController.Pause();
+		
+		var popup = GetNode<PopupPanel>("PopupPanel");
+		popup.PopupCentered();
+	}
+
+	public void Resume() {
+		_audioController.Play();
+		var popup = GetNode<PopupPanel>("PopupPanel");
+		if (popup.Visible)
+			popup.Hide();
+	}
+
+	public void Quit() {
+		_audioController?.Stop();
+		_audioController?.Dispose();
+		GetTree().ChangeSceneToFile("res://scenes/SongList.tscn");
+		QueueFree();
+	}
+
+	public override void _Input(InputEvent @event) {
+		if (@event.IsActionPressed("ui_cancel"))
+		{
+			var popup = GetNode<PopupPanel>("PopupPanel");
+			if (!popup.Visible) {
+				Pause();
+			}
+		}
+	}
+
 	public override void _Ready()
 	{
 		var info = _state.SongInfo;
@@ -22,34 +53,25 @@ public partial class SongScene : Node
 
 		_audioController.Play();
 		
-		var guitarChart = GD.Load<CSharpScript>("res://scenes/song/GuitarChart.cs");
-		GetTree().Root.AddChild(guitarChart.New().As<GuitarChart>());
+		var guitarChartScene = GD.Load<CSharpScript>("res://scenes/song/GuitarChart.cs").New().As<GuitarChart>();
+		guitarChartScene._init(_state, _audioController);
+		AddChild(guitarChartScene);
 
-		var noteGraph = GD.Load<CSharpScript>("res://scenes/song/NoteGraph.cs");
-		var noteGraphScene = noteGraph.New().As<NoteGraph>();
+		var noteGraphScene = GD.Load<CSharpScript>("res://scenes/song/NoteGraph.cs").New().As<NoteGraph>();
 		noteGraphScene._init(_state, _audioController);
-		GetTree().Root.AddChild(noteGraphScene);
+		AddChild(noteGraphScene);
 
 		try {
-			var songScene = GD.Load<CSharpScript>("res://scenes/song/SongChart.cs");
-			var s = songScene.New().As<SongChart>();
-			s._init(_state.Instrument);
-			GetTree().Root.AddChild(s);
+			var songScene = GD.Load<CSharpScript>("res://scenes/song/SongChart.cs").New().As<SongChart>();
+			songScene._init(_state.Instrument);
+			AddChild(songScene);
 		} catch (Exception e) {
 			GD.Print(e);
 		}
-
-		// TODO test
-		// var obj = MeshGenerator.Box(Colors.Red, new Vector3(20, 0, 7));
-		// GetTree().Root.AddChild(obj);
 	}
 
 	public override void _Process(double delta)
 	{
-		var guiScene = GetNode<Node3D>("/root/guitarSceneRoot");
-		var newPos = new Vector3((float)_audioController.SongPosition*_state.Instrument.Config.NoteSpeed, guiScene.Position.Y, guiScene.Position.Z);
-		guiScene.Position = newPos;
-
 		var nextNote = NextNoteBlock();
 
 		var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - _audioController.SongPosition, 1);

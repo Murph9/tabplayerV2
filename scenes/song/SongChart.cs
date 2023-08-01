@@ -13,9 +13,8 @@ public partial class SongChart : Node3D {
     public override void _Ready()
 	{
         var itemList = _loadNotes(_instrument);
-        var root = GetTree().Root;
         foreach (var item in itemList) {
-            root.AddChild(item);
+            AddChild(item);
         }
 	}
 

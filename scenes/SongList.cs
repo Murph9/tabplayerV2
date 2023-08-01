@@ -49,6 +49,6 @@ public partial class SongList : Control
 		scene._init(songState);
 		
 		GetTree().Root.AddChild(scene);
-		GetTree().Root.RemoveChild(this);
+		QueueFree();
 	}
 }

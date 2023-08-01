@@ -1,14 +1,18 @@
 using Godot;
+using murph9.TabPlayer.Songs;
 
 public partial class GuitarChart : Node3D {
     
+    private SongState _songState;
+    private AudioController _audioController;
+
+    public void _init(SongState songState, AudioController audio) {
+        _songState = songState;
+        _audioController = audio;
+    }
+
     public override void _Ready()
 	{
-        var sceneRoot = new Node3D() {
-            Name = "guitarSceneRoot"
-        };
-        GetTree().Root.AddChild(sceneRoot);
-
         var material = new StandardMaterial3D() {
             AlbedoColor = Colors.Tan
         };
@@ -22,17 +26,17 @@ public partial class GuitarChart : Node3D {
             Transform = new Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0),
             Mesh = planeMesh
         };
-        sceneRoot.AddChild(plane);
+        AddChild(plane);
 
         var camera = new Camera3D() {
             Transform = new Transform3D(0, 0.310809f, -0.950472f, 0, 0.950472f, 0.310809f, 1, 0, 0, -10, 10, 8)
         };
-        sceneRoot.AddChild(camera);
+        AddChild(camera);
 
         var light = new DirectionalLight3D() {
             Transform = new Transform3D(-0.177838f, 0.752991f, -0.633544f, -0.317607f, 0.565433f, 0.761191f, 0.931397f, 0.336587f, 0.1386f, 0, 0, 0)
         };
-        sceneRoot.AddChild(light);
+        AddChild(light);
 
         // set strings
         int index = 0;
@@ -48,7 +52,7 @@ public partial class GuitarChart : Node3D {
                 Transform = new Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, index, STRING_LENGTH/2f),
                 Mesh = stringMesh
             };
-            sceneRoot.AddChild(stringObj);
+            AddChild(stringObj);
 
             index++;
         }
@@ -73,13 +77,13 @@ public partial class GuitarChart : Node3D {
                 Transform = new Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5f, DisplayConst.CalcFretPosZ(i)),
                 Mesh = fretMesh
             };
-            sceneRoot.AddChild(fretObj);
+            AddChild(fretObj);
 
             var pathObj = new MeshInstance3D() {
                 Transform = new Transform3D(0, 5, 0, -1, 0, 0, 0, 0, 1, 15, DisplayConst.TRACK_BOTTOM_WORLD, DisplayConst.CalcFretPosZ(i)),
                 Mesh = pathMesh
             };
-            sceneRoot.AddChild(pathObj);
+            AddChild(pathObj);
         }
 
         foreach (var i in new []{3,5,7,9,12,15,17,19,21,24}) {
@@ -90,11 +94,13 @@ public partial class GuitarChart : Node3D {
                 Transform = new Transform3D(0, 1, 0, 0, 0, 1, 1, 0, 0, -0.25f, -0.5f, DisplayConst.CalcInFretPosZ(i))
             };
 
-            sceneRoot.AddChild(label3d);
+            AddChild(label3d);
         }
 	}
 
 	public override void _Process(double delta)
 	{
+		var newPos = new Vector3((float)_audioController.SongPosition * _songState.Instrument.Config.NoteSpeed, Position.Y, Position.Z);
+		Position = newPos;
 	}
 }
