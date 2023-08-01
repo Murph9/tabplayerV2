@@ -11,7 +11,7 @@ public partial class SongScene : Node
 
 	private Mesh _mesh;
 
-	public void init(SongState state) {
+	public void _init(SongState state) {
 		_state = state;
 
 		_audioController = new AudioController(_state.AudioStream);
@@ -49,7 +49,7 @@ public partial class SongScene : Node
 		try {
 			var songScene = GD.Load<CSharpScript>("res://scenes/song/SongChart.cs");
 			var s = songScene.New().As<SongChart>();
-			s.Init(_state.Instrument);
+			s._init(_state.Instrument);
 			GetTree().Root.AddChild(s);
 		} catch (Exception e) {
 			GD.Print(e);

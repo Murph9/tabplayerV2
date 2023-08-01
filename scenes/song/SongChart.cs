@@ -6,13 +6,13 @@ public partial class SongChart : Node3D {
     private NoteBlock _lastChord;
     private Instrument _instrument;
 
-    public void Init(Instrument instrument) {
+    public void _init(Instrument instrument) {
         _instrument = instrument;
     }
 
     public override void _Ready()
 	{
-        var itemList = _init(_instrument);
+        var itemList = _loadNotes(_instrument);
         var root = GetTree().Root;
         foreach (var item in itemList) {
             root.AddChild(item);
@@ -23,7 +23,7 @@ public partial class SongChart : Node3D {
 	{
 	}
 
-    private IEnumerable<Node3D> _init(Instrument instrument) {
+    private IEnumerable<Node3D> _loadNotes(Instrument instrument) {
         var fretNumLastPlacedMap = new Dictionary<int, float>();
         
         foreach (var noteBlock in instrument.Notes) {

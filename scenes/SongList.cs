@@ -46,7 +46,7 @@ public partial class SongList : Control
 
 		PackedScene packedScene = ResourceLoader.Load<PackedScene>("res://scenes/SongScene.tscn");
 		var scene = packedScene.Instantiate<SongScene>();
-		scene.init(songState);
+		scene._init(songState);
 		
 		GetTree().Root.AddChild(scene);
 		GetTree().Root.RemoveChild(this);
