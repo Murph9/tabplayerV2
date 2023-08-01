@@ -9,24 +9,10 @@ public partial class SongScene : Node
 	private SongState _state;
 	private AudioController _audioController;
 
-	private Mesh _mesh;
-
 	public void _init(SongState state) {
 		_state = state;
 
 		_audioController = new AudioController(_state.AudioStream);
-
-		var controlsLabel = GetNode<Label>("ControlsLabel");
-		controlsLabel.Text = $@"Controls:
-------------------------
-[Space]  Play/Pause
-[R]      Restart
-[F]      Go to first note (-2sec)
-[W], [S] Seek forward/backward 10 sec
-[Q]      Quit and pick a new song
-";
-
-		_mesh = new Mesh();
 	}
 
 	public override void _Ready()
@@ -35,8 +21,6 @@ public partial class SongScene : Node
 		setUILabels(info);
 
 		_audioController.Play();
-
-		// var packedScene = ResourceLoader.Load<PackedScene>("res://scenes/song/GuitarChart.tscn");
 		
 		var guitarChart = GD.Load<CSharpScript>("res://scenes/song/GuitarChart.cs");
 		GetTree().Root.AddChild(guitarChart.New().As<GuitarChart>());
