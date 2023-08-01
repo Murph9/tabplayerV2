@@ -33,6 +33,8 @@ public partial class SongScene : Node
 		_audioController?.Stop();
 		_audioController?.Dispose();
 		GetTree().ChangeSceneToFile("res://scenes/SongList.tscn");
+		
+		this.Pause(); // prevent errors in final update frame (or free audio controller later?)
 		QueueFree();
 	}
 

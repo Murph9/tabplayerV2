@@ -1,7 +1,7 @@
 using Godot;
 using murph9.TabPlayer.Songs;
 
-public partial class NoteGraph : Node2D {
+public partial class NoteGraph : Node {
     
     private const float BUCKET_SIZE = 3;
     private const float BUCKET_PIXEL_WIDTH = 7;
@@ -81,6 +81,6 @@ public partial class NoteGraph : Node2D {
                 bar.Value.Color = Colors.White;
             else
                 bar.Value.Color = _noteColour;
-        }  
+        }
 	}
 }
