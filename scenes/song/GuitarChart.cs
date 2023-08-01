@@ -43,8 +43,10 @@ public partial class GuitarChart : Node3D {
         // set strings
         int index = 0;
         const int STRING_LENGTH = 50;
-        foreach (var colour in new[] { "red", "yellow", "blue", "orange", "green", "purple"}) {
-            var stringMaterial = GD.Load<StandardMaterial3D>("res://scenes/materials/" + colour + ".tres");
+        foreach (var colour in new[] { Colors.Red, Colors.Yellow, Colors.Blue, Colors.Orange, Colors.Green, Colors.Purple}) {
+            var stringMaterial = new StandardMaterial3D() {
+                AlbedoColor = colour
+            };
             
             var stringMesh = new BoxMesh() {
                 Size = new Vector3(0.08f, 0.08f, STRING_LENGTH),

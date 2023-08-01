@@ -78,10 +78,9 @@ public partial class SongScene : Node
 
 		var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - _audioController.SongPosition, 1);
 
-		var debugText = @$"{_audioController.SongPosition.ToMinSec(true)}
-Obj #: {GetTree().Root.GetChildCount()}
+		var debugText = @$"{noteText}
 {Engine.GetFramesPerSecond()}fps | {(delta*1000).ToString("000.0")}ms
-{noteText}
+{_audioController.SongPosition.ToMinSec(true)}
 ";
 		GetNode<Label>("RunningDetailsLabel").Text = debugText;
 
