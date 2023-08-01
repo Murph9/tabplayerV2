@@ -1,8 +1,10 @@
 using Godot;
 using murph9.TabPlayer.Songs;
+using murph9.TabPlayer.Songs.Models;
 
 public partial class GuitarChart : Node3D {
-    
+    private const float CAM_MOVE_SPEED = 0.2f;
+
     private SongState _songState;
     private AudioController _audioController;
 
@@ -100,7 +102,25 @@ public partial class GuitarChart : Node3D {
 
 	public override void _Process(double delta)
 	{
+        var block = NextNoteBlock();
+        if (block != null) {
+            var cam = GetTree().Root.GetCamera3D();
+            
+            var wantPos = DisplayConst.CalcMiddleWindowZ(block.FretWindowStart, block.FretWindowLength);
+            var newZ = cam.Position.Z*(1-delta*CAM_MOVE_SPEED) + wantPos*delta*CAM_MOVE_SPEED;
+            cam.Position = new Vector3(cam.Position.X, cam.Position.Y, (float)newZ);
+        }
+
 		var newPos = new Vector3((float)_audioController.SongPosition * _songState.Instrument.Config.NoteSpeed, Position.Y, Position.Z);
 		Position = newPos;
+	}
+
+    private NoteBlock NextNoteBlock() {
+		var songPos = _audioController.SongPosition;
+		foreach (var b in _songState.Instrument.Notes) {
+			if (b.Time > songPos)
+				return b;
+		}
+		return null;
 	}
 }
