@@ -39,14 +39,33 @@ public partial class SongScene : Node
 	}
 
 	public override void _Input(InputEvent @event) {
-		if (@event.IsActionPressed("ui_cancel"))
+		if (@event.IsActionPressed("ui_cancel") || @event.IsActionPressed("song_pause"))
 		{
 			var popup = GetNode<PopupPanel>("PopupPanel");
 			if (!popup.Visible) {
 				Pause();
 			}
 		}
+
+		if (@event.IsActionPressed("song_skip_forward_10")) {
+			Skip10Sec();
+		} else if (@event.IsActionPressed("song_skip_backward_10")) {
+			Back10Sec();
+		} else if (@event.IsActionPressed("song_skip_to_first")) {
+			SkipToFirst();
+		} else if (@event.IsActionPressed("song_restart")) {
+			RestartSong();
+		}
 	}
+
+	public void Skip10Sec() => _audioController.Seek(_audioController.SongPosition + 10);
+	public void Back10Sec() => _audioController.Seek(_audioController.SongPosition - 10);
+	public void SkipToFirst() {
+		var first = _state.Instrument.Notes.First();
+		_audioController.Seek(first.Time - 1.5f);
+	}
+	public void RestartSong() => _audioController.Seek(0);
+
 
 	public override void _Ready()
 	{

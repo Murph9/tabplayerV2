@@ -55,17 +55,58 @@ text = "<lyrics here pls>"
 fit_content = true
 autowrap_mode = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="GridContainer" type="GridContainer" parent="."]
 offset_right = 40.0
 offset_bottom = 40.0
+columns = 2
 
-[node name="Button" type="Button" parent="HBoxContainer"]
+[node name="PauseButton" type="Button" parent="GridContainer"]
 layout_mode = 2
 text = "Pause"
 
-[node name="ControlsLabel" type="Label" parent="HBoxContainer"]
+[node name="PauseButtonLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
-text = "Or [Esc] to open pause menu"
+text = "[Esc] or [Space]
+"
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="SkipToStartButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "Skip to First Note"
+
+[node name="SkipToStartLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "[F]
+"
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="RestartSongButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "Restart Song"
+
+[node name="RestartSongLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "[R]
+"
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="SkipForwardButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "Forward 10 sec"
+
+[node name="SkipForwardLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "[W] or [↑]
+"
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="SkipBackwardButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "Back 10 sec"
+
+[node name="SkipBackwardsLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "[S] or [↓]"
 label_settings = SubResource("LabelSettings_42vc3")
 
 [node name="PopupPanel" type="PopupPanel" parent="."]
@@ -76,8 +117,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = -4.0
-offset_bottom = -4.0
+offset_right = -416.0
+offset_bottom = -416.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -89,7 +130,11 @@ text = "Resume"
 layout_mode = 2
 text = "Quit"
 
-[connection signal="pressed" from="HBoxContainer/Button" to="." method="Pause"]
+[connection signal="pressed" from="GridContainer/PauseButton" to="." method="Pause"]
+[connection signal="pressed" from="GridContainer/SkipToStartButton" to="." method="SkipToFirst"]
+[connection signal="pressed" from="GridContainer/RestartSongButton" to="." method="RestartSong"]
+[connection signal="pressed" from="GridContainer/SkipForwardButton" to="." method="Skip10Sec"]
+[connection signal="pressed" from="GridContainer/SkipBackwardButton" to="." method="Back10Sec"]
 [connection signal="popup_hide" from="PopupPanel" to="." method="Resume"]
 [connection signal="pressed" from="PopupPanel/VBoxContainer/ResumeButton" to="." method="Resume"]
 [connection signal="pressed" from="PopupPanel/VBoxContainer/QuitButton" to="." method="Quit"]

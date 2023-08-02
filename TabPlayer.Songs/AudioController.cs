@@ -62,7 +62,7 @@ namespace murph9.TabPlayer.Songs
 
         private void StartSong(CancellationToken token) {
             _waveOut.Play();
-            _waveOut.Volume = 0.2f; // chill on the input volume please
+            _waveOut.Volume = 0.15f; // chill on the input volume please
             while (_waveOut.PlaybackState != PlaybackState.Stopped) {
                 Thread.Sleep(1000);
                 
