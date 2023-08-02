@@ -26,5 +26,9 @@ namespace murph9.TabPlayer {
 		public void ConvertButton_Pressed() {
 			GetTree().ChangeSceneToFile("res://scenes/ConvertMenu.tscn");
 		}
+
+		public void QuitButton_Pressed() {
+			GetTree().Quit();
+		}
 	}
 }

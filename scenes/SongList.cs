@@ -9,7 +9,6 @@ public partial class SongList : Control
 	private SongFile[] _songList;
 	private SongFile _selectedSong;
 
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		var songList = SongFileManager.GetSongFileList((str) => {});
@@ -38,6 +37,10 @@ public partial class SongList : Control
 		menu.Title = "Select the instrument to play in: " + _selectedSong.SongName;
 
 		menu.PopupCentered();
+	}
+
+	public void Back() {
+		GetTree().ChangeSceneToFile("res://StartMenu.tscn");
 	}
 
 	private void SelectedItem_LoadSong(int index) {

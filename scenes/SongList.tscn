@@ -44,5 +44,6 @@ size_flags_vertical = 3
 
 [node name="PopupMenu" type="PopupMenu" parent="."]
 
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="Back"]
 [connection signal="item_activated" from="VBoxContainer/ScrollContainer/ItemList" to="." method="ItemActivated"]
 [connection signal="index_pressed" from="PopupMenu" to="." method="SelectedItem_LoadSong"]

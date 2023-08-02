@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://b10de88hnec5h"]
+[gd_scene load_steps=3 format=3 uid="uid://b10de88hnec5h"]
 
 [ext_resource type="Script" path="res://StartMenu.cs" id="1_wbodt"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_f02ew"]
+font_size = 46
 
 [node name="StartMenu" type="Control"]
 layout_mode = 3
@@ -25,6 +28,7 @@ alignment = 1
 [node name="Title" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 text = "Tab Player"
+label_settings = SubResource("LabelSettings_f02ew")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -49,6 +53,16 @@ text = "Info"
 layout_mode = 2
 text = "Made by murph9"
 
+[node name="QuitButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+grow_vertical = 0
+text = "Quit
+"
+
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/StartButton" to="." method="StartButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/ConvertButton" to="." method="ConvertButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/InfoButton" to="." method="InfoButton_Pressed"]
+[connection signal="pressed" from="QuitButton" to="." method="QuitButton_Pressed"]
