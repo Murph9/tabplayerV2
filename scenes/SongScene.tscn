@@ -8,7 +8,7 @@ line_spacing = 0.0
 [sub_resource type="LabelSettings" id="LabelSettings_42vc3"]
 line_spacing = 0.0
 
-[node name="SongScene" type="Node3D"]
+[node name="SongScene" type="Node"]
 script = ExtResource("1_jxipg")
 
 [node name="RunningDetailsLabel" type="Label" parent="."]
