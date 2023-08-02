@@ -45,14 +45,14 @@ public partial class NoteGraph : Node {
             _graphChordBars.Add(i, new ColorRect() {
                 Color = _chordColour,
                 AnchorsPreset = 3,
-                OffsetTop = - chordHeight,
+                OffsetTop = -5 - chordHeight,
                 OffsetLeft = -BUCKET_PIXEL_WIDTH * (float)(maxBucket - i),
                 Size = new Vector2(BUCKET_PIXEL_WIDTH, chordHeight)
             });
             _graphNoteBars.Add(i, new ColorRect() {
                 Color = _noteColour,
                 AnchorsPreset = 3,
-                OffsetTop = - chordHeight - noteHeight,
+                OffsetTop = -5 - chordHeight - noteHeight,
                 OffsetLeft = -BUCKET_PIXEL_WIDTH*(float)(maxBucket - i),
                 Size = new Vector2(BUCKET_PIXEL_WIDTH, noteHeight)
             });

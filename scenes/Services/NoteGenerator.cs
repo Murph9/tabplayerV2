@@ -76,7 +76,7 @@ public class NoteGenerator {
             }
             
             foreach (var b in note.Bends) {
-                var endPos = new Vector3(b.Time*config.NoteSpeed, notePos.Y + b.Step, notePos.Z);
+                var endPos = new Vector3(b.Time*config.NoteSpeed, notePos.Y + DisplayConst.STRING_DISTANCE_APART*b.Step, notePos.Z);
                 yield return MeshGenerator.BoxLine(DisplayConst.GetColorFromString(note.StringNum), lastPos, endPos);
                 lastPos = endPos;
             }

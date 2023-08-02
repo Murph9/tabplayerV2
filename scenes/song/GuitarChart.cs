@@ -31,7 +31,8 @@ public partial class GuitarChart : Node3D {
         AddChild(plane);
 
         var camera = new Camera3D() {
-            Transform = new Transform3D(0, 0.310809f, -0.950472f, 0, 0.950472f, 0.310809f, 1, 0, 0, -10, 10, 8)
+            Fov = 60,
+            Transform = new Transform3D(0, 0.310809f, -0.950472f, 0, 0.950472f, 0.310809f, 1, 0, 0, -12, 10, 8),
         };
         AddChild(camera);
 

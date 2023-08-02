@@ -27,7 +27,7 @@ public class DisplayConst
     */
     public static float CalcFretPosZ(int fret)
     {
-        return fret; //TODO make frets get smaller http://www.buildyourguitar.com/resources/tips/fretdist.htm
+        return fret*1.5f; //TODO make frets get smaller http://www.buildyourguitar.com/resources/tips/fretdist.htm
     }
 
     public static float CalcInFretPosZ(int fret)
