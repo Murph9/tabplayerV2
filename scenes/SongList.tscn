@@ -30,14 +30,14 @@ text = "Back"
 
 [node name="BackLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "The list of songs you have TODO stuff"
+text = "Select a song below:"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="ItemList" type="ItemList" parent="VBoxContainer/ScrollContainer"]
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -45,5 +45,4 @@ size_flags_vertical = 3
 [node name="PopupMenu" type="PopupMenu" parent="."]
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="Back"]
-[connection signal="item_activated" from="VBoxContainer/ScrollContainer/ItemList" to="." method="ItemActivated"]
 [connection signal="index_pressed" from="PopupMenu" to="." method="SelectedItem_LoadSong"]
