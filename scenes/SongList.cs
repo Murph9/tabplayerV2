@@ -17,18 +17,22 @@ public partial class SongList : Control
 		_songList = songList.Data.ToArray();
 
 		var grid = GetNode<GridContainer>("VBoxContainer/ScrollContainer/GridContainer");
-		grid.Columns = 11;
-		grid.AddChild(new Label());
-		grid.AddChild(new Label() { Text = "Song Name" });
-		grid.AddChild(new Label() { Text = "Artist" });
-		grid.AddChild(new Label() { Text = "Album" });
-		grid.AddChild(new Label() { Text = "Year" });
-		grid.AddChild(new Label() { Text = "Length" });
-		grid.AddChild(new Label() { Text = "Parts" });
-		grid.AddChild(new Label() { Text = "Instr" });
-		grid.AddChild(new Label() { Text = "Tuning" });
-		grid.AddChild(new Label() { Text = "Diff" });
-		grid.AddChild(new Label() { Text = "Notes" });
+		var headings = new List<string>() {
+			null, // button row needs no label
+			"Song Name", "Artist", "Album", "Year", "Length", "Parts",
+
+			// Show details about the main instrument
+			"Main", "Tuning", "Notes", "Density",
+
+			// only show first 2 other instruments
+			null, null
+		};
+		grid.Columns = headings.Count;
+		foreach (var heading in headings) {
+			grid.AddChild(new Label() {
+				Text = heading
+			});
+		}
 		
 		foreach (var (song, index) in _songList.Select((s, i) => (s, i))) {
 			var b = new Button() {
@@ -54,19 +58,27 @@ public partial class SongList : Control
 			grid.AddChild(new Label() {
 				Text = song.GetInstrumentChars()
 			});
-			grid.AddChild(new Label() {
-				Text = song.GetMainInstrument()?.Name
-			});
-			grid.AddChild(new Label() {
-				Text = song.GetMainInstrument()?.Tuning
-			});
-			grid.AddChild(new Label() {
-				Text = song.GetMainInstrument()?.GetNoteDensity(song).ToString()
-			});
-			grid.AddChild(new Label() {
-				Text = song.GetMainInstrument()?.NoteCount.ToString()
-			});
+
+			var mainI = song.GetMainInstrument();
+			grid.AddChild(new Label() { Text = mainI?.Name });
+			grid.AddChild(new Label() { Text = mainI?.Tuning });
+			grid.AddChild(new Label() { Text = mainI?.NoteCount.ToString() });
+			grid.AddChild(new Label() { Text = mainI?.GetNoteDensity(song).ToFixedPlaces(2, false) });
+			var otherInstruments = song.Instruments.Where(x => x != song.GetMainInstrument()).Take(2);
+			foreach (var otherI in otherInstruments) {
+				grid.AddChild(new Label() {
+					Text = FormatInstrument(otherI, song)
+				});
+			}
+			for (int i = 0; i < 2 - otherInstruments.Count(); i++) {
+				grid.AddChild(new Label());
+			}
 		}
+	}
+
+	private string FormatInstrument(SongFileInstrument instrument, SongFile song) {
+		if (instrument == null) return null;
+		return instrument.Name + ": " + instrument.Tuning;
 	}
 
 	public override void _Process(double delta)
