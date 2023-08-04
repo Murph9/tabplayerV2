@@ -60,7 +60,7 @@ public class SongFileManager
             var noteInfo = JsonConvert.DeserializeObject<SongInfo>(File.ReadAllText(file.FullName));
             output($"Reading all songs {i}/{total}. Current: {noteInfo?.Metadata?.Name}");
             var instruments = noteInfo.Instruments.Select(x => new SongFileInstrument(x.Name, x == noteInfo.MainInstrument, x.Config.Tuning, x.Notes.Count, x.Config.CapoFret)).ToArray();
-            var lyrics = noteInfo.Lyrics != null ? new SongFileLyrics(noteInfo.Lyrics.Lines?.Sum(x => x.Words?.Count()) ?? 0) : null;
+            var lyrics = noteInfo.Lyrics != null ? new SongFileLyrics(noteInfo.Lyrics.Lines?.Sum(x => x.Words?.Count) ?? 0) : null;
             songList.Data.Add(new SongFile(songDir.Name, noteInfo.Metadata.Name,
                 noteInfo.Metadata.Artist, noteInfo.Metadata.Album, noteInfo.Metadata.Year,
                 noteInfo.MainInstrument.LastNoteTime, instruments, lyrics));
@@ -79,7 +79,7 @@ public class SongFileManager
 }
 
 public class SongFileList {
-    public readonly List<SongFile> Data = new List<SongFile>();
+    public readonly List<SongFile> Data = new();
 }
 
 public record SongFile(string FolderName, string SongName, string Artist, string Album, int? Year, float Length, ICollection<SongFileInstrument> Instruments, SongFileLyrics Lyrics)

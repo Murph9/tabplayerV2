@@ -92,8 +92,8 @@ public class Instrument
         };
     }
 
-    private static int[] NOTE_OFFSET = new int[] { 0, 5, 10, 3, 7, 0 };
-    private static string[] NOTE_LIST = new string[] {
+    private readonly static int[] NOTE_OFFSET = new int[] { 0, 5, 10, 3, 7, 0 };
+    private readonly static string[] NOTE_LIST = new string[] {
             "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb"
         };
     private static string NoteForIndexAndOffset(int index, int offset)
@@ -113,13 +113,21 @@ public class Instrument
 public class SongInfo
 {
     public const string LEAD_NAME = "lead";
+    public const string LEAD1_NAME = "lead1";
+    public const string LEAD2_NAME = "lead2";
     public const string COMBO_NAME = "combo";
     public const string COMBO1_NAME = "combo1";
     public const string COMBO2_NAME = "combo2";
+    public const string COMBO3_NAME = "combo3";
+    public const string COMBO4_NAME = "combo4";
     public const string RHYTHM_NAME = "rhythm";
+    public const string RHYTHM1_NAME = "rhythm1";
+    public const string RHYTHM2_NAME = "rhythm2";
     public const string BASS_NAME = "bass";
+    public const string BASS1_NAME = "bass1";
+    public const string BASS2_NAME = "bass2";
     public const string VOCALS_NAME = "vocals";
-    public static string[] STANDARD_INSTRUMENT_TYPES = new string[] { LEAD_NAME, RHYTHM_NAME, BASS_NAME };
+    public static readonly string[] STANDARD_INSTRUMENT_TYPES = new string[] { LEAD_NAME, RHYTHM_NAME, BASS_NAME };
 
     [JsonIgnore]
     public Instrument MainInstrument { get; private set; }
@@ -133,15 +141,23 @@ public class SongInfo
     public SongInfo(SongMetadata metadata, IEnumerable<Instrument> instruments, Lyrics lyrics)
     {
         Metadata = metadata;
-        Instruments = instruments.ToArray() ?? new Instrument[0];
+        Instruments = instruments.ToArray() ?? Array.Empty<Instrument>();
         Lyrics = lyrics ?? new Lyrics(new List<LyricLine>());
 
-        MainInstrument = Instruments.FirstOrDefault(x => x.Name == SongInfo.LEAD_NAME);
-        if (MainInstrument == null) MainInstrument = Instruments.FirstOrDefault(x => x.Name == SongInfo.RHYTHM_NAME);
-        if (MainInstrument == null) MainInstrument = Instruments.FirstOrDefault(x => x.Name == SongInfo.BASS_NAME);
-        if (MainInstrument == null) MainInstrument = Instruments.FirstOrDefault(x => x.Name == SongInfo.COMBO_NAME);
-        if (MainInstrument == null) MainInstrument = Instruments.FirstOrDefault(x => x.Name == SongInfo.COMBO1_NAME);
-        if (MainInstrument == null) MainInstrument = Instruments.FirstOrDefault(x => x.Name == SongInfo.COMBO2_NAME);
+        MainInstrument = Instruments.FirstOrDefault(x => x.Name == LEAD_NAME);
+        MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == LEAD1_NAME);
+        MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == LEAD2_NAME);
+        MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == RHYTHM_NAME);
+        MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == RHYTHM1_NAME);
+        MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == RHYTHM2_NAME);
+        MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == BASS_NAME);
+        MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == BASS1_NAME);
+        MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == BASS2_NAME);
+        MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == COMBO_NAME);
+        MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == COMBO1_NAME);
+        MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == COMBO2_NAME);
+        MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == COMBO3_NAME);
+        MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == COMBO4_NAME);
 
         if (MainInstrument == null)
             throw new Exception("No instrument found");
