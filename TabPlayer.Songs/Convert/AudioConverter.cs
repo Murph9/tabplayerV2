@@ -13,10 +13,8 @@ internal class AudioConverter
 {
     public static void ConvertOggToWav(FileInfo oggFile, Stream stream)
     {
-        using (VorbisWaveReader vorbisStream = new VorbisWaveReader(oggFile.FullName))
-        {
-            WaveFileWriter.WriteWavFileToStream(stream, vorbisStream);
-        }
+        using var vorbisStream = new VorbisWaveReader(oggFile.FullName);
+        WaveFileWriter.WriteWavFileToStream(stream, vorbisStream);
     }
 
     public static string ConvertWemToOgg(string file, bool forceConvert = false)
@@ -28,17 +26,19 @@ internal class AudioConverter
             return outputFile;
         }
 
-		try {
+        try
+        {
 		    using var fileS = File.Open(file, FileMode.Open);
             var wemClass = new WEMSharp.WEMFile(fileS, WEMSharp.WEMForcePacketFormat.NoForcePacketFormat);
             using var outS = File.Open(outputFile, FileMode.Create);
 			wemClass.GenerateOGG(outS, false, false);
-		} catch (Exception e) {
+		} catch (Exception) {
 			throw new Exception($"We have failed to convert {outputFile}");
 		}
         return outputFile;
     }
 
+/* TODO discuss this
     private static async Task<bool> Revorb(string file)
     {
         var p = new Process
@@ -61,4 +61,5 @@ internal class AudioConverter
         }
         return true;
     }
+*/
 }

@@ -7,14 +7,14 @@ public partial class NoteGraph : Node {
     private const float BUCKET_PIXEL_WIDTH = 7;
     private const float BUCKET_NOTE_PIXEL_HEIGHT = 5;
 
-    private Color _chordColour = new Color(0, 0, 0.3f, 0.5f);
-    private Color _noteColour = new Color(0.3f, 0f, 0, 0.5f);
+    private Color _chordColour = new(0, 0, 0.3f, 0.5f);
+    private Color _noteColour = new(0.3f, 0f, 0, 0.5f);
 
     private SongState _songState;
     private AudioController _audio;
 
-    private Dictionary<int, ColorRect> _graphChordBars = new();
-    private Dictionary<int, ColorRect> _graphNoteBars = new();
+    private readonly Dictionary<int, ColorRect> _graphChordBars = new();
+    private readonly Dictionary<int, ColorRect> _graphNoteBars = new();
 
     public void _init(SongState songState, AudioController audio) {
         _songState = songState;

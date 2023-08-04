@@ -12,7 +12,7 @@ public partial class SongChart : Node3D {
 
     public override void _Ready()
 	{
-        var itemList = _loadNotes(_instrument);
+        var itemList = LoadNotes(_instrument);
         foreach (var item in itemList) {
             AddChild(item);
         }
@@ -22,7 +22,7 @@ public partial class SongChart : Node3D {
 	{
 	}
 
-    private IEnumerable<Node3D> _loadNotes(Instrument instrument) {
+    private IEnumerable<Node3D> LoadNotes(Instrument instrument) {
         var fretNumLastPlacedMap = new Dictionary<int, float>();
         
         foreach (var noteBlock in instrument.Notes) {
@@ -55,7 +55,7 @@ public partial class SongChart : Node3D {
 
     private IEnumerable<Node3D> Chord(NoteBlock noteBlock, InstrumentConfig config) {
         if (noteBlock.Notes.Count() < 2)
-            throw new ArgumentException(nameof(noteBlock), "must have mote than one note");
+            throw new ArgumentException("must have mote than one note", nameof(noteBlock));
         
         var list = new List<Node3D>();
         
@@ -90,9 +90,9 @@ public partial class SongChart : Node3D {
         return list;
     }
 
-    private IEnumerable<Node3D> SingleNote(NoteBlock noteBlock, InstrumentConfig config) {
+    private static IEnumerable<Node3D> SingleNote(NoteBlock noteBlock, InstrumentConfig config) {
         if (noteBlock.Notes.Count() != 1)
-            throw new ArgumentException(nameof(noteBlock), "must have only 1 note for this method");
+            throw new ArgumentException("must have only 1 note for this method", nameof(noteBlock));
         
         var note = noteBlock.Notes.First();
 
@@ -115,7 +115,7 @@ public partial class SongChart : Node3D {
         }
     }
     
-    private IEnumerable<Node3D> GenerateNoteBlockFrets(Instrument instrument) {
+    private static IEnumerable<Node3D> GenerateNoteBlockFrets(Instrument instrument) {
         float startOfCurSection = -10;
         int curStart = -1;
         int curLength = -1;

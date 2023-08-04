@@ -70,7 +70,7 @@ public partial class SongScene : Node
 	public override void _Ready()
 	{
 		var info = _state.SongInfo;
-		setUILabels(info);
+		SetUILabels(info);
 
 		_audioController.Play();
 		
@@ -98,7 +98,7 @@ public partial class SongScene : Node
 		var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - _audioController.SongPosition, 1);
 
 		var debugText = @$"{noteText}
-{Engine.GetFramesPerSecond()}fps | {(delta*1000).ToString("000.0")}ms
+{Engine.GetFramesPerSecond()}fps | {delta*1000:000.0}ms
 {_audioController.SongPosition.ToMinSec(true)}
 ";
 		GetNode<Label>("RunningDetailsLabel").Text = debugText;
@@ -106,14 +106,14 @@ public partial class SongScene : Node
 		UpdateLyrics(GetNode<RichTextLabel>("LyricsLabel"));
 	}
 
-	private void setUILabels(SongInfo info) {
+	private void SetUILabels(SongInfo info) {
 		var infoLabel = GetNode<Label>("SongInfoLabel");
 		infoLabel.Text = $"{info.Metadata.Name} ({info.Metadata.Year})\n{info.Metadata.Artist}";
 
 		var detailsLabel = GetNode<Label>("SongDetailsLabel");
 		var guitarTuning = "Tuning: " + Instrument.CalcTuningName(_state.Instrument.Config.Tuning, _state.Instrument.Config.CapoFret);
 		var chordCount = _state.Instrument.Notes.Where(x => x.Notes.Count() > 1).Count();
-		var singleNoteCount = _state.Instrument.Notes.Count() - chordCount;
+		var singleNoteCount = _state.Instrument.Notes.Count - chordCount;
 		detailsLabel.Text = $@"Playing: {_state.Instrument.Name}
 Notes: {singleNoteCount}
 Chords: {chordCount}
@@ -156,10 +156,10 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}";
 		}
 	}
 
-	private LyricLine[] GetCurLines(SongState state, double songPos) {
+	private static LyricLine[] GetCurLines(SongState state, double songPos) {
 		var lyrics = state.SongInfo.Lyrics;
 		if (lyrics == null || !lyrics.Lines.Any())
-			return new LyricLine[0];
+			return Array.Empty<LyricLine>();
 
 		if (lyrics.Lines.First().StartTime > songPos) {
 			// its the first one time
@@ -172,6 +172,6 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}";
 			return lyrics.Lines.SkipWhile(x => x != s).Take(2).ToArray();
 		}
 
-		return new LyricLine[0];
+		return Array.Empty<LyricLine>();
 	}
 }
