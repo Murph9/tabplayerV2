@@ -169,7 +169,7 @@ namespace murph9.TabPlayer.Songs.Convert
             var sngChord = sng.Chords[note.ChordId];
             var chordFrets = sngChord.Frets;
 
-            ChordNotes chordNotes = new ChordNotes();
+            var chordNotes = new ChordNotes();
             if (note.ChordNotesId != -1)
                 chordNotes = sng.ChordNotes[note.ChordNotesId];
 

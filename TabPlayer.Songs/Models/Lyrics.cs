@@ -25,7 +25,7 @@ public class LyricLine
     public ICollection<Lyric> Words { get; private set; }
 
     public LyricLine(List<Lyric> words) {
-        if (words.Count() < 1)
+        if (words.Count < 1)
             throw new ArgumentException("You must give at least one word", nameof(words));
         Words = words;
 
@@ -39,7 +39,7 @@ public class LyricLine
         foreach (var s in Words) {
             sb.Append(s.Text);
             if (!s.Text.EndsWith("-"))
-                sb.Append(" ");
+                sb.Append(' ');
         }
         return sb.ToString();
     }
@@ -51,11 +51,11 @@ public class LyricLine
             if (s.Time <= songPosition) {
                 firstB.Append(s.Text);
                 if (!s.Text.EndsWith("-"))
-                    firstB.Append(" ");
+                    firstB.Append(' ');
             } else {
                 secondB.Append(s.Text);
                 if (!s.Text.EndsWith("-"))
-                    secondB.Append(" ");
+                    secondB.Append(' ');
             }
         }
         return (firstB.ToString(), secondB.ToString());

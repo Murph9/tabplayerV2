@@ -15,7 +15,7 @@ public class SingleNote
         this.StringNum = stringNum;
         this.FretNum = fretNum;
         this.Length = length;
-        this.Type = type ?? new NoteType[0];
+        this.Type = type ?? Array.Empty<NoteType>();
         this.Bends = bends;
         this.Slide = slide;
 

@@ -27,12 +27,12 @@ public class NoteBlock
         FretWindowStart = fretWindowStart;
         FretWindowLength = fretWindowLength;
         Notes = notes;
-        ChordFlags = chordFlags ?? new NoteBlockFlags[0];
+        ChordFlags = chordFlags ?? Array.Empty<NoteBlockFlags>();
 
         if (FretWindowLength < 1) FretWindowLength = 4;
     }
 
-    private static NoteType[] IGNORED_TYPES = new NoteType[] { NoteType.UNDEFINED, NoteType.MISSING, NoteType.CHORD, NoteType.OPEN, NoteType.IGNORE, NoteType.HIGHDENSITY, NoteType.SINGLE, NoteType.CHORDNOTES, NoteType.DOUBLESTOP, NoteType.MISSING2, NoteType.STRUM, NoteType.ACCENT };
+    private readonly static NoteType[] IGNORED_TYPES = new NoteType[] { NoteType.UNDEFINED, NoteType.MISSING, NoteType.CHORD, NoteType.OPEN, NoteType.IGNORE, NoteType.HIGHDENSITY, NoteType.SINGLE, NoteType.CHORDNOTES, NoteType.DOUBLESTOP, NoteType.MISSING2, NoteType.STRUM, NoteType.ACCENT };
 
     public bool IsSameChordAs(NoteBlock other, float maxInterval = 2)
     {
@@ -54,21 +54,19 @@ public class NoteBlock
         if (!Enumerable.SequenceEqual(this.ChordFlags, other.ChordFlags))
             return false;
 
-        using (var thisE = this.Notes.GetEnumerator())
-        using (var otherE = other.Notes.GetEnumerator())
+        using var thisE = this.Notes.GetEnumerator();
+        using var otherE = other.Notes.GetEnumerator();
+        while (thisE.MoveNext() && otherE.MoveNext())
         {
-            while (thisE.MoveNext() && otherE.MoveNext())
-            {
-                if (thisE.Current.FretNum != otherE.Current.FretNum)
-                    return false;
-                if (thisE.Current.StringNum != otherE.Current.StringNum)
-                    return false;
+            if (thisE.Current.FretNum != otherE.Current.FretNum)
+                return false;
+            if (thisE.Current.StringNum != otherE.Current.StringNum)
+                return false;
 
-                var typesThis = thisE.Current.Type.Except(IGNORED_TYPES);
-                var typesOther = otherE.Current.Type.Except(IGNORED_TYPES);
-                if (!Enumerable.SequenceEqual(typesThis, typesOther))
-                    return false;
-            }
+            var typesThis = thisE.Current.Type.Except(IGNORED_TYPES);
+            var typesOther = otherE.Current.Type.Except(IGNORED_TYPES);
+            if (!Enumerable.SequenceEqual(typesThis, typesOther))
+                return false;
         }
 
         return true;

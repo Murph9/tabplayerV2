@@ -12,10 +12,10 @@ namespace murph9.TabPlayer.Songs
         private readonly CancellationTokenSource _tokenSource;
 
         //https://github.com/naudio/NAudio/blob/master/NAudio.Core/Wave/WaveStreams/WaveStream.cs
-        private WaveFileReader _waveStream;
+        private readonly WaveFileReader _waveStream;
         
         //https://github.com/naudio/NAudio/blob/master/NAudio.WinMM/WaveOutEvent.cs
-        private WaveOutEvent _waveOut;
+        private readonly WaveOutEvent _waveOut;
 
         private double _songPositionOffset = 0;
         public double SongPosition { get {
@@ -33,8 +33,10 @@ namespace murph9.TabPlayer.Songs
 
             _tokenSource = new CancellationTokenSource();
             CancellationToken token = _tokenSource.Token;
-            _thread = new Thread(() => StartSong(token));
-            _thread.IsBackground = true;
+            _thread = new Thread(() => StartSong(token))
+            {
+                IsBackground = true
+            };
         }
 
         public bool Playing() => _waveOut.PlaybackState == PlaybackState.Playing;
@@ -83,6 +85,8 @@ namespace murph9.TabPlayer.Songs
             _waveOut?.Dispose();
             _waveStream?.Dispose();
             _audioStream?.Dispose();
+            
+            GC.SuppressFinalize(this);
         }
     }
 }
