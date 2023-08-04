@@ -50,14 +50,16 @@ namespace murph9.TabPlayer.Songs
         public void Stop() => _waveOut.Stop();
         
         public void Seek(double pos) {
-            // TODO offset bug when going off the end of the song
             pos = Math.Max(0, pos);
 
             double t = (double)(_waveStream.Position * 1000 /1000f); // this uses the buffer size to fix seek issues, note the comment on this.SongPosition
             var streamPos = t / _waveOut.OutputWaveFormat.BitsPerSample / _waveOut.OutputWaveFormat.Channels * 8 / _waveOut.OutputWaveFormat.SampleRate;
 
-            _waveStream.CurrentTime = TimeSpan.FromSeconds(pos);
-            _songPositionOffset -= streamPos - pos;
+            var newTime = TimeSpan.FromSeconds(pos);
+            if (newTime < _waveStream.TotalTime) {
+                _waveStream.CurrentTime = TimeSpan.FromSeconds(pos);
+                _songPositionOffset -= streamPos - pos;
+            }
         }
 
         private void StartSong(CancellationToken token) {
