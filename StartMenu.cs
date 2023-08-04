@@ -1,4 +1,5 @@
 using Godot;
+using murph9.TabPlayer.Songs;
 using System;
 
 namespace murph9.TabPlayer {
@@ -25,6 +26,10 @@ namespace murph9.TabPlayer {
 
 		public void ConvertButton_Pressed() {
 			GetTree().ChangeSceneToFile("res://scenes/ConvertMenu.tscn");
+		}
+
+		public void ReloadButton_Pressed() {
+			SongFileManager.GetSongFileList((str) => GD.Print(str), true);
 		}
 
 		public void QuitButton_Pressed() {

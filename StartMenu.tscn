@@ -64,5 +64,6 @@ text = "Quit
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/StartButton" to="." method="StartButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/ConvertButton" to="." method="ConvertButton_Pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ReloadButton" to="." method="ReloadButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/InfoButton" to="." method="InfoButton_Pressed"]
 [connection signal="pressed" from="QuitButton" to="." method="QuitButton_Pressed"]
