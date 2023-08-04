@@ -111,7 +111,7 @@ public partial class SongScene : Node
 		infoLabel.Text = $"{info.Metadata.Name} ({info.Metadata.Year})\n{info.Metadata.Artist}";
 
 		var detailsLabel = GetNode<Label>("SongDetailsLabel");
-		var guitarTuning = "Tuning: " + _state.Instrument.CalcFullTuningStr();
+		var guitarTuning = "Tuning: " + Instrument.CalcTuningName(_state.Instrument.Config.Tuning, _state.Instrument.Config.CapoFret);
 		var chordCount = _state.Instrument.Notes.Where(x => x.Notes.Count() > 1).Count();
 		var singleNoteCount = _state.Instrument.Notes.Count() - chordCount;
 		detailsLabel.Text = $@"Playing: {_state.Instrument.Name}

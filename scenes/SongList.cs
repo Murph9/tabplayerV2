@@ -50,13 +50,13 @@ public partial class SongList : Control
 
 			var mainI = song.GetMainInstrument();
 			Controls.Add(new Label() { Text = mainI?.Name });
-			Controls.Add(new Label() { Text = mainI?.Tuning });
+			Controls.Add(new Label() { Text = Instrument.CalcTuningName(mainI?.Tuning) });
 			Controls.Add(new Label() { Text = mainI?.NoteCount.ToString() });
 			Controls.Add(new Label() { Text = mainI?.GetNoteDensity(song).ToFixedPlaces(2, false) });
 			var otherInstruments = song.Instruments.Where(x => x != song.GetMainInstrument()).Take(2);
 			foreach (var otherI in otherInstruments) {
 				Controls.Add(new Label() {
-					Text = SongList.FormatInstrument(otherI, song)
+					Text = otherI.Name + ": " + Instrument.CalcTuningName(otherI.Tuning, otherI.CapoFret)
 				});
 			}
 			for (int i = 0; i < 2 - otherInstruments.Count(); i++) {
@@ -65,7 +65,7 @@ public partial class SongList : Control
 		}
 	}
 
-	private static List<Column> HEADINGS = new List<Column>() {
+	private static readonly List<Column> HEADINGS = new() {
 		new Column(null, null),
 		new Column("Song Name", (s) => s.SongName),
 		new Column("Artist", (s) => s.Artist),
@@ -74,7 +74,7 @@ public partial class SongList : Control
 		new Column("Length", (s) => s.Length),
 		new Column("Parts", (s) => s.GetInstrumentChars()),
 		new Column("Main", (s) => s.GetMainInstrument()?.Name),
-		new Column("Tuning", (s) => s.GetMainInstrument()?.Tuning),
+		new Column("Tuning", (s) => Instrument.CalcTuningName(s.GetMainInstrument()?.Tuning, s.GetMainInstrument()?.CapoFret)),
 		new Column("Notes", (s) => s.GetMainInstrument()?.GetNoteDensity(s)),
 		new Column("Density", (s) => s.GetMainInstrument()?.NoteCount),
 		new Column(null, null),
@@ -86,6 +86,7 @@ public partial class SongList : Control
 	private List<Row> _rows;
 	private Func<SongFile, object> _sort = (s) => s.SongName;
 	private Func<SongFile, bool> _filter = null;
+	private string _tuningFilter = null;
 
 	// TODO don't unload this
 
@@ -100,12 +101,13 @@ public partial class SongList : Control
 		grid.Columns = HEADINGS.Count;
 		foreach (var heading in HEADINGS) {
 			if (heading.Sorted) {
-				var b = new Button() {
-					Text = heading.Name
-				};
-				b.ButtonGroup = group;
-				b.ToggleMode = true;
-				grid.AddChild(b);
+                var b = new Button
+                {
+                    Text = heading.Name,
+                    ButtonGroup = group,
+                    ToggleMode = true
+                };
+                grid.AddChild(b);
 				heading.Button = b;
 			} else {
 				grid.AddChild(new Label() {
@@ -115,12 +117,13 @@ public partial class SongList : Control
 		}
 		group.Pressed += Heading_Pressed;
 
-		LoadTableRows();
-	}
+		var tuningSelect = GetNode<OptionButton>("VBoxContainer/HBoxContainer/TuningOptionButton");
+		tuningSelect.AddItem("");
+		foreach (var tuning in songList.Data.Select(x => Instrument.CalcTuningName(x.GetMainInstrument()?.Tuning)).Distinct()) {
+			tuningSelect.AddItem(tuning);
+		}
 
-	public static string FormatInstrument(SongFileInstrument instrument, SongFile song) {
-		if (instrument == null) return null;
-		return instrument.Name + ": " + instrument.Tuning;
+		LoadTableRows();
 	}
 
 	public override void _Process(double delta)
@@ -146,6 +149,13 @@ public partial class SongList : Control
 		GetTree().ChangeSceneToFile("res://StartMenu.tscn");
 	}
 
+	public void TuningSelected(int index) {
+		var tuningSelect = GetNode<OptionButton>("VBoxContainer/HBoxContainer/TuningOptionButton");
+		var record = tuningSelect.GetItemText(index);
+		_tuningFilter = record;
+		LoadTableFilter();
+	}
+
 	private void SelectedItem_LoadSong(int index) {
 		var selectedInstrument = _selectedSong.Instruments.ToArray()[index].Name;
 		var songState = SongLoader.Load(new DirectoryInfo(Path.Combine(SongFileManager.SONG_FOLDER, _selectedSong.FolderName)), selectedInstrument);
@@ -168,11 +178,19 @@ public partial class SongList : Control
 			}
 		}
 	}
+	private void LoadTableFilter() {
+		foreach (var row in _rows) {
+			var tuningEnabled = _tuningFilter == null || Instrument.CalcTuningName(row.Song.GetMainInstrument().Tuning) == _tuningFilter;
+			var enabled = _filter == null || _filter(row.Song);
+			foreach (var control in row.Controls) {
+				control.Visible = enabled && tuningEnabled;
+			}
+		}
+	}
 
 	private void Heading_Pressed(BaseButton b) {
-		var button = b as Button;
-		if (button == null) return;
-		GD.Print(button.Text);
+        if (b is not Button button) return;
+        GD.Print(button.Text);
 
 		var heading = HEADINGS.Single(x => button == x.Button);
 		_sort = heading.Sort;
@@ -183,7 +201,8 @@ public partial class SongList : Control
 	private void ResetFilter_Pressed() {
 		var textFilter = GetNode<LineEdit>("VBoxContainer/HBoxContainer/FilterLineEdit");
 		textFilter.Text = null;
-		UpdateFilter("");
+		_filter = null;
+		LoadTableFilter();
 	}
 
 	private void UpdateFilter(string filter) {
@@ -193,11 +212,6 @@ public partial class SongList : Control
 			|| x.Album.Contains(filter, StringComparison.InvariantCultureIgnoreCase);
 		};
 
-		foreach (var row in _rows) {
-			var enabled = _filter(row.Song);
-			foreach (var control in row.Controls) {
-				control.Visible = enabled;
-			}
-		}
+		LoadTableFilter();
 	}
 }

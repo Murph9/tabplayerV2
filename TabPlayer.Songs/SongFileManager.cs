@@ -51,7 +51,7 @@ public class SongFileManager
         output("Loading all songs from: " + SONG_FOLDER);
         var songDirs = Directory.EnumerateDirectories(SONG_FOLDER).Select(x => new DirectoryInfo(x)).ToList();
         
-        int total = songDirs.Count();
+        int total = songDirs.Count;
         int i = 0;
         foreach (var songDir in songDirs) {
             var file = songDir.GetFiles("*.json").FirstOrDefault();
@@ -59,7 +59,7 @@ public class SongFileManager
             
             var noteInfo = JsonConvert.DeserializeObject<SongInfo>(File.ReadAllText(file.FullName));
             output($"Reading all songs {i}/{total}. Current: {noteInfo?.Metadata?.Name}");
-            var instruments = noteInfo.Instruments.Select(x => new SongFileInstrument(x.Name, x == noteInfo.MainInstrument, x.CalcFullTuningStr(), x.Notes.Count)).ToArray();
+            var instruments = noteInfo.Instruments.Select(x => new SongFileInstrument(x.Name, x == noteInfo.MainInstrument, x.Config.Tuning, x.Notes.Count, x.Config.CapoFret)).ToArray();
             var lyrics = noteInfo.Lyrics != null ? new SongFileLyrics(noteInfo.Lyrics.Lines?.Sum(x => x.Words?.Count()) ?? 0) : null;
             songList.Data.Add(new SongFile(songDir.Name, noteInfo.Metadata.Name,
                 noteInfo.Metadata.Artist, noteInfo.Metadata.Album, noteInfo.Metadata.Year,
@@ -110,7 +110,7 @@ public record SongFile(string FolderName, string SongName, string Artist, string
     }
 }
 
-public record SongFileInstrument(string Name, bool IsMain, string Tuning, int NoteCount)
+public record SongFileInstrument(string Name, bool IsMain, short[] Tuning, int NoteCount, float CapoFret)
 {
     public float GetNoteDensity(SongFile song) {
         return this.NoteCount / song.Length;

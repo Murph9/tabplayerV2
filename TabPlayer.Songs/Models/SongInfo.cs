@@ -29,9 +29,19 @@ public class Instrument
         this.ControlData = CalcControlData(this.Notes);
     }
 
-    public string CalcTuningName()
+    public static string CalcTuningName(short[] t, float? capoFret) {
+        if (capoFret.HasValue && capoFret != 0 && capoFret != 255)
+        {
+            return CalcTuningName(t).Replace(" Standard", string.Empty) + $", Capo: {capoFret}";
+        }
+        return CalcTuningName(t);
+    }
+
+    public static string CalcTuningName(short[] t)
     {
-        var t = this.Config.Tuning;
+        if (t == null)
+            return "<unknown>";
+        
         // https://en.wikipedia.org/wiki/List_of_guitar_tunings
         if (Enumerable.SequenceEqual(t, new short[] { 1, 1, 1, 1, 1, 1 }))
             return "F Standard";
@@ -59,17 +69,6 @@ public class Instrument
             return "B Standard";
 
         return string.Join(",", t.Select((x, i) => NoteForIndexAndOffset(i, x)));
-    }
-
-
-    public string CalcFullTuningStr()
-    {
-        if (Config.CapoFret != 0 && Config.CapoFret != 255)
-        {
-            return CalcTuningName().Replace(" Standard", string.Empty) + $", Capo: {Config.CapoFret}";
-        }
-
-        return CalcTuningName();
     }
 
     private static SimulationControlData CalcControlData(IEnumerable<NoteBlock> notes)
