@@ -32,7 +32,7 @@ public class NoteGenerator {
                 var lineStartZ = DisplayConst.CalcFretPosZ(noteBlock.FretWindowStart - 1);
                 var across = new Vector3(0, 0, DisplayConst.CalcFretWidthZ(noteBlock.FretWindowStart, noteBlock.FretWindowLength));
             
-                var start =new Vector3(noteBlock.Time * config.NoteSpeed, note.StringNum * DisplayConst.STRING_DISTANCE_APART, lineStartZ);
+                var start = new Vector3(noteBlock.Time * config.NoteSpeed, note.StringNum * DisplayConst.STRING_DISTANCE_APART, lineStartZ);
                 yield return MeshGenerator.BoxLine(colour, start, start + across);
             } else {
                 // normal note

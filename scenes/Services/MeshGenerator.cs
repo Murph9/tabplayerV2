@@ -20,7 +20,7 @@ public class MeshGenerator {
         return meshObj;
     }
 
-    public static Node3D TextVertical(string text, Vector3 pos) {
+    public static Label3D TextVertical(string text, Vector3 pos) {
         return new Label3D() {
             Text = text,
             FontSize = 200,
@@ -29,7 +29,7 @@ public class MeshGenerator {
         };
     }
 
-    public static Node3D Box(Color c, Vector3 pos) {
+    public static MeshInstance3D Box(Color c, Vector3 pos) {
         var mat = new StandardMaterial3D() {
             AlbedoColor = c
         };
