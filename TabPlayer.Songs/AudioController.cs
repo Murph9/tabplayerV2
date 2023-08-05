@@ -58,8 +58,6 @@ namespace murph9.TabPlayer.Songs
             Active = false;
 
             _waveOut?.Dispose();
-            _waveStream?.Dispose();
-            _audioStream?.Dispose();
             
             GC.SuppressFinalize(this);
         }

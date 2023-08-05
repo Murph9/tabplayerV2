@@ -86,18 +86,20 @@ public partial class SongList : Control
 
 	private SongFile _selectedSong;
 
-	private List<Row> _rows;
+	private readonly List<Row> _rows;
 	private Func<SongFile, object> _sort = (s) => s.SongName;
 	private Func<SongFile, bool> _filter = null;
 	private string _tuningFilter = null;
 
 	// TODO don't unload this
 
-	public override void _Ready()
-	{
+	public SongList() {
 		var songList = SongFileManager.GetSongFileList((str) => {});
 		_rows = songList.Data.ToArray().Select(x => new Row(x, () => ItemActivated(x))).ToList();
+	}
 
+	public override void _Ready()
+	{
 		var group = new ButtonGroup();
 
 		var grid = GetNode<GridContainer>("VBoxContainer/ScrollContainer/GridContainer");
@@ -122,11 +124,12 @@ public partial class SongList : Control
 
 		var tuningSelect = GetNode<OptionButton>("VBoxContainer/HBoxContainer/TuningOptionButton");
 		tuningSelect.AddItem("");
-		foreach (var tuning in songList.Data.Select(x => Instrument.CalcTuningName(x.GetMainInstrument()?.Tuning)).Distinct()) {
+		foreach (var tuning in _rows.Select(x => Instrument.CalcTuningName(x.Song.GetMainInstrument()?.Tuning)).Distinct()) {
 			tuningSelect.AddItem(tuning);
 		}
 
 		LoadTableRows();
+		LoadTableFilter();
 	}
 
 	public override void _Process(double delta)
@@ -191,6 +194,7 @@ public partial class SongList : Control
 			}
 		}
 	}
+
 	private void LoadTableFilter() {
 		foreach (var row in _rows) {
 			var tuningEnabled = string.IsNullOrEmpty(_tuningFilter) || Instrument.CalcTuningName(row.Song.GetMainInstrument().Tuning) == _tuningFilter;
