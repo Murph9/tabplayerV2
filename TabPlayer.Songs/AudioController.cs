@@ -8,8 +8,6 @@ namespace murph9.TabPlayer.Songs
     public class AudioController : IDisposable
     {
         private readonly Stream _audioStream;
-        private readonly Thread _thread;
-        private readonly CancellationTokenSource _tokenSource;
 
         //https://github.com/naudio/NAudio/blob/master/NAudio.Core/Wave/WaveStreams/WaveStream.cs
         private readonly WaveFileReader _waveStream;
@@ -30,26 +28,17 @@ namespace murph9.TabPlayer.Songs
             _waveStream = new WaveFileReader(_audioStream);
             _waveOut = new WaveOutEvent();
             _waveOut.Init(_waveStream);
-
-            _tokenSource = new CancellationTokenSource();
-            CancellationToken token = _tokenSource.Token;
-            _thread = new Thread(() => StartSong(token))
-            {
-                IsBackground = true
-            };
+            Active = true;
         }
 
         public bool Playing() => _waveOut.PlaybackState == PlaybackState.Playing;
         public bool Paused() => _waveOut.PlaybackState == PlaybackState.Paused;
         
-        public void Start() {
-            if (!_thread.IsAlive)
-                _thread.Start();
-        }
-
         public void Play() => _waveOut.Play();
         public void Pause() => _waveOut.Pause();
         public void Stop() => _waveOut.Stop();
+
+        public bool Active { get; private set; }
         
         public void Seek(double pos) {
             pos = Math.Max(0, pos);
@@ -64,24 +53,10 @@ namespace murph9.TabPlayer.Songs
             }
         }
 
-        private void StartSong(CancellationToken token) {
-            _waveOut.Play();
-            _waveOut.Volume = 0.15f; // chill on the input volume please
-            while (_waveOut.PlaybackState != PlaybackState.Stopped) {
-                Thread.Sleep(1000);
-                
-                if (token.IsCancellationRequested) {
-                    Console.WriteLine("Music playback stopped, closing song playing thread");
-                    return;
-                }
-            }
-            Seek(0);
-            Pause();
-        }
-
         public void Dispose()
         {
-            _tokenSource.Cancel();
+            Active = false;
+
             _waveOut?.Dispose();
             _waveStream?.Dispose();
             _audioStream?.Dispose();

@@ -108,6 +108,9 @@ public partial class GuitarChart : Node3D {
 
 	public override void _Process(double delta)
 	{
+		if (!_audioController.Active)
+			return;
+
         var block = NextNoteBlock();
         if (block != null) {
             var cam = GetTree().Root.GetCamera3D();
@@ -119,6 +122,8 @@ public partial class GuitarChart : Node3D {
 
 		var newPos = new Vector3((float)_audioController.SongPosition * _songState.Instrument.Config.NoteSpeed, Position.Y, Position.Z);
 		Position = newPos;
+
+        //TODO show the notes for the next note but little
 	}
 
     private NoteBlock NextNoteBlock() {

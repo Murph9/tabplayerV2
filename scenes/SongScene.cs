@@ -97,6 +97,9 @@ public partial class SongScene : Node
 
 	public override void _Process(double delta)
 	{
+		if (!_audioController.Active)
+			return;
+
 		var nextNote = NextNoteBlock();
 
 		var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - _audioController.SongPosition, 1);
