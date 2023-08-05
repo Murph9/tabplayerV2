@@ -49,6 +49,10 @@ text = "Set Tuning:"
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 
+[node name="RandomButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Random"
+
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -59,10 +63,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="PopupMenu" type="PopupMenu" parent="."]
+[node name="PopupPanel" type="PopupPanel" parent="."]
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="Back"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/FilterLineEdit" to="." method="UpdateFilter"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/ResetFilterButton" to="." method="ResetFilter_Pressed"]
 [connection signal="item_selected" from="VBoxContainer/HBoxContainer/TuningOptionButton" to="." method="TuningSelected"]
-[connection signal="index_pressed" from="PopupMenu" to="." method="SelectedItem_LoadSong"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RandomButton" to="." method="SelectRandom"]

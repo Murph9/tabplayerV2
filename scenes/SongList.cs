@@ -135,14 +135,25 @@ public partial class SongList : Control
 
 		GD.Print(_selectedSong.SongName);
 		
-		var menu = GetNode<PopupMenu>("PopupMenu");
-		menu.Clear();
-		foreach (var i in _selectedSong.Instruments) {
-			menu.AddItem(i.Name + " | Tuning:" + i.Tuning + " | Note Count:" + i.NoteCount);
-		}
-		menu.Title = "Select the instrument to play in: " + _selectedSong.SongName;
+		var panel = GetNode<PopupPanel>("PopupPanel");
+		panel.GetChildren().ToList().ForEach(panel.RemoveChild);
 
-		menu.PopupCentered();
+		var layout = new VBoxContainer();
+		panel.AddChild(layout);
+
+		layout.AddChild(new Label() {
+			Text = $"Select an instrument for: {selectedSong.SongName} by {selectedSong.Artist}"
+		});
+
+		foreach (var i in _selectedSong.Instruments) {
+			var b = new Button() {
+				Text = i.Name + " | Tuning:" + Instrument.CalcTuningName(i.Tuning, i.CapoFret) + " | Note Count:" + i.NoteCount
+			};
+			b.Pressed += () => SelectedItem_LoadSong(i.Name);
+			layout.AddChild(b);
+		}
+
+		panel.PopupCentered();
 	}
 
 	public void Back() {
@@ -156,9 +167,8 @@ public partial class SongList : Control
 		LoadTableFilter();
 	}
 
-	private void SelectedItem_LoadSong(int index) {
-		var selectedInstrument = _selectedSong.Instruments.ToArray()[index].Name;
-		var songState = SongLoader.Load(new DirectoryInfo(Path.Combine(SongFileManager.SONG_FOLDER, _selectedSong.FolderName)), selectedInstrument);
+	private void SelectedItem_LoadSong(string name) {
+		var songState = SongLoader.Load(new DirectoryInfo(Path.Combine(SongFileManager.SONG_FOLDER, _selectedSong.FolderName)), name);
 
 		PackedScene packedScene = ResourceLoader.Load<PackedScene>("res://scenes/SongScene.tscn");
 		var scene = packedScene.Instantiate<SongScene>();
@@ -213,5 +223,16 @@ public partial class SongList : Control
 		};
 
 		LoadTableFilter();
+	}
+
+	public void SelectRandom() {
+		var validSongs = _rows.Where(x => x.Controls.Any(x => x.Visible)).ToArray();
+		if (!validSongs.Any()) 
+			return;
+
+		var index = new Random().NextInt64(0, validSongs.Length);
+		var song = validSongs[index];
+		
+		ItemActivated(song.Song);
 	}
 }
