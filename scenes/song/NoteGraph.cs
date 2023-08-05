@@ -1,6 +1,8 @@
 using Godot;
 using murph9.TabPlayer.Songs;
 
+namespace murph9.TabPlayer.scenes.song;
+
 public partial class NoteGraph : Node {
     
     private const float BUCKET_SIZE = 3;

@@ -15,7 +15,7 @@ namespace WEMSharp
         private uint _payloadBytes;
         private bool _first = true;
         private bool _continued;
-        private byte[] _pageBuffer = new byte[HEADER_SIZE + MAX_SEGMENTS + SEGMENT_SIZE * MAX_SEGMENTS];
+        private readonly byte[] _pageBuffer = new byte[HEADER_SIZE + MAX_SEGMENTS + SEGMENT_SIZE * MAX_SEGMENTS];
         private uint _granule;
         private uint _sequenceNumber;
 

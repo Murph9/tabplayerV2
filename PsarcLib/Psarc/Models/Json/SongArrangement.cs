@@ -125,7 +125,7 @@ namespace Rocksmith2014PsarcLib.Psarc.Models.Json
                 [Serializable]
                 public class ToneGear
                 {
-                    [JsonProperty("Type")]
+                    [JsonProperty(nameof(Type))]
                     public string Type { get; set; }
                     public string Key { get; set; }
                     public string Category { get; set; }

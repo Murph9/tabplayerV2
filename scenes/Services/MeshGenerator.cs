@@ -1,5 +1,7 @@
 using Godot;
 
+namespace murph9.TabPlayer.scenes.Services;
+
 public class MeshGenerator {
     
     public static MeshInstance3D BoxLine(Color c, Vector3 start, Vector3 end) {

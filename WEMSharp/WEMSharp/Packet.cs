@@ -3,12 +3,12 @@ using System.IO;
 
 namespace WEMSharp
 {
-    internal struct Packet
+    internal readonly struct Packet
     {
-        private uint _offset;
-        private ushort _size;
-        private uint _absoluteGranule;
-        private bool _noGranule;
+        private readonly uint _offset;
+        private readonly ushort _size;
+        private readonly uint _absoluteGranule;
+        private readonly bool _noGranule;
 
         internal Packet(Stream stream, uint offset, bool noGranule = false)
         {

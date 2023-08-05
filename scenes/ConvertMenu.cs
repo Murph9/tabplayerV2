@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+namespace murph9.TabPlayer.scenes;
+
 public partial class ConvertMenu : Node2D
 {
 	private bool _recreate;

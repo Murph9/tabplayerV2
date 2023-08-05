@@ -1,5 +1,8 @@
 using Godot;
+using murph9.TabPlayer.scenes.Services;
 using murph9.TabPlayer.Songs.Models;
+
+namespace murph9.TabPlayer.scenes.song;
 
 public partial class SongChart : Node3D {
     

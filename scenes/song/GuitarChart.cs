@@ -1,6 +1,9 @@
 using Godot;
+using murph9.TabPlayer.scenes.Services;
 using murph9.TabPlayer.Songs;
 using murph9.TabPlayer.Songs.Models;
+
+namespace murph9.TabPlayer.scenes.song;
 
 public partial class GuitarChart : Node3D {
     private const float CAM_MOVE_SPEED = 0.2f;

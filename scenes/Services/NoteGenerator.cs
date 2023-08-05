@@ -1,6 +1,8 @@
 using Godot;
 using murph9.TabPlayer.Songs.Models;
 
+namespace murph9.TabPlayer.scenes.Services;
+
 public class NoteGenerator {
     public static Node3D GetBasicNote(SingleNote note, InstrumentConfig config, NoteBlock noteBlock) {
         var notePosZ = DisplayConst.CalcInFretPosZ(note.FretNum);

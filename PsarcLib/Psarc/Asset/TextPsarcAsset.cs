@@ -29,10 +29,8 @@ namespace Rocksmith2014PsarcLib.Psarc.Asset
 
         public override void ReadFrom(MemoryStream stream)
         {
-            using (var reader = new StreamReader(stream))
-            {
-                Text = reader.ReadToEnd();
-            }
+            using var reader = new StreamReader(stream);
+            Text = reader.ReadToEnd();
         }
     }
 }

@@ -70,7 +70,7 @@ namespace Rocksmith2014PsarcLib.Psarc
         /// </summary>
         /// <param name="zipped"></param>
         /// <returns></returns>
-        private byte[] UnzipBlock(byte[] zipped)
+        private static byte[] UnzipBlock(byte[] zipped)
         {
             using var inStream = new MemoryStream(zipped);
             using var zOutputStream = new InflaterInputStream(inStream);
@@ -219,10 +219,7 @@ namespace Rocksmith2014PsarcLib.Psarc
         {
             string artPath = $"gfxassets/album_art/{attr.AlbumArt.Substring(14)}_256.dds";
 
-            var entry = TOC.Entries.FirstOrDefault(a => a.Path == artPath);
-
-            if (entry == null) throw new KeyNotFoundException();
-
+            var entry = TOC.Entries.FirstOrDefault(a => a.Path == artPath) ?? throw new KeyNotFoundException();
             return InflateEntry<DdsAsset>(entry);
         }
 

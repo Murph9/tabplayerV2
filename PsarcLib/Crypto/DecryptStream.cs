@@ -29,7 +29,7 @@ namespace Rocksmith2014PsarcLib.Crypto
             0xBB, 0x4C, 0xEB, 0x42
         };
 
-        public static byte[] SngKeyPC = new byte[32]
+        public static readonly byte[] SngKeyPC = new byte[32]
         {
             0xCB, 0x64, 0x8D, 0xF3, 0xD1, 0x2A, 0x16, 0xBF,
             0x71, 0x70, 0x14, 0x14, 0xE6, 0x96, 0x19, 0xEC,
@@ -37,7 +37,7 @@ namespace Rocksmith2014PsarcLib.Crypto
             0x59, 0xDE, 0x7A, 0xDD, 0xA1, 0x8A, 0x3A, 0x30
         };
 
-        public static byte[] PCMetaDatKey = new byte[32]
+        public static readonly byte[] PCMetaDatKey = new byte[32]
         {
             0x5F, 0xB0, 0x23, 0xEF, 0x19, 0xD5, 0xDC, 0x37,
             0xAD, 0xDA, 0xC8, 0xF0, 0x17, 0xF8, 0x8F, 0x0E,
@@ -87,24 +87,22 @@ namespace Rocksmith2014PsarcLib.Crypto
                 decryptor.IV = new byte[16];
                 decryptor.Key = PsarcKey;
 
-                using (var decryptStream = new CryptoStream(_decryptedStream, decryptor.CreateDecryptor(), CryptoStreamMode.Write))
+                using var decryptStream = new CryptoStream(_decryptedStream, decryptor.CreateDecryptor(), CryptoStreamMode.Write);
+                var buffer = new byte[512];
+                var pad = buffer.Length - (int)(length % buffer.Length);
+
+                while (input.Position < length)
                 {
-                    var buffer = new byte[512];
-                    var pad = buffer.Length - (int)(length % buffer.Length);
-
-                    while (input.Position < length)
-                    {
-                        var size = (int)Math.Min(length - input.Position, buffer.Length);
-                        input.Read(buffer, 0, size);
-                        decryptStream.Write(buffer, 0, size);
-                    }
-
-                    if (pad > 0)
-                        decryptStream.Write(new byte[pad], 0, pad);
-
-                    decryptStream.Flush();
-                    _decryptedStream = new MemoryStream(_decryptedStream.ToArray());
+                    var size = (int)Math.Min(length - input.Position, buffer.Length);
+                    input.Read(buffer, 0, size);
+                    decryptStream.Write(buffer, 0, size);
                 }
+
+                if (pad > 0)
+                    decryptStream.Write(new byte[pad], 0, pad);
+
+                decryptStream.Flush();
+                _decryptedStream = new MemoryStream(_decryptedStream.ToArray());
             }
 
             Reader = new BinaryReader(_decryptedStream);

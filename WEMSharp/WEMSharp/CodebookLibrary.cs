@@ -7,28 +7,27 @@ namespace WEMSharp
 {
     internal class CodebookLibrary
     {
+        private readonly byte[] _codebookData;
+        private readonly uint[] _codebookOffsets;
+        
         public uint CodebookCount { get; private set; }
-        private byte[] _codebookData;
-        private uint[] _codebookOffsets;
 
         internal CodebookLibrary()
         {
-            using (BinaryReader br = new BinaryReader(new MemoryStream(CodeBook.codebook)))
+            using var br = new BinaryReader(new MemoryStream(CodeBook.codebook));
+            br.BaseStream.Seek(br.BaseStream.Length - 4, SeekOrigin.Begin);
+
+            uint offsetOffset = br.ReadUInt32();
+            CodebookCount = (uint)(br.BaseStream.Length - offsetOffset) / 4;
+            _codebookOffsets = new uint[CodebookCount];
+
+            br.BaseStream.Seek(0, SeekOrigin.Begin);
+
+            _codebookData = br.ReadBytes((int)offsetOffset);
+
+            for (int i = 0; i < CodebookCount; i++)
             {
-                br.BaseStream.Seek(br.BaseStream.Length - 4, SeekOrigin.Begin);
-
-                uint offsetOffset = br.ReadUInt32();
-                CodebookCount = (uint)(br.BaseStream.Length - offsetOffset) / 4;
-                _codebookOffsets = new uint[CodebookCount];
-
-                br.BaseStream.Seek(0, SeekOrigin.Begin);
-
-                _codebookData = br.ReadBytes((int)offsetOffset);
-
-                for (int i = 0; i < this.CodebookCount; i++)
-                {
-                    _codebookOffsets[i] = br.ReadUInt32();
-                }
+                _codebookOffsets[i] = br.ReadUInt32();
             }
         }
 
@@ -259,7 +258,7 @@ namespace WEMSharp
         }
 
         //https://xiph.org/vorbis/doc/Vorbis_I_spec.pdf#subsubsection.9.2.1
-        private uint ILog(uint value)
+        private static uint ILog(uint value)
         {
             uint ret = 0;
 

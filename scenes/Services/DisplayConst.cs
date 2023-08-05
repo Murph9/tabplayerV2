@@ -1,5 +1,7 @@
 using Godot;
 
+namespace murph9.TabPlayer.scenes.Services;
+
 public class DisplayConst
 {
     private static Dictionary<int, Color> colourMap = new Dictionary<int, Color>()

@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+namespace murph9.TabPlayer.scenes;
+
 public partial class InfoPage : Node
 {
 	// Called when the node enters the scene tree for the first time.

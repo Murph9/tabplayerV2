@@ -12,15 +12,11 @@ namespace Rocksmith2014PsarcLib.Psarc.Asset
         {
             base.ReadFrom(stream);
 
-            using (var reader = new StreamReader(stream))
-            {
-                using (var jsonReader = new JsonTextReader(reader))
-                {
-                    var serializer = new JsonSerializer();
+            using var reader = new StreamReader(stream);
+            using var jsonReader = new JsonTextReader(reader);
+            var serializer = new JsonSerializer();
 
-                    JsonObject = serializer.Deserialize<JObject>(jsonReader);
-                }
-            }
+            JsonObject = serializer.Deserialize<JObject>(jsonReader);
         }
     }
 }

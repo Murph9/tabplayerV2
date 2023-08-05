@@ -7,7 +7,7 @@ namespace WEMSharp
     /// </summary>
     internal class BitStream
     {
-        private Stream _stream;
+        private readonly Stream _stream;
         private byte _bitBuffer;
         private int _bitsLeft;
         internal ulong TotalBitsRead { get; private set; }

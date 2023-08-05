@@ -1,3 +1,5 @@
+namespace murph9.TabPlayer.scenes.Services;
+
 public static class NumberHelper {
     public static string ToMinSec(this float value, bool frac = false) {
         return ((double)value).ToMinSec(frac);

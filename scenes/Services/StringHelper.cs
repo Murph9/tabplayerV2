@@ -1,3 +1,5 @@
+namespace murph9.TabPlayer.scenes.Services;
+
 public static class StringHelper
 {
     public static string FixedWidthString(this string str, int length) {

@@ -3,11 +3,11 @@ using System.IO;
 
 namespace WEMSharp
 {
-    internal struct Packet8
+    internal readonly struct Packet8
     {
-        private uint _offset;
-        private uint _size;
-        private uint _absoluteGranule;
+        private readonly uint _offset;
+        private readonly uint _size;
+        private readonly uint _absoluteGranule;
 
         internal Packet8(Stream stream, uint offset)
         {
@@ -26,11 +26,8 @@ namespace WEMSharp
             _absoluteGranule = BitConverter.ToUInt32(granuleBuffer, 0);
         }
 
-        internal uint GetHeaderSize()
-        {
-            return 8;
-        }
-
+        internal uint GetHeaderSize() => 8;
+        
         internal uint GetOffset()
         {
             return GetHeaderSize() + _offset;
