@@ -190,7 +190,7 @@ public partial class SongList : Control
 	}
 	private void LoadTableFilter() {
 		foreach (var row in _rows) {
-			var tuningEnabled = _tuningFilter == null || Instrument.CalcTuningName(row.Song.GetMainInstrument().Tuning) == _tuningFilter;
+			var tuningEnabled = string.IsNullOrEmpty(_tuningFilter) || Instrument.CalcTuningName(row.Song.GetMainInstrument().Tuning) == _tuningFilter;
 			var enabled = _filter == null || _filter(row.Song);
 			foreach (var control in row.Controls) {
 				control.Visible = enabled && tuningEnabled;
