@@ -55,8 +55,8 @@ public partial class SongScene : Node
 			Skip10Sec();
 		} else if (@event.IsActionPressed("song_skip_backward_10")) {
 			Back10Sec();
-		} else if (@event.IsActionPressed("song_skip_to_first")) {
-			SkipToFirst();
+		} else if (@event.IsActionPressed("song_skip_to_next")) {
+			SkipToNext();
 		} else if (@event.IsActionPressed("song_restart")) {
 			RestartSong();
 		}
@@ -64,9 +64,11 @@ public partial class SongScene : Node
 
 	public void Skip10Sec() => _audioController.Seek(_audioController.SongPosition + 10);
 	public void Back10Sec() => _audioController.Seek(_audioController.SongPosition - 10);
-	public void SkipToFirst() {
-		var first = _state.Instrument.Notes.First();
-		_audioController.Seek(first.Time - 1.5f);
+	public void SkipToNext() {
+		var nextNote = NextNoteBlock();
+		if (nextNote == null)
+			return;
+		_audioController.Seek(nextNote.Time - 1.5f);
 	}
 	public void RestartSong() => _audioController.Seek(0);
 

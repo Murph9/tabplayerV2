@@ -70,11 +70,11 @@ text = "[Esc] or [Space]
 "
 label_settings = SubResource("LabelSettings_42vc3")
 
-[node name="SkipToStartButton" type="Button" parent="GridContainer"]
+[node name="SkipToNextButton" type="Button" parent="GridContainer"]
 layout_mode = 2
-text = "Skip to First Note"
+text = "Skip to Next Note"
 
-[node name="SkipToStartLabel" type="Label" parent="GridContainer"]
+[node name="SkipToNextLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
 text = "[F]
 "
@@ -117,7 +117,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = 96.0
+offset_right = 99.0
 offset_bottom = 96.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -131,7 +131,7 @@ layout_mode = 2
 text = "Leave Song"
 
 [connection signal="pressed" from="GridContainer/PauseButton" to="." method="Pause"]
-[connection signal="pressed" from="GridContainer/SkipToStartButton" to="." method="SkipToFirst"]
+[connection signal="pressed" from="GridContainer/SkipToNextButton" to="." method="SkipToNext"]
 [connection signal="pressed" from="GridContainer/RestartSongButton" to="." method="RestartSong"]
 [connection signal="pressed" from="GridContainer/SkipForwardButton" to="." method="Skip10Sec"]
 [connection signal="pressed" from="GridContainer/SkipBackwardButton" to="." method="Back10Sec"]
