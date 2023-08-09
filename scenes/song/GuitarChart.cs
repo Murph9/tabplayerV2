@@ -139,7 +139,7 @@ public partial class GuitarChart : Node3D {
             foreach (var n in block.Notes) {
                 // .2 so we can see the open notes
                 var note = NoteGenerator.GetBasicNote(n, config, 0.2f/config.NoteSpeed, _lastNoteBlock.FretWindowStart, _lastNoteBlock.FretWindowLength);
-                note.Scale *= 0.6f; // TODO fix open notes
+                // TODO scale with open notes working
                 _lastNoteBlockNode.AddChild(note);
             }
         }
