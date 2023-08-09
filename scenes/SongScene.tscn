@@ -128,7 +128,7 @@ text = "Resume"
 
 [node name="QuitButton" type="Button" parent="PopupPanel/VBoxContainer"]
 layout_mode = 2
-text = "Quit"
+text = "Leave Song"
 
 [connection signal="pressed" from="GridContainer/PauseButton" to="." method="Pause"]
 [connection signal="pressed" from="GridContainer/SkipToStartButton" to="." method="SkipToFirst"]

@@ -4,17 +4,17 @@ using murph9.TabPlayer.Songs.Models;
 namespace murph9.TabPlayer.scenes.Services;
 
 public class NoteGenerator {
-    public static Node3D GetBasicNote(SingleNote note, InstrumentConfig config, NoteBlock noteBlock) {
+    public static Node3D GetBasicNote(SingleNote note, InstrumentConfig config, float time, int fretWindowStart, int fretWindowLength) {
         var notePosZ = DisplayConst.CalcInFretPosZ(note.FretNum);
-        var notePos = new Vector3(noteBlock.Time * config.NoteSpeed, note.StringNum * DisplayConst.STRING_DISTANCE_APART, notePosZ);
+        var notePos = new Vector3(time * config.NoteSpeed, note.StringNum * DisplayConst.STRING_DISTANCE_APART, notePosZ);
 
         var colour = note.StringNum != 255 ? DisplayConst.GetColorFromString(note.StringNum) : Colors.HotPink;
         
         if (note.FretNum == 0) {
             // open note
-            var lineStartZ = DisplayConst.CalcFretPosZ(noteBlock.FretWindowStart-1);
-            var across = new Vector3(0, 0, DisplayConst.CalcFretWidthZ(noteBlock.FretWindowStart, noteBlock.FretWindowLength));
-            var lineStart = new Vector3(noteBlock.Time * config.NoteSpeed, note.StringNum * DisplayConst.STRING_DISTANCE_APART, -lineStartZ);
+            var lineStartZ = DisplayConst.CalcFretPosZ(fretWindowStart - 1);
+            var across = new Vector3(0, 0, DisplayConst.CalcFretWidthZ(fretWindowStart, fretWindowLength));
+            var lineStart = new Vector3(time * config.NoteSpeed, note.StringNum * DisplayConst.STRING_DISTANCE_APART, lineStartZ);
 
             return MeshGenerator.BoxLine(colour, lineStart, lineStart + across);
         }

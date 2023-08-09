@@ -10,6 +10,9 @@ public partial class GuitarChart : Node3D {
 
     private SongState _songState;
     private AudioController _audioController;
+    
+    private NoteBlock _lastNoteBlock;
+    private Node3D _lastNoteBlockNode;
 
     public void _init(SongState songState, AudioController audio) {
         _songState = songState;
@@ -123,7 +126,23 @@ public partial class GuitarChart : Node3D {
 		var newPos = new Vector3((float)_audioController.SongPosition * _songState.Instrument.Config.NoteSpeed, Position.Y, Position.Z);
 		Position = newPos;
 
-        //TODO show the notes for the next note but little
+        if (block?.Time != _lastNoteBlock?.Time) { // diff notes i hope
+            _lastNoteBlock = block;
+
+            _lastNoteBlockNode?.QueueFree();
+            if (block == null) return;
+
+            _lastNoteBlockNode = new Node3D();
+            AddChild(_lastNoteBlockNode);
+
+            var config = _songState.Instrument.Config;
+            foreach (var n in block.Notes) {
+                // .2 so we can see the open notes
+                var note = NoteGenerator.GetBasicNote(n, config, 0.2f/config.NoteSpeed, _lastNoteBlock.FretWindowStart, _lastNoteBlock.FretWindowLength);
+                note.Scale *= 0.6f; // TODO fix open notes
+                _lastNoteBlockNode.AddChild(note);
+            }
+        }
 	}
 
     private NoteBlock NextNoteBlock() {
