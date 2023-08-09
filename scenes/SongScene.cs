@@ -13,6 +13,9 @@ public partial class SongScene : Node
 	private SongState _state;
 	private AudioController _audioController;
 
+	[Signal]
+	public delegate void ClosedEventHandler();
+
 	public void _init(SongState state) {
 		_state = state;
 
@@ -35,11 +38,10 @@ public partial class SongScene : Node
 
 	public void Quit() {
 		_audioController?.Stop();
-		_audioController?.Dispose();
-		GetTree().ChangeSceneToFile("res://scenes/SongList.tscn");
+		_audioController?.Dispose();		
+		Pause(); // prevent errors in final update frame
 		
-		this.Pause(); // prevent errors in final update frame (or free audio controller later?)
-		QueueFree();
+		EmitSignal(SignalName.Closed);
 	}
 
 	public override void _Input(InputEvent @event) {

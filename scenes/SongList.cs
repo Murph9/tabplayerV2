@@ -91,7 +91,10 @@ public partial class SongList : Control
 	private Func<SongFile, bool> _filter = null;
 	private string _tuningFilter = null;
 
-	// TODO don't unload this
+	[Signal]
+	public delegate void ClosedEventHandler();
+	[Signal]
+	public delegate void OpenedSongEventHandler(string folder, string instrument);
 
 	public SongList() {
 		var songList = SongFileManager.GetSongFileList((str) => {});
@@ -163,7 +166,7 @@ public partial class SongList : Control
 	}
 
 	public void Back() {
-		GetTree().ChangeSceneToFile("res://StartMenu.tscn");
+		EmitSignal(SignalName.Closed);
 	}
 
 	public void TuningSelected(int index) {
@@ -174,14 +177,8 @@ public partial class SongList : Control
 	}
 
 	private void SelectedItem_LoadSong(string name) {
-		var songState = SongLoader.Load(new DirectoryInfo(Path.Combine(SongFileManager.SONG_FOLDER, _selectedSong.FolderName)), name);
-
-		PackedScene packedScene = ResourceLoader.Load<PackedScene>("res://scenes/SongScene.tscn");
-		var scene = packedScene.Instantiate<SongScene>();
-		scene._init(songState);
-		
-		GetTree().Root.AddChild(scene);
-		QueueFree();
+		var dir = new DirectoryInfo(Path.Combine(SongFileManager.SONG_FOLDER, _selectedSong.FolderName));
+		EmitSignal(SignalName.OpenedSong, dir.FullName, name);
 	}
 
 	private void LoadTableRows() {

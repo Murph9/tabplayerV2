@@ -6,19 +6,22 @@ namespace murph9.TabPlayer;
 
 public partial class StartMenu : Node
 {
-	// Called when the node enters the scene tree for the first time.
+	[Signal]
+	public delegate void ClosedEventHandler();
+	[Signal]
+	public delegate void SongListOpenedEventHandler();
+
 	public override void _Ready()
 	{
 		
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
 	}
 
 	public void StartButton_Pressed() {
-		GetTree().ChangeSceneToFile("res://scenes/SongList.tscn");
+		EmitSignal(SignalName.SongListOpened);
 	}
 
 	public void InfoButton_Pressed() {
@@ -30,10 +33,10 @@ public partial class StartMenu : Node
 	}
 
 	public void ReloadButton_Pressed() {
-		SongFileManager.GetSongFileList((str) => GD.Print(str), true);
+		SongFileManager.GetSongFileList(GD.Print, true);
 	}
 
 	public void QuitButton_Pressed() {
-		GetTree().Quit();
+		EmitSignal(SignalName.Closed);
 	}
 }
