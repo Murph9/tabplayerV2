@@ -16,13 +16,14 @@ public class SongFileManager
         PLAY_DATA_FILE = Path.Combine(SONG_FOLDER, "playData.json");
     }
 
-    private static void EnsureConfigExists() {
+    private static FileStream EnsureConfigExists() {
         var dir = new DirectoryInfo(SONG_FOLDER);
         if (!dir.Exists)
             dir.Create();
 
         if (!File.Exists(PLAY_DATA_FILE))
-            File.Create(PLAY_DATA_FILE);
+            return File.Create(PLAY_DATA_FILE);
+        return new FileStream(PLAY_DATA_FILE, FileMode.Open);
     }
 
     public static DirectoryInfo GetOrCreateSongFolder(SongInfo info) {
@@ -38,10 +39,11 @@ public class SongFileManager
     }
 
     public static SongFileList GetSongFileList(Action<string> output, bool update = false) {
-        EnsureConfigExists();
-
         if (!update) {
-            string result = File.ReadAllText(PLAY_DATA_FILE);
+            var configFile = EnsureConfigExists();
+
+            using var sr = new StreamReader(configFile);
+            string result = sr.ReadToEnd();
             output("Reading existing song file from: " + result);
             
             return JsonConvert.DeserializeObject<SongFileList>(result) ?? new SongFileList();

@@ -133,6 +133,14 @@ public partial class SongList : Control
 
 		LoadTableRows();
 		LoadTableFilter();
+
+		if (!_rows.Any()) {
+			var label = new Label() {
+				Text = "No songs found :(, please convert some at the main menu"
+			};
+			grid.AddSibling(label);
+			grid.Visible = false;
+		}
 	}
 
 	public override void _Process(double delta)
