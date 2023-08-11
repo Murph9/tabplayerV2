@@ -14,6 +14,8 @@ public partial class StartMenu : Node
 	public delegate void ConvertMenuOpenedEventHandler();
 	[Signal]
 	public delegate void InfoMenuOpenedEventHandler();
+	[Signal]
+	public delegate void SongListChangedEventHandler();
 
 	public override void _Ready() { }
 
@@ -34,6 +36,7 @@ public partial class StartMenu : Node
 	public void ReloadButton_Pressed() {
 		// TODO cleanup so that there is UI progress
 		SongFileManager.GetSongFileList(GD.Print, true);
+		EmitSignal(SignalName.SongListChanged);
 	}
 
 	public void QuitButton_Pressed() {

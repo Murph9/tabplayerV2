@@ -14,8 +14,6 @@ public partial class ConvertMenu : Node2D
 
 	[Signal]
 	public delegate void ClosedEventHandler();
-	[Signal]
-	public delegate void SongListChangedEventHandler();
 	
 	public override void _Ready() { }
 

@@ -3,7 +3,7 @@ TabPlayer using Godot and C#
 Yay
 
 
-## How to create a new c# and attach it project
+## How to create a new c# and attach the project
 
 ```
 dotnet new classlib -o TabPlayer.SomeImportantStuff

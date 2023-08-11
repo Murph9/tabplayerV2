@@ -11,25 +11,11 @@ public partial class MainScene : Node
 
 	private StartMenu _startMenu;
 	private SongList _songList;
-	private ConvertMenu _convertMenu;
 
 	public override void _Ready()
 	{
 		LoadStartMenu();
 		LoadSongList();
-
-		_convertMenu = GD.Load<PackedScene>("res://scenes/ConvertMenu.tscn").Instantiate<ConvertMenu>();
-		_convertMenu.SongListChanged += () => {
-			var loaded = _songList.IsVisibleInTree();
-			if (loaded) {
-				_songList.QueueFree();
-			}
-			LoadSongList();
-
-			if (loaded) {
-				AddChild(_songList);
-			}
-		};
 	}
 	
 	private void LoadStartMenu() {
@@ -43,6 +29,17 @@ public partial class MainScene : Node
 		_startMenu.SongListOpened += () => {
 			RemoveChild(_startMenu);
 			AddChild(_songList);
+		};
+		_startMenu.SongListChanged += () => {
+			var loaded = _songList.IsVisibleInTree();
+			if (loaded) {
+				_songList.QueueFree();
+			}
+			LoadSongList();
+
+			if (loaded) {
+				AddChild(_songList);
+			}
 		};
 		_startMenu.ConvertMenuOpened += () => {
 			var convertMenu = GD.Load<PackedScene>("res://scenes/ConvertMenu.tscn").Instantiate<ConvertMenu>();
