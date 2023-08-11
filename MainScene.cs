@@ -25,6 +25,24 @@ public partial class MainScene : Node
 			RemoveChild(_startMenu);
 			AddChild(_songList);
 		};
+		_startMenu.ConvertMenuOpened += () => {
+			var convertMenu = GD.Load<PackedScene>("res://scenes/ConvertMenu.tscn").Instantiate<ConvertMenu>();
+			RemoveChild(_startMenu);
+			convertMenu.Closed += () => {
+				RemoveChild(convertMenu);
+				AddChild(_startMenu);
+			};
+			AddChild(convertMenu);
+		};
+		_startMenu.InfoMenuOpened += () => {
+			var infoMenu = GD.Load<PackedScene>("res://scenes/InfoPage.tscn").Instantiate<InfoPage>();
+			RemoveChild(_startMenu);
+			infoMenu.Closed += () => {
+				RemoveChild(infoMenu);
+				AddChild(_startMenu);
+			};
+			AddChild(infoMenu);
+		};
 
 		_songList = GD.Load<PackedScene>("res://scenes/SongList.tscn").Instantiate<SongList>();
 		_songList.Closed += () => {

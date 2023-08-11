@@ -12,15 +12,12 @@ public partial class ConvertMenu : Node2D
 {
 	private bool _recreate;
 
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
-	}
+	[Signal]
+	public delegate void ClosedEventHandler();
+	
+	public override void _Ready() { }
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
+	public override void _Process(double delta) { }
 
 	public void Recreate_Toggled(bool state) => _recreate = state;
 
@@ -66,6 +63,6 @@ public partial class ConvertMenu : Node2D
 	}
 
 	public void BackButton_Pressed() {
-		GetTree().ChangeSceneToFile("res://StartMenu.tscn");
+		EmitSignal(SignalName.Closed);
 	}
 }

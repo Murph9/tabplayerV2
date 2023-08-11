@@ -10,29 +10,29 @@ public partial class StartMenu : Node
 	public delegate void ClosedEventHandler();
 	[Signal]
 	public delegate void SongListOpenedEventHandler();
+	[Signal]
+	public delegate void ConvertMenuOpenedEventHandler();
+	[Signal]
+	public delegate void InfoMenuOpenedEventHandler();
 
-	public override void _Ready()
-	{
-		
-	}
+	public override void _Ready() { }
 
-	public override void _Process(double delta)
-	{
-	}
+	public override void _Process(double delta) { }
 
 	public void StartButton_Pressed() {
 		EmitSignal(SignalName.SongListOpened);
 	}
 
 	public void InfoButton_Pressed() {
-		GetTree().ChangeSceneToFile("res://scenes/InfoPage.tscn");
+		EmitSignal(SignalName.InfoMenuOpened);
 	}
 
 	public void ConvertButton_Pressed() {
-		GetTree().ChangeSceneToFile("res://scenes/ConvertMenu.tscn");
+		EmitSignal(SignalName.ConvertMenuOpened);
 	}
 
 	public void ReloadButton_Pressed() {
+		// TODO cleanup so that there is UI progress
 		SongFileManager.GetSongFileList(GD.Print, true);
 	}
 
