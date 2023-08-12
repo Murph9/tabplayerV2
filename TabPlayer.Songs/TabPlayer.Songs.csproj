@@ -9,14 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NAudio.Core" Version="2.1.0" />
-    <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
-    <PackageReference Include="NAudio.WinMM" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WEMSharp\WEMSharp\WEMSharp.csproj" />
     <ProjectReference Include="..\PsarcLib\Rocksmith2014PsarcLib.csproj" />
+    <ProjectReference Include="..\revorbstd\RevorbStd.csproj" />
   </ItemGroup>
 </Project>

@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEMSharp", "WEMSharp\WEMSha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocksmith2014PsarcLib", "PsarcLib\Rocksmith2014PsarcLib.csproj", "{BC92D049-3F3E-436D-A781-113684E819A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RevorbStd", "revorbstd\RevorbStd.csproj", "{77418FBE-C36B-45C1-A01F-58A5350ED2C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,12 @@ Global
 		{BC92D049-3F3E-436D-A781-113684E819A9}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
 		{BC92D049-3F3E-436D-A781-113684E819A9}.ExportRelease|Any CPU.ActiveCfg = Debug|Any CPU
 		{BC92D049-3F3E-436D-A781-113684E819A9}.ExportRelease|Any CPU.Build.0 = Debug|Any CPU
+		{77418FBE-C36B-45C1-A01F-58A5350ED2C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77418FBE-C36B-45C1-A01F-58A5350ED2C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77418FBE-C36B-45C1-A01F-58A5350ED2C6}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77418FBE-C36B-45C1-A01F-58A5350ED2C6}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
+		{77418FBE-C36B-45C1-A01F-58A5350ED2C6}.ExportRelease|Any CPU.ActiveCfg = Debug|Any CPU
+		{77418FBE-C36B-45C1-A01F-58A5350ED2C6}.ExportRelease|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{37300E67-62F5-4B57-BF41-B28454D12973} = {F85E8002-39E0-4538-A100-DB3947CC150F}

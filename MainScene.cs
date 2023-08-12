@@ -58,7 +58,7 @@ public partial class MainScene : Node
 				AddChild(_startMenu);
 			};
 			AddChild(infoMenu);
-		};
+        };
 	}
 
 	private void LoadSongList() {
