@@ -1,5 +1,3 @@
-using NAudio.Vorbis;
-using NAudio.Wave;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -9,14 +7,8 @@ using System.Threading.Tasks;
 
 namespace murph9.TabPlayer.Songs.Convert;
 
-internal class AudioConverter
+public class AudioConverter
 {
-    public static void ConvertOggToWav(FileInfo oggFile, Stream stream)
-    {
-        using var vorbisStream = new VorbisWaveReader(oggFile.FullName);
-        WaveFileWriter.WriteWavFileToStream(stream, vorbisStream);
-    }
-
     public static string ConvertWemToOgg(string file, bool forceConvert = false)
     {
         var outputFile = Path.Join(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file)) + ".ogg";
@@ -30,36 +22,17 @@ internal class AudioConverter
         {
 		    using var fileS = File.Open(file, FileMode.Open);
             var wemClass = new WEMSharp.WEMFile(fileS, WEMSharp.WEMForcePacketFormat.NoForcePacketFormat);
-            using var outS = File.Open(outputFile, FileMode.Create);
+            using var outS = new MemoryStream();
 			wemClass.GenerateOGG(outS, false, false);
-		} catch (Exception) {
-			throw new Exception($"We have failed to convert {outputFile}");
+            outS.Seek(0, SeekOrigin.Begin);
+
+            using var outFile = File.Open(outputFile, FileMode.Create);
+            var revorb = RevorbStd.Revorb.Jiggle(outS);
+            revorb.CopyTo(outFile);
+		} catch (Exception e) {
+            Console.WriteLine(e);
+            throw;
 		}
         return outputFile;
     }
-
-/* TODO discuss this
-    private static async Task<bool> Revorb(string file)
-    {
-        var p = new Process
-        {
-            StartInfo =
-                    {
-                        FileName = "revorb.exe",
-                        Arguments = $"\"{file}\"",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        CreateNoWindow = true
-                    }
-        };
-        p.Start();
-        await p.WaitForExitAsync();
-        if (p.ExitCode != 0)
-        {
-            var output = p.StandardOutput.ReadToEnd();
-            return false;
-        }
-        return true;
-    }
-*/
 }

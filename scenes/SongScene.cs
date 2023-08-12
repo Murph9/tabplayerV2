@@ -8,37 +8,69 @@ using System.IO;
 
 namespace murph9.TabPlayer.scenes;
 
+public static class AudioStreamPlayerExtensions {
+	public static double GetSongPosition(this AudioStreamPlayer player) {
+		double time = player.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix();
+		// Compensate for output latency.
+		time -= AudioServer.GetOutputLatency();
+		return time;
+	}
+	// TODO please average the results of this
+/*
+The current 'difference' between looks like this:
+Time diff is: 0
+Time diff is: 0.011610031127929688
+Time diff is: 0
+Time diff is: 0.008707046508789062
+Time diff is: 0
+Time diff is: 0.011610031127929688
+Time diff is: 0
+Time diff is: 0.008707046508789062
+Time diff is: 0.011610031127929688
+Time diff is: 0
+Time diff is: 0.011610031127929688
+Time diff is: 0
+Time diff is: 0.011610031127929688
+Time diff is: 0.008707046508789062
+Time diff is: 0
+Time diff is: 0.011610031127929688
+Time diff is: 0
+*/
+}
+
 public partial class SongScene : Node
 {
 	private SongState _state;
-	private AudioController _audioController;
+	private AudioStreamOggVorbis _audioStream;
+	private AudioStreamPlayer _player;
 
-	[Signal]
+	private double _lastAudioTime;
+
+    [Signal]
 	public delegate void ClosedEventHandler();
 
 	public void _init(SongState state) {
 		_state = state;
-
-		_audioController = new AudioController(_state.AudioStream);
+		_audioStream = AudioStreamOggVorbis.LoadFromBuffer(state.Audio);
 	}
 
 	public void Pause() {
-		_audioController.Pause();
+		_player.StreamPaused = true;
 		
 		var popup = GetNode<PopupPanel>("PopupPanel");
 		popup.PopupCentered();
 	}
 
 	public void Resume() {
-		_audioController.Play();
+		_player.StreamPaused = false;
+
 		var popup = GetNode<PopupPanel>("PopupPanel");
 		if (popup.Visible)
 			popup.Hide();
 	}
 
 	public void Quit() {
-		_audioController?.Stop();
-		_audioController?.Dispose();		
+		_player.Stop();
 		Pause(); // prevent errors in final update frame
 		
 		EmitSignal(SignalName.Closed);
@@ -64,30 +96,31 @@ public partial class SongScene : Node
 		}
 	}
 
-	public void Skip10Sec() => _audioController.Seek(_audioController.SongPosition + 10);
-	public void Back10Sec() => _audioController.Seek(_audioController.SongPosition - 10);
+	public void Skip10Sec() => _player.Seek((float)_player.GetSongPosition() + 10f);
+	public void Back10Sec() => _player.Seek((float)_player.GetSongPosition() - 10f);
 	public void SkipToNext() {
 		var nextNote = NextNoteBlock();
 		if (nextNote == null)
 			return;
-		_audioController.Seek(nextNote.Time - 1.5f);
+		_player.Seek(nextNote.Time - 1.5f);
 	}
-	public void RestartSong() => _audioController.Seek(0);
-
+	public void RestartSong() => _player.Seek(0);
 
 	public override void _Ready()
 	{
 		var info = _state.SongInfo;
 		SetUILabels(info);
 
-		_audioController.Play();
+		_player = GetNode<AudioStreamPlayer>("AudioStreamPlayer");
+		_player.Stream = _audioStream;
+		_player.Play();
 		
 		var guitarChartScene = GD.Load<CSharpScript>("res://scenes/song/GuitarChart.cs").New().As<GuitarChart>();
-		guitarChartScene._init(_state, _audioController);
+		guitarChartScene._init(_state, _player);
 		AddChild(guitarChartScene);
 
 		var noteGraphScene = GD.Load<CSharpScript>("res://scenes/song/NoteGraph.cs").New().As<NoteGraph>();
-		noteGraphScene._init(_state, _audioController);
+		noteGraphScene._init(_state, _player);
 		AddChild(noteGraphScene);
 
 		try {
@@ -101,16 +134,21 @@ public partial class SongScene : Node
 
 	public override void _Process(double delta)
 	{
-		if (!_audioController.Active)
+		double time = _player.GetPlaybackPosition();
+		GD.Print(string.Format("Time diff is: {0}", time - _lastAudioTime));
+
+		_lastAudioTime = time;
+
+		if (!_player.Playing)
 			return;
 
 		var nextNote = NextNoteBlock();
 
-		var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - _audioController.SongPosition, 1);
+		var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - _player.GetSongPosition(), 1);
 
 		var debugText = @$"{noteText}
 {Engine.GetFramesPerSecond()}fps | {delta*1000:000.0}ms
-{_audioController.SongPosition.ToMinSec(true)}
+{_player.GetSongPosition().ToMinSec(true)}
 ";
 		GetNode<Label>("RunningDetailsLabel").Text = debugText;
 
@@ -134,7 +172,7 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}";
 	}
 
 	private NoteBlock NextNoteBlock() {
-		var songPos = _audioController.SongPosition;
+		var songPos = _player.GetSongPosition();
 		foreach (var b in _state.Instrument.Notes) {
 			if (b.Time > songPos)
 				return b;
@@ -147,7 +185,7 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}";
 		label.PushFontSize(20);
 		
 		//TODO don't move to the next lyrics until the next set starts
-		var songPos = _audioController.SongPosition;
+		var songPos = _player.GetSongPosition();
 		var curList = GetCurLines(_state, songPos);
 		if (curList.Length < 1) {
 			label.Text = null;

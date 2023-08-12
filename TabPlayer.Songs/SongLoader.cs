@@ -13,23 +13,15 @@ public class SongLoader {
         var noteInfoFile = folder.GetFiles("*.json").First();
         var noteInfo = JsonConvert.DeserializeObject<SongInfo>(File.ReadAllText(noteInfoFile.FullName));
 
-        var wavFile = folder.GetFiles("*.wav").SingleOrDefault();
-        Stream stream;
-        if (wavFile != null) {
-            stream = File.OpenRead(wavFile.FullName);
-        } else {
-            // its an ogg, so convert it
-            var oggFile = folder.GetFiles("*.ogg").SingleOrDefault();
-            
-            stream = new MemoryStream();
-            AudioConverter.ConvertOggToWav(oggFile, stream); // ogg conversion makes 100mb files
-            stream.Seek(0, SeekOrigin.Begin);
-        }
+        var oggFile = folder.GetFiles("*.ogg").SingleOrDefault();
+        var ms = new MemoryStream();
+        File.OpenRead(oggFile.FullName).CopyTo(ms);
+        var audio = ms.ToArray();
         
         return new SongState() {
             SongInfo = noteInfo,
             Instrument = noteInfo?.Instruments.First(x => x.Name == instrumentType),
-            AudioStream = stream
+            Audio = audio
         };
     }
 }
@@ -37,5 +29,5 @@ public class SongLoader {
 public class SongState {
     public SongInfo? SongInfo;
     public Instrument? Instrument;
-    public Stream? AudioStream;
+    public byte[]? Audio;
 }

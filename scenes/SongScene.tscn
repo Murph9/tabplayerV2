@@ -117,8 +117,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = 99.0
-offset_bottom = 96.0
+offset_right = -413.0
+offset_bottom = -416.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -129,6 +129,8 @@ text = "Resume"
 [node name="QuitButton" type="Button" parent="PopupPanel/VBoxContainer"]
 layout_mode = 2
 text = "Leave Song"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
 [connection signal="pressed" from="GridContainer/PauseButton" to="." method="Pause"]
 [connection signal="pressed" from="GridContainer/SkipToNextButton" to="." method="SkipToNext"]

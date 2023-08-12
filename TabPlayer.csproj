@@ -1,4 +1,4 @@
-<Project Sdk="Godot.NET.Sdk/4.1.1">
+<Project Sdk="Godot.NET.Sdk/4.2.0-dev.3">
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
@@ -11,9 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NAudio.Core" Version="2.1.0" />
-    <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
-    <PackageReference Include="NAudio.WinMM" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SharpZipLib" Version="1.4.1" />
   </ItemGroup>
