@@ -13,12 +13,12 @@ public partial class NoteGraph : Node {
     private Color _noteColour = new(0.3f, 0f, 0, 0.5f);
 
     private SongState _songState;
-    private AudioStreamPlayer _audio;
+    private IAudioStreamPosition _audio;
 
     private readonly Dictionary<int, ColorRect> _graphChordBars = new();
     private readonly Dictionary<int, ColorRect> _graphNoteBars = new();
 
-    public void _init(SongState songState, AudioStreamPlayer audio) {
+    public void _init(SongState songState, IAudioStreamPosition audio) {
         _songState = songState;
         _audio = audio;
     }
@@ -69,7 +69,7 @@ public partial class NoteGraph : Node {
 
 	public override void _Process(double delta)
 	{
-        if (!_audio.Playing)
+        if (!_audio.SongPlaying)
 			return;
 
         var bucket = Math.Round(_audio.GetSongPosition()/BUCKET_SIZE);

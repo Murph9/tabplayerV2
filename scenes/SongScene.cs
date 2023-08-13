@@ -8,43 +8,19 @@ using System.IO;
 
 namespace murph9.TabPlayer.scenes;
 
-public static class AudioStreamPlayerExtensions {
-	public static double GetSongPosition(this AudioStreamPlayer player) {
-		double time = player.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix();
-		// Compensate for output latency.
-		time -= AudioServer.GetOutputLatency();
-		return time;
-	}
-	// TODO please average the results of this
-/*
-The current 'difference' between looks like this:
-Time diff is: 0
-Time diff is: 0.011610031127929688
-Time diff is: 0
-Time diff is: 0.008707046508789062
-Time diff is: 0
-Time diff is: 0.011610031127929688
-Time diff is: 0
-Time diff is: 0.008707046508789062
-Time diff is: 0.011610031127929688
-Time diff is: 0
-Time diff is: 0.011610031127929688
-Time diff is: 0
-Time diff is: 0.011610031127929688
-Time diff is: 0.008707046508789062
-Time diff is: 0
-Time diff is: 0.011610031127929688
-Time diff is: 0
-*/
+public interface IAudioStreamPosition {
+	public bool SongPlaying { get; }
+	public double GetSongPosition();
 }
 
-public partial class SongScene : Node
+public partial class SongScene : Node, IAudioStreamPosition
 {
 	private SongState _state;
 	private AudioStreamOggVorbis _audioStream;
 	private AudioStreamPlayer _player;
+	private double? _cachedSongPosition;
 
-	private double _lastAudioTime;
+	public bool SongPlaying => _player?.Playing == true;
 
     [Signal]
 	public delegate void ClosedEventHandler();
@@ -96,8 +72,8 @@ public partial class SongScene : Node
 		}
 	}
 
-	public void Skip10Sec() => _player.Seek((float)_player.GetSongPosition() + 10f);
-	public void Back10Sec() => _player.Seek((float)_player.GetSongPosition() - 10f);
+	public void Skip10Sec() => _player.Seek((float)GetSongPosition() + 10f);
+	public void Back10Sec() => _player.Seek((float)GetSongPosition() - 10f);
 	public void SkipToNext() {
 		var nextNote = NextNoteBlock();
 		if (nextNote == null)
@@ -116,11 +92,11 @@ public partial class SongScene : Node
 		_player.Play();
 		
 		var guitarChartScene = GD.Load<CSharpScript>("res://scenes/song/GuitarChart.cs").New().As<GuitarChart>();
-		guitarChartScene._init(_state, _player);
+		guitarChartScene._init(_state, this);
 		AddChild(guitarChartScene);
 
 		var noteGraphScene = GD.Load<CSharpScript>("res://scenes/song/NoteGraph.cs").New().As<NoteGraph>();
-		noteGraphScene._init(_state, _player);
+		noteGraphScene._init(_state, this);
 		AddChild(noteGraphScene);
 
 		try {
@@ -134,26 +110,36 @@ public partial class SongScene : Node
 
 	public override void _Process(double delta)
 	{
-		double time = _player.GetPlaybackPosition();
-		GD.Print(string.Format("Time diff is: {0}", time - _lastAudioTime));
-
-		_lastAudioTime = time;
-
+		_cachedSongPosition = null;
 		if (!_player.Playing)
 			return;
 
 		var nextNote = NextNoteBlock();
 
-		var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - _player.GetSongPosition(), 1);
+		var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - GetSongPosition(), 1);
 
 		var debugText = @$"{noteText}
 {Engine.GetFramesPerSecond()}fps | {delta*1000:000.0}ms
-{_player.GetSongPosition().ToMinSec(true)}
+{GetSongPosition().ToMinSec(true)}
 ";
 		GetNode<Label>("RunningDetailsLabel").Text = debugText;
 
 		UpdateLyrics(GetNode<RichTextLabel>("LyricsLabel"));
 	}
+
+	public double GetSongPosition()
+    {
+		if (_cachedSongPosition.HasValue) {
+			return _cachedSongPosition.Value;
+		}
+
+		double time = _player.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix();
+		time -= AudioServer.GetOutputLatency();
+		_cachedSongPosition = time;
+		return time;
+
+		// TODO this might have some stuttering which we'll need to fix
+    }
 
 	private void SetUILabels(SongInfo info) {
 		var infoLabel = GetNode<Label>("SongInfoLabel");
@@ -172,7 +158,7 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}";
 	}
 
 	private NoteBlock NextNoteBlock() {
-		var songPos = _player.GetSongPosition();
+		var songPos = GetSongPosition();
 		foreach (var b in _state.Instrument.Notes) {
 			if (b.Time > songPos)
 				return b;
@@ -185,7 +171,7 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}";
 		label.PushFontSize(20);
 		
 		//TODO don't move to the next lyrics until the next set starts
-		var songPos = _player.GetSongPosition();
+		var songPos = GetSongPosition();
 		var curList = GetCurLines(_state, songPos);
 		if (curList.Length < 1) {
 			label.Text = null;

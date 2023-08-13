@@ -9,12 +9,12 @@ public partial class GuitarChart : Node3D {
     private const float CAM_MOVE_SPEED = 0.2f;
 
     private SongState _songState;
-    private AudioStreamPlayer _audio;
+    private IAudioStreamPosition _audio;
     
     private NoteBlock _lastNoteBlock;
     private Node3D _lastNoteBlockNode;
 
-    public void _init(SongState songState, AudioStreamPlayer audio) {
+    public void _init(SongState songState, IAudioStreamPosition audio) {
         _songState = songState;
         _audio = audio;
     }
@@ -111,7 +111,7 @@ public partial class GuitarChart : Node3D {
 
 	public override void _Process(double delta)
 	{
-		if (!_audio.Playing)
+		if (!_audio.SongPlaying)
 			return;
 
         var block = NextNoteBlock();
