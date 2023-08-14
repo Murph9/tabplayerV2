@@ -90,6 +90,9 @@ namespace murph9.TabPlayer.Songs.Convert
             var oggFile = AudioConverter.ConvertWemToOgg(wemFile, forceConvert: reconvert);
             Console.WriteLine($"Created ogg file: {oggFile}");
 
+            foreach (var f in new DirectoryInfo(outputFolder.FullName).GetFiles("*.wem"))
+                f.Delete();
+
             output("Wrote " + noteInfo?.Metadata?.Name + " info to " + outputFolder.FullName);
 
             return true;
