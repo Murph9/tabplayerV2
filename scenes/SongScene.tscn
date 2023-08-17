@@ -109,24 +109,30 @@ layout_mode = 2
 text = "[S] or [↓]"
 label_settings = SubResource("LabelSettings_42vc3")
 
-[node name="PopupPanel" type="PopupPanel" parent="."]
+[node name="PauseWindow" type="Window" parent="."]
+title = "Paused"
+size = Vector2i(150, 150)
+visible = false
+exclusive = true
+unresizable = true
+borderless = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PopupPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseWindow"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = -413.0
-offset_bottom = -416.0
+offset_right = -55.0
+offset_bottom = -84.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="ResumeButton" type="Button" parent="PopupPanel/VBoxContainer"]
+[node name="ResumeButton" type="Button" parent="PauseWindow/VBoxContainer"]
 layout_mode = 2
 text = "Resume"
 
-[node name="QuitButton" type="Button" parent="PopupPanel/VBoxContainer"]
+[node name="QuitButton" type="Button" parent="PauseWindow/VBoxContainer"]
 layout_mode = 2
 text = "Leave Song"
 
@@ -137,6 +143,8 @@ text = "Leave Song"
 [connection signal="pressed" from="GridContainer/RestartSongButton" to="." method="RestartSong"]
 [connection signal="pressed" from="GridContainer/SkipForwardButton" to="." method="Skip10Sec"]
 [connection signal="pressed" from="GridContainer/SkipBackwardButton" to="." method="Back10Sec"]
-[connection signal="popup_hide" from="PopupPanel" to="." method="Resume"]
-[connection signal="pressed" from="PopupPanel/VBoxContainer/ResumeButton" to="." method="Resume"]
-[connection signal="pressed" from="PopupPanel/VBoxContainer/QuitButton" to="." method="Quit"]
+[connection signal="close_requested" from="PauseWindow" to="." method="Resume"]
+[connection signal="window_input" from="PauseWindow" to="." method="PauseWindow_Input"]
+[connection signal="pressed" from="PauseWindow/VBoxContainer/ResumeButton" to="." method="Resume"]
+[connection signal="pressed" from="PauseWindow/VBoxContainer/QuitButton" to="." method="Quit"]
+[connection signal="finished" from="AudioStreamPlayer" to="." method="SongFinished"]

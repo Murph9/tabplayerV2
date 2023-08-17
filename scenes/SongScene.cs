@@ -30,19 +30,29 @@ public partial class SongScene : Node, IAudioStreamPosition
 		_audioStream = AudioStreamOggVorbis.LoadFromBuffer(state.Audio);
 	}
 
+	public void SongFinished() {
+		_player.Play();
+		_player.Seek(0);
+		_player.StreamPaused = true;
+		Pause();
+	}
+
 	public void Pause() {
 		_player.StreamPaused = true;
 		
-		var popup = GetNode<PopupPanel>("PopupPanel");
-		popup.PopupCentered();
+		var pause = GetNode<Window>("PauseWindow");
+		var windowSize = GetWindow().Size;
+		pause.Size = new Vector2I((int)Math.Round(windowSize.X*0.5f), (int)Math.Round(windowSize.Y*0.5f));
+		pause.PopupCentered();
+		pause.ChildControlsChanged();
 	}
 
 	public void Resume() {
 		_player.StreamPaused = false;
-
-		var popup = GetNode<PopupPanel>("PopupPanel");
-		if (popup.Visible)
-			popup.Hide();
+		
+		var pause = GetNode<Window>("PauseWindow");
+		if (pause.Visible)
+			pause.Hide();
 	}
 
 	public void Quit() {
@@ -52,12 +62,18 @@ public partial class SongScene : Node, IAudioStreamPosition
 		EmitSignal(SignalName.Closed);
 	}
 
+	public void PauseWindow_Input(InputEvent @event) {
+		_Input(@event);
+	}
+
 	public override void _Input(InputEvent @event) {
 		if (@event.IsActionPressed("ui_cancel") || @event.IsActionPressed("song_pause"))
 		{
-			var popup = GetNode<PopupPanel>("PopupPanel");
-			if (!popup.Visible) {
+			var pause = GetNode<Window>("PauseWindow");
+			if (!pause.Visible) {
 				Pause();
+			} else {
+				Resume();
 			}
 		}
 
