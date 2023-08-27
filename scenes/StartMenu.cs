@@ -2,7 +2,7 @@ using Godot;
 using murph9.TabPlayer.Songs;
 using System;
 
-namespace murph9.TabPlayer;
+namespace murph9.TabPlayer.scenes;
 
 public partial class StartMenu : Node
 {
@@ -17,9 +17,13 @@ public partial class StartMenu : Node
 	[Signal]
 	public delegate void SongListChangedEventHandler();
 
+	private string _progressText;
+
 	public override void _Ready() { }
 
-	public override void _Process(double delta) { }
+	public override void _Process(double delta) {
+		GetNode<Label>("ReloadProgressLabel").Text = _progressText;
+	}
 
 	public void StartButton_Pressed() {
 		EmitSignal(SignalName.SongListOpened);
@@ -34,9 +38,21 @@ public partial class StartMenu : Node
 	}
 
 	public void ReloadButton_Pressed() {
-		// TODO cleanup so that there is UI progress
-		SongFileManager.GetSongFileList(GD.Print, true);
-		EmitSignal(SignalName.SongListChanged);
+		var startButton = GetNode<Button>("%StartButton");
+		startButton.Disabled = true;
+		var convertButton = GetNode<Button>("%ConvertButton");
+		convertButton.Disabled = true;
+		var reloadButton = GetNode<Button>("%ReloadButton");
+		reloadButton.Disabled = true;
+
+		Task.Run(() => {
+			SongFileManager.UpdateSongList((str) => _progressText = str);
+
+			EmitSignal(SignalName.SongListChanged);
+			reloadButton.Disabled = false;
+			convertButton.Disabled = false;
+			startButton.Disabled = false;
+		});
 	}
 
 	public void QuitButton_Pressed() {

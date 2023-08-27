@@ -38,17 +38,16 @@ public class SongFileManager
         return dir;
     }
 
-    public static SongFileList GetSongFileList(Action<string> output, bool update = false) {
-        if (!update) {
-            var configFile = EnsureConfigExists();
+    public static SongFileList GetSongFileList() {
+        var configFile = EnsureConfigExists();
 
-            using var sr = new StreamReader(configFile);
-            string result = sr.ReadToEnd();
-            output("Reading existing song file from: " + result);
-            
-            return JsonConvert.DeserializeObject<SongFileList>(result) ?? new SongFileList();
-        }
+        using var sr = new StreamReader(configFile);
+        string result = sr.ReadToEnd();
         
+        return JsonConvert.DeserializeObject<SongFileList>(result) ?? new SongFileList();
+    }
+
+    public static void UpdateSongList(Action<string> output) {
         var songList = new SongFileList();
         output("Loading all songs from: " + SONG_FOLDER);
         var songDirs = Directory.EnumerateDirectories(SONG_FOLDER).Select(x => new DirectoryInfo(x)).ToList();
@@ -60,7 +59,7 @@ public class SongFileManager
             if (file == null) continue;
             
             var noteInfo = JsonConvert.DeserializeObject<SongInfo>(File.ReadAllText(file.FullName));
-            output($"Reading all songs {i}/{total}. Current: {noteInfo?.Metadata?.Name}");
+            output($"{i}/{total} Reading all songs, current: {noteInfo?.Metadata?.Name}");
             var instruments = noteInfo.Instruments.Select(x => new SongFileInstrument(x.Name, x == noteInfo.MainInstrument, x.Config.Tuning, x.Notes.Count, x.Config.CapoFret)).ToArray();
             var lyrics = noteInfo.Lyrics != null ? new SongFileLyrics(noteInfo.Lyrics.Lines?.Sum(x => x.Words?.Count) ?? 0) : null;
             songList.Data.Add(new SongFile(songDir.Name, noteInfo.Metadata.Name,
@@ -71,12 +70,11 @@ public class SongFileManager
         }
         songList.Data.Sort((x, y) => x.SongName.CompareTo(y.SongName)); // default sort of name
 
-        output($"Completed {total}/{total}. Sorting");
+        output($"Completed {total}/{total}. Saving");
         var songListContents = JsonConvert.SerializeObject(songList);
         File.WriteAllText(PLAY_DATA_FILE, songListContents);
 
-        output($"Completed all.");
-        return songList;
+        output($"Loaded all songs {total}/{total} into {PLAY_DATA_FILE}");
     }
 }
 

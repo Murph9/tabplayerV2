@@ -173,16 +173,20 @@ public class SongMetadata
     public string Album { get; private set; }
     public int? Year { get; private set; }
     public float SongLength { get; private set; }
-    //TODO genre
+    public string Genre { get; private set; }
+
+    public SongMetadata(string name, string artist, string album, int? year, float songLength) : this(name, artist, album, year, songLength, null) {
+    }
 
     [JsonConstructor]
-    public SongMetadata(string name, string artist, string album, int? year, float songLength)
+    public SongMetadata(string name, string artist, string album, int? year, float songLength, string genre)
     {
-        this.Name = name;
-        this.Artist = artist;
-        this.Album = album;
-        this.Year = year;
-        this.SongLength = songLength;
+        Name = name;
+        Artist = artist;
+        Album = album;
+        Year = year;
+        SongLength = songLength;
+        Genre = genre;
     }
 }
 

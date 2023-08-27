@@ -97,7 +97,7 @@ public partial class SongList : Control
 	public delegate void OpenedSongEventHandler(string folder, string instrument);
 
 	public SongList() {
-		var songList = SongFileManager.GetSongFileList((str) => {});
+		var songList = SongFileManager.GetSongFileList();
 		_rows = songList.Data.ToArray().Select(x => new Row(x, () => ItemActivated(x))).ToList();
 	}
 

@@ -19,7 +19,7 @@ public partial class MainScene : Node
 	}
 	
 	private void LoadStartMenu() {
-		_startMenu = GD.Load<PackedScene>("res://StartMenu.tscn").Instantiate<StartMenu>();
+		_startMenu = GD.Load<PackedScene>("res://scenes/StartMenu.tscn").Instantiate<StartMenu>();
 		AddChild(_startMenu);
 
 		_startMenu.Closed += () => {
