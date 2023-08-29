@@ -8,9 +8,7 @@ And allows you to play along with the notes as you would TAB or sheet music.
 
 This doesn't listen to a plugged in guitar or tell you notes hit
 
-See the MiiChannel song, note the strings and notes:
-
-![alt text](https://www.murph9.com/assets/images/tab_player_mii.png)
+See the MiiChannel song, note the strings and note preview at: https://www.murph9.com/mygames
 
 ## How to play
 
