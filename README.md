@@ -3,6 +3,15 @@
 
 This application lets you play rocksmith cldc and others by importing them in app forever.
 
+It allows stopping, rewinding and skipping through songs much faster than rocksmith.
+And allows you to play along with the notes as you would TAB or sheet music.
+
+This doesn't listen to a plugged in guitar or tell you notes hit
+
+See the MiiChannel song:
+
+![alt text](http://url/to/img.png)
+
 ## How to play
 
 1. Download the latest release from [Github Releases](https://github.com/Murph9/tabplayerV2/releases)
