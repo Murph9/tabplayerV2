@@ -140,7 +140,7 @@ public partial class SongScene : Node, IAudioStreamPosition
 ";
 		GetNode<Label>("RunningDetailsLabel").Text = debugText;
 
-		UpdateLyrics(GetNode<RichTextLabel>("LyricsLabel"));
+		UpdateLyrics(GetNode<RichTextLabel>("HBoxContainer/LyricsLabel"));
 	}
 
 	public double GetSongPosition()

@@ -47,14 +47,6 @@ probably
 label_settings = SubResource("LabelSettings_smbfm")
 horizontal_alignment = 2
 
-[node name="LyricsLabel" type="RichTextLabel" parent="."]
-offset_top = 182.0
-offset_right = 466.0
-offset_bottom = 222.0
-text = "<lyrics here pls>"
-fit_content = true
-autowrap_mode = 0
-
 [node name="GridContainer" type="GridContainer" parent="."]
 offset_right = 40.0
 offset_bottom = 40.0
@@ -137,6 +129,22 @@ layout_mode = 2
 text = "Leave Song"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -62.5
+offset_right = 62.5
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="LyricsLabel" type="RichTextLabel" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "<lyrics here pls>"
+fit_content = true
+autowrap_mode = 0
 
 [connection signal="pressed" from="GridContainer/PauseButton" to="." method="Pause"]
 [connection signal="pressed" from="GridContainer/SkipToNextButton" to="." method="SkipToNext"]
