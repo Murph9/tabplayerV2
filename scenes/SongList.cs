@@ -159,7 +159,7 @@ public partial class SongList : Control
 		panel.AddChild(layout);
 
 		layout.AddChild(new Label() {
-			Text = $"Select an instrument for: {selectedSong.SongName} by {selectedSong.Artist}"
+			Text = $"Select an instrument for song:\n{selectedSong.SongName}\nby {selectedSong.Artist} ({selectedSong.Year})"
 		});
 
 		foreach (var i in _selectedSong.Instruments) {
