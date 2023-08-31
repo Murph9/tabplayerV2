@@ -161,6 +161,30 @@ public class SongInfo
 
         if (MainInstrument == null)
             throw new Exception("No instrument found");
+
+        SplitLyricsIntoLines();
+    }
+
+    private void SplitLyricsIntoLines() {
+        // a little hack which forces single line lyric songs to be multiple lines
+        if (Lyrics.Lines.Count != 1) {
+            return;
+        }
+
+        var list = new List<LyricLine>();
+        var blockStartTime = float.MaxValue;
+        List<Lyric> lyricLineWords = null;
+        foreach (var word in Lyrics.Lines.First().Words) {
+            if (blockStartTime == float.MaxValue || word.Time > blockStartTime + 10) { // max 10 sec line
+                blockStartTime = word.Time;
+                if (lyricLineWords != null)
+                    list.Add(new LyricLine(lyricLineWords));
+                lyricLineWords = new List<Lyric>();
+            }
+            lyricLineWords.Add(word);
+        }
+
+        Lyrics = new Lyrics(list);
     }
 }
 
