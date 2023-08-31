@@ -4,6 +4,8 @@ namespace murph9.TabPlayer.scenes.Services;
 
 public class DisplayConst
 {
+    public static readonly char[] StringLabels = "eADGBE".ToCharArray();
+    
     private static Dictionary<int, Color> colourMap = new Dictionary<int, Color>()
     {
         {0, Colors.Red},

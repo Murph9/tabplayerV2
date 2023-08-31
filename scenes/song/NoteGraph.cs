@@ -17,6 +17,7 @@ public partial class NoteGraph : Node {
 
     private readonly Dictionary<int, ColorRect> _graphChordBars = new();
     private readonly Dictionary<int, ColorRect> _graphNoteBars = new();
+    // TODO show which strings each section has
 
     public void _init(SongState songState, IAudioStreamPosition audio) {
         _songState = songState;

@@ -16,6 +16,8 @@ public partial class StartMenu : Node
 	public delegate void InfoMenuOpenedEventHandler();
 	[Signal]
 	public delegate void SongListChangedEventHandler();
+	[Signal]
+	public delegate void SettingsOpenedEventHandler();
 
 	private string _progressText;
 
@@ -57,5 +59,9 @@ public partial class StartMenu : Node
 
 	public void QuitButton_Pressed() {
 		EmitSignal(SignalName.Closed);
+	}
+
+	public void SettingsButton_Pressed() {
+		EmitSignal(SignalName.SettingsOpened);
 	}
 }

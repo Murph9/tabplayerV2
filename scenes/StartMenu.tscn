@@ -64,6 +64,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Info"
 
+[node name="SettingsButton" type="Button" parent="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Convert"]
+layout_mode = 2
+text = "Settings"
+
 [node name="QuitButton" type="Button" parent="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Convert"]
 layout_mode = 2
 text = "Quit
@@ -82,4 +86,5 @@ grow_vertical = 0
 [connection signal="pressed" from="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Convert/ConvertButton" to="." method="ConvertButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Convert/ReloadButton" to="." method="ReloadButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Convert/InfoButton" to="." method="InfoButton_Pressed"]
+[connection signal="pressed" from="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Convert/SettingsButton" to="." method="SettingsButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Convert/QuitButton" to="." method="QuitButton_Pressed"]

@@ -59,6 +59,15 @@ public partial class MainScene : Node
 			};
 			AddChild(infoMenu);
         };
+		_startMenu.SettingsOpened += () => {
+			var settingsMenu = GD.Load<PackedScene>("res://scenes/SettingsPage.tscn").Instantiate<SettingsPage>();
+			RemoveChild(_startMenu);
+			settingsMenu.Closed += () => {
+				RemoveChild(settingsMenu);
+				AddChild(_startMenu);
+			};
+			AddChild(settingsMenu);
+        };
 	}
 
 	private void LoadSongList() {
