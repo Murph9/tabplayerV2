@@ -31,6 +31,11 @@ size_flags_horizontal = 4
 text = "Tab Player"
 label_settings = SubResource("LabelSettings_f02ew")
 
+[node name="Credits" type="Label" parent="VBoxContainer_FullPage"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Made by murph9"
+
 [node name="VBoxContainer_Buttons" type="VBoxContainer" parent="VBoxContainer_FullPage"]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -54,19 +59,12 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Reload Song List"
 
-[node name="HBoxContainer_Info" type="HBoxContainer" parent="VBoxContainer_FullPage/VBoxContainer_Buttons"]
-layout_mode = 2
-
-[node name="Credits" type="Label" parent="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Info"]
-layout_mode = 2
-text = "Made by murph9"
-
-[node name="InfoButton" type="Button" parent="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Info"]
+[node name="InfoButton" type="Button" parent="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Convert"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Info"
 
-[node name="QuitButton" type="Button" parent="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Info"]
+[node name="QuitButton" type="Button" parent="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Convert"]
 layout_mode = 2
 text = "Quit
 "
@@ -83,5 +81,5 @@ grow_vertical = 0
 [connection signal="pressed" from="VBoxContainer_FullPage/VBoxContainer_Buttons/StartButton" to="." method="StartButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Convert/ConvertButton" to="." method="ConvertButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Convert/ReloadButton" to="." method="ReloadButton_Pressed"]
-[connection signal="pressed" from="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Info/InfoButton" to="." method="InfoButton_Pressed"]
-[connection signal="pressed" from="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Info/QuitButton" to="." method="QuitButton_Pressed"]
+[connection signal="pressed" from="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Convert/InfoButton" to="." method="InfoButton_Pressed"]
+[connection signal="pressed" from="VBoxContainer_FullPage/VBoxContainer_Buttons/HBoxContainer_Convert/QuitButton" to="." method="QuitButton_Pressed"]
