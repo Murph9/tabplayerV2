@@ -184,7 +184,7 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}";
 
 	private void UpdateLyrics(RichTextLabel label) {
 		label.Clear();
-		label.PushFontSize(20);
+		label.PushFontSize(40);
 		
 		//TODO don't move to the next lyrics until the next set starts
 		var songPos = GetSongPosition();
