@@ -130,6 +130,7 @@ public partial class GuitarChart : Node3D {
             _lastNoteBlock = block;
 
             _lastNoteBlockNode?.QueueFree();
+            _lastNoteBlockNode = null;
             if (block == null) return;
 
             _lastNoteBlockNode = new Node3D();
