@@ -50,7 +50,9 @@ public partial class GuitarChart : Node3D {
         // set strings
         int index = 0;
         const int STRING_LENGTH = 50;
-        foreach (var colour in new[] { Colors.Red, Colors.Yellow, Colors.Blue, Colors.Orange, Colors.Green, Colors.Purple}) {
+        
+        foreach (var i in Enumerable.Range(0, 6)) {
+            var colour = SettingsService.GetColorFromStringNum(i);
             var stringMaterial = new StandardMaterial3D() {
                 AlbedoColor = colour
             };

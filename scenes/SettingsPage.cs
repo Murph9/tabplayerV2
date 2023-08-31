@@ -36,7 +36,8 @@ public partial class SettingsPage : Node
 				{
 					[i] = picker.Color
 				};
-				SettingsService.UpdateSettings(_settings with { StringColours = colours });
+				_settings = _settings with { StringColours = colours };
+				SettingsService.UpdateSettings(_settings);
 			};
 			box.AddChild(picker);
 			vboxContainer.AddChild(box);

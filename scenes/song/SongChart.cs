@@ -109,12 +109,12 @@ public partial class SongChart : Node3D {
             var dir = new Vector3(0, notePos.Y - DisplayConst.TRACK_BOTTOM_WORLD, 0);
 
             var start = new Vector3(notePos.X, DisplayConst.TRACK_BOTTOM_WORLD, notePos.Z);
-            yield return MeshGenerator.BoxLine(DisplayConst.GetColorFromString(note.StringNum), start, start + dir);
+            yield return MeshGenerator.BoxLine(SettingsService.GetColorFromStringNum(note.StringNum), start, start + dir);
 
             // and a horizontal one for position
             var pos = new Vector3(notePos.X, DisplayConst.TRACK_BOTTOM_WORLD+0.01f, DisplayConst.CalcFretPosZ(note.FretNum-1));
             var across = new Vector3(0, 0, DisplayConst.CalcFretWidthZ(note.FretNum));
-            yield return MeshGenerator.BoxLine(DisplayConst.GetColorFromString(note.StringNum), pos, pos + across);
+            yield return MeshGenerator.BoxLine(SettingsService.GetColorFromStringNum(note.StringNum), pos, pos + across);
         }
     }
     

@@ -8,7 +8,7 @@ public class NoteGenerator {
         var notePosZ = DisplayConst.CalcInFretPosZ(note.FretNum);
         var notePos = new Vector3(time * config.NoteSpeed, note.StringNum * DisplayConst.STRING_DISTANCE_APART, notePosZ);
 
-        var colour = note.StringNum != 255 ? DisplayConst.GetColorFromString(note.StringNum) : Colors.HotPink;
+        var colour = note.StringNum != 255 ? SettingsService.GetColorFromStringNum(note.StringNum) : Colors.HotPink;
         
         if (note.FretNum == 0) {
             // open note
@@ -27,7 +27,7 @@ public class NoteGenerator {
         var notePosZ = DisplayConst.CalcInFretPosZ(note.FretNum);
         var notePos = new Vector3(noteBlock.Time * config.NoteSpeed, note.StringNum * DisplayConst.STRING_DISTANCE_APART, notePosZ);
 
-        var colour = note.StringNum != 255 ? DisplayConst.GetColorFromString(note.StringNum) : Colors.HotPink;
+        var colour = note.StringNum != 255 ? SettingsService.GetColorFromStringNum(note.StringNum) : Colors.HotPink;
         if (!note.Type.Contains(NoteType.CHILD)) {
             if (note.FretNum == 0) {
                 // open note
@@ -79,7 +79,7 @@ public class NoteGenerator {
             
             foreach (var b in note.Bends) {
                 var endPos = new Vector3(b.Time*config.NoteSpeed, notePos.Y + DisplayConst.STRING_DISTANCE_APART*b.Step, notePos.Z);
-                yield return MeshGenerator.BoxLine(DisplayConst.GetColorFromString(note.StringNum), lastPos, endPos);
+                yield return MeshGenerator.BoxLine(SettingsService.GetColorFromStringNum(note.StringNum), lastPos, endPos);
                 lastPos = endPos;
             }
 
@@ -87,10 +87,10 @@ public class NoteGenerator {
             if (note.Slide == null || !note.Slide.HasValue)
                 throw new Exception("A slide without a slide"); // TODO should really have not passed validation
             var endPos = new Vector3((noteBlock.Time + note.Length) * config.NoteSpeed, notePos.Y, DisplayConst.CalcInFretPosZ(note.Slide.Value.ToFret));
-            yield return MeshGenerator.BoxLine(DisplayConst.GetColorFromString(note.StringNum), notePos, endPos);
+            yield return MeshGenerator.BoxLine(SettingsService.GetColorFromStringNum(note.StringNum), notePos, endPos);
 
         } else {
-            yield return MeshGenerator.BoxLine(DisplayConst.GetColorFromString(note.StringNum), notePos, notePos + new Vector3(config.NoteSpeed*note.Length, 0, 0));
+            yield return MeshGenerator.BoxLine(SettingsService.GetColorFromStringNum(note.StringNum), notePos, notePos + new Vector3(config.NoteSpeed*note.Length, 0, 0));
         }
     }
 }

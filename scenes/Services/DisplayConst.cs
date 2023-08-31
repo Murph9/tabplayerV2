@@ -6,20 +6,6 @@ public class DisplayConst
 {
     public static readonly char[] StringLabels = "eADGBE".ToCharArray();
     
-    private static Dictionary<int, Color> colourMap = new Dictionary<int, Color>()
-    {
-        {0, Colors.Red},
-        {1, Colors.Yellow},
-        {2, Colors.Blue},
-        {3, Colors.Orange},
-        {4, Colors.Green},
-        {5, Colors.Purple},
-    };
-    public static Color GetColorFromString(int stringNum)
-    {
-        return colourMap[stringNum];
-    }
-
     public const float TRACK_BOTTOM_WORLD = -0.5f;
     public const float STRING_DISTANCE_APART = 1;
 

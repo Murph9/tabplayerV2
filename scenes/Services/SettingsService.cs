@@ -41,7 +41,7 @@ public class SettingsService {
 
     public static void UpdateSettings(Settings settings) {
         using var file = File.CreateText(SETTINGS_FILE);
-        var content = JsonConvert.SerializeObject(settings ?? DEFAULT);
+        var content = JsonConvert.SerializeObject(settings ?? DEFAULT, Formatting.Indented);
         file.Write(content);
         file.Flush(); // so we can read it right now?
 
@@ -50,5 +50,9 @@ public class SettingsService {
 
     public static void ReloadSettings() {
         _settings = null; // very good reload
+    }
+
+    public static Color GetColorFromStringNum(int num) {
+        return Settings().StringColours[num];
     }
 }
