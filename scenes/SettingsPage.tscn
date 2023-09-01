@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://btj2gwly1gvu5"]
+[gd_scene load_steps=3 format=3 uid="uid://btj2gwly1gvu5"]
 
 [ext_resource type="Script" path="res://scenes/SettingsPage.cs" id="1_485jx"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ovgdw"]
+font_size = 24
 
 [node name="SettingsPage" type="Control"]
 layout_mode = 3
@@ -21,8 +24,8 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="StringVBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Select Your String Colours (high to low):
-"
+text = "Settings         "
+label_settings = SubResource("LabelSettings_ovgdw")
 
 [node name="SaveButton" type="Button" parent="StringVBoxContainer/HBoxContainer"]
 layout_mode = 2

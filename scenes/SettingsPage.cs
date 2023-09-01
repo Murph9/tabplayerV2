@@ -16,6 +16,9 @@ public partial class SettingsPage : Node
 		_settings = SettingsService.Settings();
 
 		var vboxContainer = GetNode<VBoxContainer>("StringVBoxContainer");
+		vboxContainer.AddChild(new Label() {
+			Text = "Select Your String Colours (high to low):"
+		});
 
 		foreach (var i in Enumerable.Range(0, 6)) {
 			var stringChar = DisplayConst.StringLabels[i];
@@ -42,6 +45,23 @@ public partial class SettingsPage : Node
 			box.AddChild(picker);
 			vboxContainer.AddChild(box);
 		}
+
+		vboxContainer.AddChild(new Label() {
+			Text = "Other Settings"
+		});
+		var otherBox = new HBoxContainer() {
+			Name = "OtherHBoxContainer"
+		};
+		var lowIsLowCheck = new CheckBox() {
+			Text = "Low String at the bottom: ",
+			ButtonPressed = _settings.LowStringIsLow
+		};
+		lowIsLowCheck.Pressed += () => {
+			_settings = _settings with { LowStringIsLow = !_settings.LowStringIsLow };
+			SettingsService.UpdateSettings(_settings);
+		};
+		otherBox.AddChild(lowIsLowCheck);
+		vboxContainer.AddChild(otherBox);
 	}
 
 	public override void _Process(double delta) { }
