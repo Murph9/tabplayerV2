@@ -50,10 +50,10 @@ public partial class StartMenu : Node
 		Task.Run(() => {
 			SongFileManager.UpdateSongList((str) => _progressText = str);
 
-			EmitSignal(SignalName.SongListChanged);
-			reloadButton.Disabled = false;
-			convertButton.Disabled = false;
-			startButton.Disabled = false;
+			CallDeferred("emit_signal", SignalName.SongListChanged);
+			reloadButton.SetDeferred("disabled", false);
+			convertButton.SetDeferred("disabled", false);
+			startButton.SetDeferred("disabled", false);
 		});
 	}
 
