@@ -5,7 +5,7 @@ using System;
 
 namespace murph9.TabPlayer.scenes;
 
-public partial class SettingsPage : Node
+public partial class SettingsPage : CenterContainer
 {
 	[Signal]
 	public delegate void ClosedEventHandler();
@@ -15,9 +15,31 @@ public partial class SettingsPage : Node
 	public override void _Ready() {
 		_settings = SettingsService.Settings();
 
-		var vboxContainer = GetNode<VBoxContainer>("StringVBoxContainer");
+		LayoutMode = 3;
+		AnchorsPreset = 15;
+
+		var vboxContainer = new VBoxContainer() {
+		};
+		AddChild(vboxContainer);
+		
+		var hBoxContainer = new HBoxContainer();
+		hBoxContainer.AddChild(new Label() {
+			Text = "Settings         ", // its for cheap spacing
+			LabelSettings = new LabelSettings() {
+				FontSize = 24
+			}
+		});
+		var exitButton = new Button() {
+			Text = "Save and Close"
+		};
+		exitButton.Pressed += () => {
+			EmitSignal(SignalName.Closed);
+		};
+		hBoxContainer.AddChild(exitButton);
+		
+		vboxContainer.AddChild(hBoxContainer);
 		vboxContainer.AddChild(new Label() {
-			Text = "Select Your String Colours (high to low):"
+			Text = "Set String Colours (low to high):"
 		});
 
 		foreach (var i in Enumerable.Range(0, 6)) {
@@ -65,8 +87,4 @@ public partial class SettingsPage : Node
 	}
 
 	public override void _Process(double delta) { }
-
-	public void BackButton_Pressed() {
-		EmitSignal(SignalName.Closed);
-	}
 }

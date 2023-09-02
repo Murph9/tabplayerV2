@@ -60,7 +60,7 @@ public partial class MainScene : Node
 			AddChild(infoMenu);
         };
 		_startMenu.SettingsOpened += () => {
-			var settingsMenu = GD.Load<PackedScene>("res://scenes/SettingsPage.tscn").Instantiate<SettingsPage>();
+			var settingsMenu = GD.Load<CSharpScript>("res://scenes/SettingsPage.cs").New().As<SettingsPage>();
 			RemoveChild(_startMenu);
 			settingsMenu.Closed += () => {
 				RemoveChild(settingsMenu);
