@@ -6,7 +6,7 @@ namespace murph9.TabPlayer.scenes.Services;
 public class NoteGenerator {
     public static Node3D GetBasicNote(SingleNote note, InstrumentConfig config, float time, int fretWindowStart, int fretWindowLength) {
         var notePosZ = DisplayConst.CalcInFretPosZ(note.FretNum);
-        var notePos = new Vector3(time * config.NoteSpeed, note.StringNum * DisplayConst.STRING_DISTANCE_APART, notePosZ);
+        var notePos = new Vector3(time * config.NoteSpeed, DisplayConst.CalcNoteHeightY(note.StringNum), notePosZ);
 
         var colour = note.StringNum != 255 ? SettingsService.GetColorFromStringNum(note.StringNum) : Colors.HotPink;
         
@@ -14,7 +14,7 @@ public class NoteGenerator {
             // open note
             var lineStartZ = DisplayConst.CalcFretPosZ(fretWindowStart - 1);
             var across = new Vector3(0, 0, DisplayConst.CalcFretWidthZ(fretWindowStart, fretWindowLength));
-            var lineStart = new Vector3(time * config.NoteSpeed, note.StringNum * DisplayConst.STRING_DISTANCE_APART, lineStartZ);
+            var lineStart = new Vector3(time * config.NoteSpeed, DisplayConst.CalcNoteHeightY(note.StringNum), lineStartZ);
 
             return MeshGenerator.BoxLine(colour, lineStart, lineStart + across);
         }
@@ -25,7 +25,7 @@ public class NoteGenerator {
 
     public static IEnumerable<Node3D> GetNote(SingleNote note, InstrumentConfig config, NoteBlock noteBlock) {
         var notePosZ = DisplayConst.CalcInFretPosZ(note.FretNum);
-        var notePos = new Vector3(noteBlock.Time * config.NoteSpeed, note.StringNum * DisplayConst.STRING_DISTANCE_APART, notePosZ);
+        var notePos = new Vector3(noteBlock.Time * config.NoteSpeed, DisplayConst.CalcNoteHeightY(note.StringNum), notePosZ);
 
         var colour = note.StringNum != 255 ? SettingsService.GetColorFromStringNum(note.StringNum) : Colors.HotPink;
         if (!note.Type.Contains(NoteType.CHILD)) {
@@ -34,7 +34,7 @@ public class NoteGenerator {
                 var lineStartZ = DisplayConst.CalcFretPosZ(noteBlock.FretWindowStart - 1);
                 var across = new Vector3(0, 0, DisplayConst.CalcFretWidthZ(noteBlock.FretWindowStart, noteBlock.FretWindowLength));
             
-                var start = new Vector3(noteBlock.Time * config.NoteSpeed, note.StringNum * DisplayConst.STRING_DISTANCE_APART, lineStartZ);
+                var start = new Vector3(noteBlock.Time * config.NoteSpeed, DisplayConst.CalcNoteHeightY(note.StringNum), lineStartZ);
                 yield return MeshGenerator.BoxLine(colour, start, start + across);
             } else {
                 // normal note
@@ -56,7 +56,7 @@ public class NoteGenerator {
 
     public static IEnumerable<Node3D> CreateNoteLine(NoteBlock noteBlock, SingleNote note, InstrumentConfig config) {
         var notePosZ = DisplayConst.CalcInFretPosZ(note.FretNum);
-        var notePos = new Vector3(noteBlock.Time * config.NoteSpeed, note.StringNum * DisplayConst.STRING_DISTANCE_APART, notePosZ);
+        var notePos = new Vector3(noteBlock.Time * config.NoteSpeed, DisplayConst.CalcNoteHeightY(note.StringNum), notePosZ);
 
         if (note.FretNum == 0) {
             notePos = new Vector3(notePos.X, notePos.Y, DisplayConst.CalcMiddleWindowZ(noteBlock.FretWindowStart, noteBlock.FretWindowLength));

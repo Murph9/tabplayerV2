@@ -48,7 +48,6 @@ public partial class GuitarChart : Node3D {
         AddChild(light);
 
         // set strings
-        int index = 0;
         const int STRING_LENGTH = 50;
         
         foreach (var i in Enumerable.Range(0, 6)) {
@@ -62,12 +61,10 @@ public partial class GuitarChart : Node3D {
                 Material = stringMaterial
             };
             var stringObj = new MeshInstance3D() {
-                Transform = new Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, index, STRING_LENGTH/2f),
+                Transform = new Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, DisplayConst.CalcNoteHeightY(i), STRING_LENGTH/2f),
                 Mesh = stringMesh
             };
             AddChild(stringObj);
-
-            index++;
         }
         
         // set frets and fret lines
@@ -104,7 +101,7 @@ public partial class GuitarChart : Node3D {
                 Text = i.ToString(),
                 FontSize = 200,
                 Shaded = true,
-                Transform = new Transform3D(0, 1, 0, 0, 0, 1, 1, 0, 0, -0.25f, -0.5f, DisplayConst.CalcInFretPosZ(i))
+                Transform = new Transform3D(0, 1, 0, 0, 0, 1, 1, 0, 0, -0.25f, DisplayConst.TRACK_BOTTOM_WORLD, DisplayConst.CalcInFretPosZ(i))
             };
 
             AddChild(label3d);

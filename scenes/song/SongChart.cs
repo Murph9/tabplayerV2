@@ -48,7 +48,7 @@ public partial class SongChart : Node3D {
                 if (Math.Abs(noteBlock.Time - fretNumLastPlacedMap[note.FretNum]) > 0.6f) {
                     fretNumLastPlacedMap[note.FretNum] = noteBlock.Time;
                     var zPos = DisplayConst.CalcInFretPosZ(note.FretNum);
-                    yield return MeshGenerator.TextVertical(note.FretNum.ToString(), new Vector3(noteBlock.Time * instrument.Config.NoteSpeed, DisplayConst.STRING_DISTANCE_APART*note.StringNum + 1, zPos));
+                    yield return MeshGenerator.TextVertical(note.FretNum.ToString(), new Vector3(noteBlock.Time * instrument.Config.NoteSpeed, DisplayConst.CalcNoteHeightY(note.StringNum) + 1, zPos));
                 }
             }
         }
@@ -103,7 +103,7 @@ public partial class SongChart : Node3D {
         foreach (var o in NoteGenerator.CreateNoteLine(noteBlock, note, config)) yield return o;
 
         if (note.FretNum != 0) {
-            var notePos = new Vector3(noteBlock.Time * config.NoteSpeed, note.StringNum * DisplayConst.STRING_DISTANCE_APART, DisplayConst.CalcInFretPosZ(note.FretNum));
+            var notePos = new Vector3(noteBlock.Time * config.NoteSpeed, DisplayConst.CalcNoteHeightY(note.StringNum), DisplayConst.CalcInFretPosZ(note.FretNum));
 
             // vertical line for timing
             var dir = new Vector3(0, notePos.Y - DisplayConst.TRACK_BOTTOM_WORLD, 0);

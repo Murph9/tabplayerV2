@@ -7,7 +7,15 @@ public class DisplayConst
     public static readonly char[] StringLabels = "eADGBE".ToCharArray();
     
     public const float TRACK_BOTTOM_WORLD = -0.5f;
+
     public const float STRING_DISTANCE_APART = 1;
+
+    public static float CalcNoteHeightY(int stringNum) {
+        if (!SettingsService.Settings().LowStringIsLow)
+            stringNum = 5 - stringNum; // swap stringNum 5 <-> 0
+
+        return stringNum * STRING_DISTANCE_APART;
+    }
 
     /*
     |---fret---|
