@@ -24,6 +24,7 @@ window/size/mode=2
 [dotnet]
 
 project/assembly_name="TabPlayer"
+project/solution_directory="..\\"
 
 [input]
 

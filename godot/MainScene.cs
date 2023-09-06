@@ -7,10 +7,6 @@ namespace murph9.TabPlayer;
 
 public partial class MainScene : Node
 {
-	static MainScene() {
-		RevorbStd.Native.LibInit();
-	}
-
 	// The Scene manager of the game, this has no game in it right?
 
 	private StartMenu _startMenu;
