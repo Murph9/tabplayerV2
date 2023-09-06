@@ -5,6 +5,7 @@ using murph9.TabPlayer.Songs;
 using murph9.TabPlayer.Songs.Models;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace murph9.TabPlayer.scenes;
 

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.IO;
 using Godot;
 using murph9.TabPlayer.Songs;
 using Newtonsoft.Json;

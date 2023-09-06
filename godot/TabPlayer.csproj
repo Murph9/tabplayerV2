@@ -14,4 +14,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SharpZipLib" Version="1.4.1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabPlayer.Songs\TabPlayer.Songs.csproj" />
+  </ItemGroup>
 </Project>

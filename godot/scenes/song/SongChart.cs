@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using murph9.TabPlayer.scenes.Services;
 using murph9.TabPlayer.Songs.Models;
@@ -53,7 +56,10 @@ public partial class SongChart : Node3D {
             }
         }
 
-        foreach (var x in GenerateNoteBlockFrets(instrument)) yield return x;
+        foreach (var x in GenerateNoteBlockFrets(instrument))
+        {
+            yield return x;
+        }
     }
 
     private IEnumerable<Node3D> Chord(NoteBlock noteBlock, InstrumentConfig config) {

@@ -1,3 +1,5 @@
+using System;
+
 namespace murph9.TabPlayer.scenes.Services;
 
 public static class NumberHelper {

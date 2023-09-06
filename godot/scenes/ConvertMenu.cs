@@ -1,6 +1,7 @@
 using Godot;
 using murph9.TabPlayer.Songs.Convert;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;

@@ -4,6 +4,9 @@ using murph9.TabPlayer.Songs;
 using murph9.TabPlayer.Songs.Models;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace murph9.TabPlayer.scenes;
 

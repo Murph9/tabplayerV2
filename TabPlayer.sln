@@ -1,6 +1,6 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabPlayer", "TabPlayer.csproj", "{98545B83-EB56-489A-AEEA-62CA60390DC7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabPlayer", "godot\TabPlayer.csproj", "{98545B83-EB56-489A-AEEA-62CA60390DC7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabPlayer.Songs", "TabPlayer.Songs\TabPlayer.Songs.csproj", "{4EA99C3A-3E56-46A1-9E8B-7EA5E09A337E}"
 EndProject

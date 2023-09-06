@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Godot;
 using murph9.TabPlayer.scenes.Services;
 using murph9.TabPlayer.Songs;
