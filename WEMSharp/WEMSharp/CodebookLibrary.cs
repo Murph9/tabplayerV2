@@ -227,7 +227,7 @@ namespace WEMSharp
             }
         }
 
-        internal byte[]? GetCodebook(uint index)
+        internal byte[] GetCodebook(uint index)
         {
             if (_codebookData == null || _codebookOffsets == null)
             {
