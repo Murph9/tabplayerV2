@@ -9,16 +9,15 @@ namespace RevorbStd {
         //libs installed in /libs/ or datatool path defined in LD_LIBRARY_PATH env var)
         private static IntPtr SharedLibraryResolver(string libraryName, Assembly assembly, DllImportSearchPath? p) {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                return NativeLibrary.Load("revorbstd/librevorb.dll", assembly, DllImportSearchPath.AssemblyDirectory);
+                return NativeLibrary.Load(System.IO.Path.Combine(AppContext.BaseDirectory, "librevorb.dll"), assembly, DllImportSearchPath.AssemblyDirectory);
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                return NativeLibrary.Load("./revorbstd/librevorb.so", assembly, DllImportSearchPath.AssemblyDirectory);
+                return NativeLibrary.Load(System.IO.Path.Combine(AppContext.BaseDirectory, "./librevorb.so"), assembly, DllImportSearchPath.AssemblyDirectory);
 
             Console.WriteLine("Current platform doesn't support librevorb. Sound conversion to .ogg is not available.");
             return IntPtr.Zero;
         }
 
-        [ModuleInitializer]
         public static void LibInit() {
             NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), SharedLibraryResolver);
         }
