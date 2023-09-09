@@ -27,7 +27,7 @@ namespace RevorbStd {
                 if (File.Exists("../revorbstd/librevorb.so"))
                     return NativeLibrary.Load("../revorbstd/librevorb.so", assembly, DllImportSearchPath.AssemblyDirectory);
 
-                return NativeLibrary.Load("librevorb.so", assembly, DllImportSearchPath.AssemblyDirectory);
+                return NativeLibrary.Load("./librevorb.so", assembly, DllImportSearchPath.AssemblyDirectory);
             }
 
             Console.WriteLine("Current platform doesn't support librevorb. Sound conversion to .ogg is not available.");
