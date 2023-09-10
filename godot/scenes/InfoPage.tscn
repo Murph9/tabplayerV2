@@ -11,22 +11,38 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7ddm5")
 
-[node name="Label" type="Label" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
 offset_right = 40.0
-offset_bottom = 23.0
-text = "Tab Player by murph9
+offset_bottom = 40.0
 
-Can load psarc files from Rocksmith2014 and play them along with the music
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Features of this app:
+- Load and prepare psarc files from from Rocksmith2014
+- Play along with the notes and music
+- Search and filter your full list of songs instantly
+- Stop/start rewind songs while playing
 
-Licence: godotengine.org/license"
+Written in Godot Engine, licence: godotengine.org/license
 
-[node name="Button" type="Button" parent="."]
-layout_mode = 0
-offset_top = 142.0
-offset_right = 45.0
-offset_bottom = 173.0
+A full list can be found in the documentation:"
+
+[node name="ProjectSourceButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Open Documentation
+"
+
+[node name="OpenConfigFolderButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Open Config and Logs Folder"
+
+[node name="BackButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
 text = "Back
 "
 
-[connection signal="pressed" from="Button" to="." method="BackButton_Pressed"]
+[connection signal="pressed" from="VBoxContainer/ProjectSourceButton" to="." method="ProjectSourceButton_Pressed"]
+[connection signal="pressed" from="VBoxContainer/OpenConfigFolderButton" to="." method="OpenConfigFolder_Pressed"]
+[connection signal="pressed" from="VBoxContainer/BackButton" to="." method="BackButton_Pressed"]
