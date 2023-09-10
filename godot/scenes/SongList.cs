@@ -152,7 +152,7 @@ public partial class SongList : Control
 	public void ItemActivated(SongFile selectedSong) {
 		_selectedSong = selectedSong;
 
-		GD.Print("Selected " + _selectedSong.SongName);
+		GD.Print("Selected: " + _selectedSong.SongName);
 		
 		var panel = GetNode<PopupPanel>("PopupPanel");
 		panel.GetChildren().ToList().ForEach(panel.RemoveChild);

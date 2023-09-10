@@ -41,8 +41,6 @@ public partial class SongScene : Node, IAudioStreamPosition
 		_player.StreamPaused = true;
 		
 		var pause = GetNode<Window>("PauseWindow");
-		var windowSize = GetWindow().Size;
-		pause.Size = new Vector2I((int)Math.Round(windowSize.X*0.5f), (int)Math.Round(windowSize.Y*0.5f));
 		pause.PopupCentered();
 		pause.ChildControlsChanged();
 	}

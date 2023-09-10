@@ -102,8 +102,7 @@ text = "[S] or [↓]"
 label_settings = SubResource("LabelSettings_42vc3")
 
 [node name="PauseWindow" type="Window" parent="."]
-title = "Paused"
-size = Vector2i(150, 150)
+initial_position = 1
 visible = false
 exclusive = true
 unresizable = true
@@ -113,12 +112,17 @@ borderless = true
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -55.0
-offset_bottom = -84.0
+offset_right = -5.0
+offset_bottom = -7.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="HeadingLabel" type="Label" parent="PauseWindow/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "PAUSED"
 
 [node name="ResumeButton" type="Button" parent="PauseWindow/VBoxContainer"]
 layout_mode = 2
