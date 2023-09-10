@@ -9,9 +9,9 @@ public class NoteBlock
 {
     public string? Label { get; set; }
     public float Time { get; set; }
-    [JsonPropertyAttribute("fws")] // these take up quite the space in the json file
+    [JsonProperty("fws")] // these take up quite the space in the json file
     public int FretWindowStart { get; set; }
-    [JsonPropertyAttribute("fwl")] // these take up quite the space in the json file
+    [JsonProperty("fwl")] // these take up quite the space in the json file
     public int FretWindowLength { get; set; }
     public IEnumerable<NoteBlockFlags> ChordFlags { get; set; }
     public IEnumerable<SingleNote> Notes { get; set; }
@@ -42,19 +42,19 @@ public class NoteBlock
         if (Math.Abs(other.Time - this.Time) > maxInterval)
             return false;
 
-        var thisHasStuff = this.Notes.Any(x => (x.Bends != null && x.Bends.Any()) || x.Slide != null);
+        var thisHasStuff = Notes.Any(x => (x.Bends != null && x.Bends.Any()) || x.Slide != null);
         if (thisHasStuff) return false;
 
         var otherHasStuff = other.Notes.Any(x => (x.Bends != null && x.Bends.Any()) || x.Slide != null);
         if (otherHasStuff) return false;
 
-        if (this.Notes.Count() != other.Notes.Count())
+        if (Notes.Count() != other.Notes.Count())
             return false;
 
-        if (!Enumerable.SequenceEqual(this.ChordFlags, other.ChordFlags))
+        if (!Enumerable.SequenceEqual(ChordFlags, other.ChordFlags))
             return false;
 
-        using var thisE = this.Notes.GetEnumerator();
+        using var thisE = Notes.GetEnumerator();
         using var otherE = other.Notes.GetEnumerator();
         while (thisE.MoveNext() && otherE.MoveNext())
         {
@@ -72,4 +72,3 @@ public class NoteBlock
         return true;
     }
 }
-
