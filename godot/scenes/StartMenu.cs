@@ -1,6 +1,5 @@
 using Godot;
 using murph9.TabPlayer.Songs;
-using System;
 using System.Threading.Tasks;
 
 namespace murph9.TabPlayer.scenes;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace murph9.TabPlayer.Songs.Models;
@@ -12,17 +13,17 @@ public class SingleNote
     public SingleSlide? Slide { get; private set; }
     public SingleNote(int stringNum, int fretNum, float length, IEnumerable<NoteType> type, ICollection<SingleBend> bends, SingleSlide? slide)
     {
-        this.StringNum = stringNum;
-        this.FretNum = fretNum;
-        this.Length = length;
-        this.Type = type ?? Array.Empty<NoteType>();
-        this.Bends = bends;
-        this.Slide = slide;
+        StringNum = stringNum;
+        FretNum = fretNum;
+        Length = length;
+        Type = type ?? Array.Empty<NoteType>();
+        Bends = bends;
+        Slide = slide;
 
-        if (this.Slide != null && this.Length <= 0)
+        if (Slide != null && Length <= 0)
         {
             // Slide without a length for note, setting as no slide
-            this.Slide = null;
+            Slide = null;
         }
     }
 }

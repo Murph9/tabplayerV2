@@ -6,5 +6,5 @@ public static class StringHelper
         if (str == null || length < 1) return null;
         if (str.Length > length) return str[..length];
         return str.PadRight(length);
-    }        
+    }
 }

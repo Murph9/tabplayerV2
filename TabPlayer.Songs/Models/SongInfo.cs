@@ -20,13 +20,13 @@ public class Instrument
     [JsonConstructor]
     public Instrument(string name, IEnumerable<NoteBlock> notes, IEnumerable<Section> sections, InstrumentConfig config)
     {
-        this.Name = name;
-        this.Notes = notes.OrderBy(x => x.Time).ToList();
-        this.Config = config;
+        Name = name;
+        Notes = notes.OrderBy(x => x.Time).ToList();
+        Config = config;
 
-        this.Sections = sections.ToList();
+        Sections = sections.ToList();
 
-        this.ControlData = CalcControlData(this.Notes);
+        ControlData = CalcControlData(Notes);
     }
 
     public static string CalcTuningName(short[] t, float? capoFret) {

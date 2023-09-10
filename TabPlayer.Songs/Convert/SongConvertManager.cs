@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 using Rocksmith2014PsarcLib.Psarc;
 using System;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace murph9.TabPlayer.Songs.Convert
 {
@@ -16,9 +18,9 @@ namespace murph9.TabPlayer.Songs.Convert
             
             try {
                 if (type == SongType.Midi)
-                    success = SongConvertManager.ExportMidi(new DirectoryInfo(location), output);
+                    success = ExportMidi(new DirectoryInfo(location), output);
                 if (type == SongType.Psarc)
-                    success = await SongConvertManager.ExportPsarc(new FileInfo(location), reconvert, output);
+                    success = await ExportPsarc(new FileInfo(location), reconvert, output);
             } catch (Exception e) {
                 Console.WriteLine(e);
                 Console.WriteLine($"Failed to convert file '{location}'");

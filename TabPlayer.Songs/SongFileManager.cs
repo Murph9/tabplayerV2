@@ -1,11 +1,11 @@
-﻿namespace murph9.TabPlayer.Songs;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using murph9.TabPlayer.Songs.Models;
 using Newtonsoft.Json;
+
+namespace murph9.TabPlayer.Songs;
 
 public class SongFileManager
 {

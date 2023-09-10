@@ -34,7 +34,9 @@ namespace RevorbStd {
             return IntPtr.Zero;
         }
 
+#pragma warning disable CA2255
         [ModuleInitializer]
+#pragma warning restore CA2255
         public static void LibInit() {
             NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), SharedLibraryResolver);
         }
