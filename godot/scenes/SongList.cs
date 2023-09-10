@@ -2,7 +2,6 @@ using Godot;
 using murph9.TabPlayer.scenes.Services;
 using murph9.TabPlayer.Songs;
 using murph9.TabPlayer.Songs.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -153,7 +152,7 @@ public partial class SongList : Control
 	public void ItemActivated(SongFile selectedSong) {
 		_selectedSong = selectedSong;
 
-		GD.Print(_selectedSong.SongName);
+		GD.Print("Selected " + _selectedSong.SongName);
 		
 		var panel = GetNode<PopupPanel>("PopupPanel");
 		panel.GetChildren().ToList().ForEach(panel.RemoveChild);
@@ -204,8 +203,13 @@ public partial class SongList : Control
 	}
 
 	private void LoadTableFilter() {
+		var capoShown = GetNode<CheckBox>("VBoxContainer/HBoxContainer/CapoCheckBox").ButtonPressed;
+
 		foreach (var row in _rows) {
-			var tuningEnabled = string.IsNullOrEmpty(_tuningFilter) || Instrument.CalcTuningName(row.Song.GetMainInstrument().Tuning) == _tuningFilter;
+			var instrument = row.Song.GetMainInstrument();
+			var tuningEnabled = (string.IsNullOrEmpty(_tuningFilter) || Instrument.CalcTuningName(instrument.Tuning) == _tuningFilter)
+				&& (instrument.CapoFret == 0 || (capoShown && instrument.CapoFret != 0));
+			
 			var enabled = _filter == null || _filter(row.Song);
 			foreach (var control in row.Controls) {
 				control.Visible = enabled && tuningEnabled;
@@ -215,7 +219,6 @@ public partial class SongList : Control
 
 	private void Heading_Pressed(BaseButton b) {
         if (b is not Button button) return;
-        GD.Print(button.Text);
 
 		var heading = HEADINGS.Single(x => button == x.Button);
 		_sort = heading.Sort;
@@ -249,5 +252,9 @@ public partial class SongList : Control
 		var song = validSongs[index];
 		
 		ItemActivated(song.Song);
+	}
+
+	private void ShowCapo_Pressed() {
+		LoadTableFilter();
 	}
 }

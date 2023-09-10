@@ -12,7 +12,7 @@ public class SongFileManager
     public readonly static string SONG_FOLDER;
     public readonly static string PLAY_DATA_FILE;
     static SongFileManager() {
-        SONG_FOLDER = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "murph9.TabPlayer");
+        SONG_FOLDER = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "murph9.TabPlayer");
         PLAY_DATA_FILE = Path.Combine(SONG_FOLDER, "playData.json");
     }
 
@@ -87,16 +87,16 @@ public record SongFile(string FolderName, string SongName, string Artist, string
     public string GetInstrumentChars()
     {
         var chars = new char[] { ' ', ' ', ' ', ' ', ' '};
-        if (this.Instruments.Any(x => x.Name == SongInfo.LEAD_NAME))
+        if (Instruments.Any(x => x.Name == SongInfo.LEAD_NAME))
             chars[0] = 'L';
-        if (this.Instruments.Any(x => x.Name == SongInfo.RHYTHM_NAME))
+        if (Instruments.Any(x => x.Name == SongInfo.RHYTHM_NAME))
             chars[1] = 'R';
-        if (this.Instruments.Any(x => x.Name == SongInfo.BASS_NAME))
+        if (Instruments.Any(x => x.Name == SongInfo.BASS_NAME))
             chars[2] = 'B';
-        if (this.Lyrics != null && this.Lyrics.WordCount > 0)
+        if (Lyrics != null && Lyrics.WordCount > 0)
             chars[3] = 'V';
         
-        var otherInstruments = this.Instruments.Count(x => !SongInfo.STANDARD_INSTRUMENT_TYPES.Contains(x.Name));
+        var otherInstruments = Instruments.Count(x => !SongInfo.STANDARD_INSTRUMENT_TYPES.Contains(x.Name));
         if (otherInstruments > 0) {
             if (otherInstruments.ToString().Length > 0)
                 chars[4] = otherInstruments.ToString()[0];
@@ -106,7 +106,7 @@ public record SongFile(string FolderName, string SongName, string Artist, string
     }
 
     public SongFileInstrument GetMainInstrument() {
-        return this.Instruments.FirstOrDefault(x => x.IsMain);
+        return Instruments.FirstOrDefault(x => x.IsMain);
     }
 }
 

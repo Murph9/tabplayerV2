@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://is88mgxkke68"]
+[gd_scene load_steps=3 format=3 uid="uid://is88mgxkke68"]
 
 [ext_resource type="Script" path="res://scenes/SongList.cs" id="1_tdao1"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_88tyd"]
+font_size = 20
 
 [node name="SongList" type="Control"]
 layout_mode = 3
@@ -21,25 +24,39 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer_Top" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="BackButton" type="Button" parent="VBoxContainer/HBoxContainer_Top"]
 layout_mode = 2
 text = "Back"
 
-[node name="BackLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="Title" type="Label" parent="VBoxContainer/HBoxContainer_Top"]
 layout_mode = 2
 text = "Select a song below:"
+label_settings = SubResource("LabelSettings_88tyd")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="RandomButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Random"
+
+[node name="VSeparator3" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
 
 [node name="FilterLineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
-placeholder_text = "Filter Below"
+placeholder_text = "Search"
 
 [node name="ResetFilterButton" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Reset"
+text = "Reset Search"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
 
 [node name="TuningLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -49,9 +66,12 @@ text = "Set Tuning:"
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 
-[node name="RandomButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="VSeparator2" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Random"
+
+[node name="CapoCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Show Capo"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -65,8 +85,9 @@ size_flags_vertical = 3
 
 [node name="PopupPanel" type="PopupPanel" parent="."]
 
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="Back"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer_Top/BackButton" to="." method="Back"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RandomButton" to="." method="SelectRandom"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/FilterLineEdit" to="." method="UpdateFilter"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/ResetFilterButton" to="." method="ResetFilter_Pressed"]
 [connection signal="item_selected" from="VBoxContainer/HBoxContainer/TuningOptionButton" to="." method="TuningSelected"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/RandomButton" to="." method="SelectRandom"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/CapoCheckBox" to="." method="ShowCapo_Pressed"]
