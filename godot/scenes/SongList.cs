@@ -161,12 +161,12 @@ public partial class SongList : Control
 		panel.AddChild(layout);
 
 		layout.AddChild(new Label() {
-			Text = $"Select an instrument for song:\n{selectedSong.SongName}\nby {selectedSong.Artist} ({selectedSong.Year})"
+			Text = $"Select an instrument for song:\n{selectedSong.SongName}\n{selectedSong.Artist} ({selectedSong.Year})\n{selectedSong.Length.ToMinSec()}"
 		});
 
 		foreach (var i in _selectedSong.Instruments) {
 			var b = new Button() {
-				Text = i.Name + " | Tuning:" + Instrument.CalcTuningName(i.Tuning, i.CapoFret) + " | Note Count:" + i.NoteCount
+				Text = $"{i.Name} Tuning: {Instrument.CalcTuningName(i.Tuning, i.CapoFret)} | Notes: {i.NoteCount} @ {i.GetNoteDensity(_selectedSong).ToFixedPlaces(2, false)}"
 			};
 			b.Pressed += () => SelectedItem_LoadSong(i.Name);
 			layout.AddChild(b);
