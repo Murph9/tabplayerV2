@@ -43,7 +43,7 @@ namespace murph9.TabPlayer.Songs.Convert
                     foreach (var name in songNames) {
                         try {
                             await ExportSinglePsarc(p, name.Split(':').Last(), reconvert, output);
-                        } catch (System.IO.IOException e) {
+                        } catch (IOException e) {
                             Console.WriteLine(e);
                             output("Failed to convert: " + name.Split(':').Last());
                         } catch (Exception) {

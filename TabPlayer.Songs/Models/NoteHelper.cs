@@ -40,13 +40,16 @@ public class NoteHelper
         if (note.Type.Contains(NoteType.HARMONIC))
             yield return "H";
 
+        if (note.Type.Contains(NoteType.PINCHHARMONIC))
+            yield return "o";
+
         if (note.Type.Contains(NoteType.FRETHANDMUTE))
             yield return ".";
 
-        if (note.Type.Contains(NoteType.SLIDEUNPITCHEDTO) && (note.Slide.HasValue && note.Slide.Value.SlideUnpitched && note.FretNum > note.Slide.Value.ToFret))
+        if (note.Type.Contains(NoteType.SLIDEUNPITCHEDTO) && note.Slide.HasValue && note.Slide.Value.SlideUnpitched && note.FretNum > note.Slide.Value.ToFret)
             yield return "\\";
 
-        if (note.Type.Contains(NoteType.SLIDEUNPITCHEDTO) && (note.Slide.HasValue && note.Slide.Value.SlideUnpitched && note.FretNum < note.Slide.Value.ToFret))
+        if (note.Type.Contains(NoteType.SLIDEUNPITCHEDTO) && note.Slide.HasValue && note.Slide.Value.SlideUnpitched && note.FretNum < note.Slide.Value.ToFret)
             yield return "/";
 
         // if (note.Type.Contains(NoteType.OPEN))

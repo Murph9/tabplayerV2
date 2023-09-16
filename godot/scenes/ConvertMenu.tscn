@@ -17,9 +17,18 @@ text = "This page allows you to select a single .psarc file or all in a folder"
 layout_mode = 2
 text = "Overwrite existing files"
 
-[node name="Button" type="Button" parent="VBoxContainer"]
+[node name="ChoseButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-text = "Go"
+text = "Manually Choose Files"
+
+[node name="Label2" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = " or"
+horizontal_alignment = 1
+
+[node name="FromDownloadsButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Convert All from Downloads"
 
 [node name="InfoLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
@@ -41,7 +50,8 @@ text = "Back
 "
 
 [connection signal="toggled" from="VBoxContainer/RecreateRadio" to="." method="Recreate_Toggled"]
-[connection signal="pressed" from="VBoxContainer/Button" to="." method="GoButton_Pressed"]
+[connection signal="pressed" from="VBoxContainer/ChoseButton" to="." method="ChoseButton_Pressed"]
+[connection signal="pressed" from="VBoxContainer/FromDownloadsButton" to="." method="FromDownloadsButton_Pressed"]
 [connection signal="dir_selected" from="FileDialog" to="." method="Dir_Selected"]
 [connection signal="file_selected" from="FileDialog" to="." method="File_Selected"]
 [connection signal="files_selected" from="FileDialog" to="." method="Files_Selected"]

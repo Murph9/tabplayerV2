@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ public partial class ConvertMenu : Node2D
 
 	public void Recreate_Toggled(bool state) => _recreate = state;
 
-	public void GoButton_Pressed() {
+	private void ChoseButton_Pressed() {
 		var infoLabel = GetNode<Label>("VBoxContainer/InfoLabel");
 		infoLabel.Text = "";
 		
@@ -30,6 +31,14 @@ public partial class ConvertMenu : Node2D
 		var windowSize = GetWindow().Size;
 		a.Size = new Vector2I((int)Math.Round(windowSize.X*0.8f), (int)Math.Round(windowSize.Y*0.8f));
 		a.PopupCentered();
+	}
+
+	private async void FromDownloadsButton_Pressed() {
+		var infoLabel = GetNode<Label>("VBoxContainer/InfoLabel");
+		var downloadsFolder = OS.GetSystemDir(OS.SystemDir.Downloads);
+
+		infoLabel.Text = "Downloading from " + downloadsFolder;
+		await ConvertFiles(Directory.GetFiles(downloadsFolder, "*.psarc"));
 	}
 
 	public async void Dir_Selected(string dir) => await ConvertFiles(Directory.GetFiles(dir, "*.psarc"));
@@ -46,21 +55,26 @@ public partial class ConvertMenu : Node2D
 		}
 		
 		var completed = new List<string>();
+		var failed = new List<string>();
 		foreach (var psarc in files) {
 			try {
 				var success = await SongConvertManager.ConvertFile(SongConvertManager.SongType.Psarc, psarc, _recreate, (string str) => {infoLabel.Text = str;});
 				if (success)
 					completed.Add(psarc);
+				else
+					failed.Add(psarc);
 			} catch (Exception e) {
 				GD.Print(e, "ogg file not converted: " + psarc);
 				infoLabel.Text = "Failed to convert psarc file: " + psarc;
-				Thread.Sleep(300); // so you can read it i guess
+				failed.Add(psarc);
 			}
 		}
-		if (completed.Count < 1)
-			infoLabel.Text = $"Completed none :(";
-		else
-			infoLabel.Text = $"Completed: {String.Join('\n', completed)}";
+		infoLabel.Text = $"Completed: {completed.Count}, failed: {failed.Count}";
+		if (failed.Count > 0) {
+			foreach (var fail in failed) {
+				infoLabel.Text += "\n Failed: " + fail;
+			}
+		}
 	}
 
 	public void BackButton_Pressed() {
