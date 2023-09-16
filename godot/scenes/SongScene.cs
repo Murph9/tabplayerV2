@@ -30,14 +30,14 @@ public partial class SongScene : Node, IAudioStreamPosition
 		_audioStream = AudioStreamOggVorbis.LoadFromBuffer(state.Audio);
 	}
 
-	public void SongFinished() {
+	private void SongFinished() {
 		_player.Play();
 		_player.Seek(0);
 		_player.StreamPaused = true;
 		Pause();
 	}
 
-	public void Pause() {
+	private void Pause() {
 		_player.StreamPaused = true;
 		
 		var pause = GetNode<Window>("PauseWindow");
@@ -45,7 +45,7 @@ public partial class SongScene : Node, IAudioStreamPosition
 		pause.ChildControlsChanged();
 	}
 
-	public void Resume() {
+	private void Resume() {
 		_player.StreamPaused = false;
 		
 		var pause = GetNode<Window>("PauseWindow");
@@ -53,14 +53,14 @@ public partial class SongScene : Node, IAudioStreamPosition
 			pause.Hide();
 	}
 
-	public void Quit() {
+	private void Quit() {
 		_player.Stop();
 		Pause(); // prevent errors in final update frame
 		
 		EmitSignal(SignalName.Closed);
 	}
 
-	public void PauseWindow_Input(InputEvent @event) {
+	private void PauseWindow_Input(InputEvent @event) {
 		_Input(@event);
 	}
 
@@ -86,15 +86,15 @@ public partial class SongScene : Node, IAudioStreamPosition
 		}
 	}
 
-	public void Skip10Sec() => _player.Seek((float)GetSongPosition() + 10f);
-	public void Back10Sec() => _player.Seek((float)GetSongPosition() - 10f);
-	public void SkipToNext() {
+	private void Skip10Sec() => _player.Seek((float)GetSongPosition() + 10f);
+	private void Back10Sec() => _player.Seek((float)GetSongPosition() - 10f);
+	private void SkipToNext() {
 		var nextNote = NextNoteBlock();
 		if (nextNote == null)
 			return;
 		_player.Seek(nextNote.Time - 1.5f);
 	}
-	public void RestartSong() => _player.Seek(0);
+	private void RestartSong() => _player.Seek(0);
 
 	public override void _Ready()
 	{

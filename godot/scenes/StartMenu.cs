@@ -27,19 +27,19 @@ public partial class StartMenu : Node
 		GetNode<Label>("ReloadProgressLabel").Text = _progressText;
 	}
 
-	public void StartButton_Pressed() {
+	private void StartButton_Pressed() {
 		EmitSignal(SignalName.SongListOpened);
 	}
 
-	public void InfoButton_Pressed() {
+	private void InfoButton_Pressed() {
 		EmitSignal(SignalName.InfoMenuOpened);
 	}
 
-	public void ConvertButton_Pressed() {
+	private void ConvertButton_Pressed() {
 		EmitSignal(SignalName.ConvertMenuOpened);
 	}
 
-	public void ReloadButton_Pressed() {
+	private void ReloadButton_Pressed() {
 		var startButton = GetNode<Button>("%StartButton");
 		startButton.Disabled = true;
 		var convertButton = GetNode<Button>("%ConvertButton");
@@ -57,11 +57,11 @@ public partial class StartMenu : Node
 		});
 	}
 
-	public void QuitButton_Pressed() {
+	private void QuitButton_Pressed() {
 		EmitSignal(SignalName.Closed);
 	}
 
-	public void SettingsButton_Pressed() {
+	private void SettingsButton_Pressed() {
 		EmitSignal(SignalName.SettingsOpened);
 	}
 }

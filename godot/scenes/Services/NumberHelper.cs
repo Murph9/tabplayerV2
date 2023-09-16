@@ -7,7 +7,7 @@ public static class NumberHelper {
         return ((double)value).ToMinSec(frac);
     }
     public static string ToMinSec(this double value, bool frac = false) {
-        var fracStr = frac ? $" {(int)(((decimal)value % 1) * 1000)}ms" : null;
+        var fracStr = frac ? $" {(int)((decimal)value % 1 * 1000)}ms" : null;
         return $"{Math.Floor(value/60f)}m {Math.Floor(value % 60)}s{fracStr}";
     }
 

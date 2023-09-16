@@ -52,7 +52,7 @@ public partial class SettingsPage : CenterContainer
 			});
 			var picker = new ColorPickerButton() {
 				LayoutMode = 2,
-				SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+				SizeFlagsHorizontal = SizeFlags.ExpandFill,
 				Color = _settings.StringColours[i],
 				EditAlpha = false
 			};

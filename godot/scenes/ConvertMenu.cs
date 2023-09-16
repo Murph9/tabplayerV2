@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace murph9.TabPlayer.scenes;
@@ -43,7 +41,7 @@ public partial class ConvertMenu : Node2D
 
 	public async void Dir_Selected(string dir) => await ConvertFiles(Directory.GetFiles(dir, "*.psarc"));
 	public async void File_Selected(string path) => await ConvertFiles(new string[] {path});
-	public async void Files_Selected(String[] paths) => await ConvertFiles(paths);
+	public async void Files_Selected(string[] paths) => await ConvertFiles(paths);
 
 	private async Task ConvertFiles(string[] files) {
 		var infoLabel = GetNode<Label>("VBoxContainer/InfoLabel");
