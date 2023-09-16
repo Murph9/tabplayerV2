@@ -12,7 +12,13 @@ public partial class NoteGraph : Node {
     private const float BUCKET_SIZE = 3;
     private const float BUCKET_PIXEL_WIDTH = 7;
     private const float BUCKET_NOTE_PIXEL_HEIGHT = 5;
-    private const float BUCKET_BOTTOM_OFFSET = 10;
+    private const float BUCKET_BOTTOM_OFFSET = 15;
+
+    record GraphSection {
+        public ColorRect Chord;
+        public ColorRect Note;
+        public ColorRect Unique;
+    }
 
     private Color _chordColour = new(0, 0, 0.3f, 0.5f);
     private Color _noteColour = new(0.3f, 0f, 0, 0.5f);
@@ -21,9 +27,7 @@ public partial class NoteGraph : Node {
     private SongState _songState;
     private IAudioStreamPosition _audio;
 
-    private readonly Dictionary<int, ColorRect> _graphChordBars = new();
-    private readonly Dictionary<int, ColorRect> _graphNoteBars = new();
-    private readonly Dictionary<int, ColorRect> _graphUniqueBars = new();
+    private readonly Dictionary<int, GraphSection> _graphBars = new();
     // TODO show which strings each section has
 
     public void _init(SongState songState, IAudioStreamPosition audio) {
@@ -68,36 +72,38 @@ public partial class NoteGraph : Node {
             }
             var uniquePercent = uniqueList.Count / Math.Max(1f, totalCount);
 
-            _graphChordBars.Add(i, new ColorRect() {
+            var chord = new ColorRect() {
                 Color = _chordColour,
                 AnchorsPreset = 3,
                 OffsetTop = -BUCKET_BOTTOM_OFFSET - chordHeight,
                 OffsetLeft = -BUCKET_PIXEL_WIDTH * (float)(maxBucket - i),
                 Size = new Vector2(BUCKET_PIXEL_WIDTH, chordHeight)
-            });
-            _graphNoteBars.Add(i, new ColorRect() {
+            };
+            var note = new ColorRect() {
                 Color = _noteColour,
                 AnchorsPreset = 3,
                 OffsetTop = -BUCKET_BOTTOM_OFFSET - chordHeight - noteHeight,
                 OffsetLeft = -BUCKET_PIXEL_WIDTH*(float)(maxBucket - i),
                 Size = new Vector2(BUCKET_PIXEL_WIDTH, noteHeight)
-            });
-            _graphUniqueBars.Add(i, new ColorRect() {
+            };
+            var unique = new ColorRect() {
                 Color = _uniqueColour,
                 AnchorsPreset = 3,
                 OffsetTop = -BUCKET_BOTTOM_OFFSET,
                 OffsetLeft = -BUCKET_PIXEL_WIDTH*(float)(maxBucket - i),
                 Size = new Vector2(BUCKET_PIXEL_WIDTH, BUCKET_BOTTOM_OFFSET * uniquePercent)
+            };
+
+            _graphBars.Add(i, new GraphSection() {
+                Chord = chord,
+                Note = note,
+                Unique = unique
             });
         }
-        foreach (var n in _graphChordBars) {
-            barNode.AddChild(n.Value);
-        }
-        foreach (var n in _graphNoteBars) {
-            barNode.AddChild(n.Value);
-        }
-        foreach (var n in _graphUniqueBars) {
-            barNode.AddChild(n.Value);
+        foreach (var n in _graphBars) {
+            barNode.AddChild(n.Value.Chord);
+            barNode.AddChild(n.Value.Note);
+            barNode.AddChild(n.Value.Unique);
         }
 	}
 
@@ -108,25 +114,16 @@ public partial class NoteGraph : Node {
 
         var bucket = Math.Round(_audio.GetSongPosition()/BUCKET_SIZE);
 
-        foreach (var bar in _graphChordBars) {
-            if (bar.Key == bucket)
-                bar.Value.Color = _chordColour * 2;
-            else
-                bar.Value.Color = _chordColour;
-        }
-
-        foreach (var bar in _graphNoteBars) {
-            if (bar.Key == bucket)
-                bar.Value.Color = _noteColour * 2;
-            else
-                bar.Value.Color = _noteColour;
-        }
-
-        foreach (var bar in _graphUniqueBars) {
-            if (bar.Key == bucket)
-                bar.Value.Color = _uniqueColour * 2;
-            else
-                bar.Value.Color = _uniqueColour;
+        foreach (var bar in _graphBars) {
+            if (bar.Key == bucket) {
+                bar.Value.Chord.Color = _chordColour * 2;
+                bar.Value.Note.Color = _noteColour * 2;
+                bar.Value.Unique.Color = _uniqueColour * 2;
+            } else {
+                bar.Value.Chord.Color = _chordColour;
+                bar.Value.Note.Color = _noteColour;
+                bar.Value.Unique.Color = _uniqueColour;
+            }
         }
 	}
 }
