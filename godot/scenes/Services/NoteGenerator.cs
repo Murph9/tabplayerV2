@@ -86,6 +86,11 @@ public class NoteGenerator {
                 lastPos = endPos;
             }
 
+            if (noteBlock.Time + note.Length > note.Bends.Last().Time) {
+                var endPos2 = new Vector3((noteBlock.Time + note.Length)*config.NoteSpeed, notePos.Y, notePos.Z);
+                yield return MeshGenerator.BoxLine(SettingsService.GetColorFromStringNum(note.StringNum), lastPos, endPos2);
+            }
+
         } else if (note.Type.Contains(NoteType.SLIDE)) {
             if (note.Slide == null || !note.Slide.HasValue)
                 throw new Exception("A slide without a slide"); // TODO should really have not passed validation
