@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://is88mgxkke68"]
+[gd_scene load_steps=3 format=3 uid="uid://cjt4fuduh34qh"]
 
 [ext_resource type="Script" path="res://scenes/SongPick.cs" id="1_tdao1"]
 
@@ -24,80 +24,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HBoxContainer_Top" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="BackButton" type="Button" parent="VBoxContainer/HBoxContainer_Top"]
+[node name="BackButton" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Back"
 
-[node name="Title" type="Label" parent="VBoxContainer/HBoxContainer_Top"]
+[node name="Title" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Select a song below:"
 label_settings = SubResource("LabelSettings_88tyd")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="RandomButton" type="Button" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Random"
-
-[node name="VSeparator3" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="FilterLineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-placeholder_text = "Search"
-
-[node name="ResetFilterButton" type="Button" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Reset Search"
-
-[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="TuningLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Set Tuning:"
-
-[node name="TuningOptionButton" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-
-[node name="VSeparator2" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="CapoCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Show Capo"
-
-[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HSplitContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-horizontal_scroll_mode = 0
-
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer/HSplitContainer/ScrollContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="VBoxContainerDetails" type="VBoxContainer" parent="VBoxContainer/HSplitContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
 [node name="PopupPanel" type="PopupPanel" parent="."]
 
-[connection signal="pressed" from="VBoxContainer/HBoxContainer_Top/BackButton" to="." method="Back"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/RandomButton" to="." method="SelectRandom"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer/FilterLineEdit" to="." method="UpdateFilter"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/ResetFilterButton" to="." method="ResetFilter_Pressed"]
-[connection signal="item_selected" from="VBoxContainer/HBoxContainer/TuningOptionButton" to="." method="TuningSelected"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/CapoCheckBox" to="." method="ShowCapo_Pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/BackButton" to="." method="Back"]

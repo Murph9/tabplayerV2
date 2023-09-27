@@ -1,0 +1,76 @@
+[gd_scene load_steps=2 format=3 uid="uid://b8cwde4vswi6a"]
+
+[ext_resource type="Script" path="res://scenes/SongList.cs" id="1_tdao1"]
+
+[node name="SongList" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_tdao1")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="RandomButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Random"
+
+[node name="VSeparator3" type="VSeparator" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="FilterLineEdit" type="LineEdit" parent="HBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+placeholder_text = "Search"
+
+[node name="ResetFilterButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Reset Search"
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="TuningLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "Set Tuning:"
+
+[node name="TuningOptionButton" type="OptionButton" parent="HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="VSeparator2" type="VSeparator" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="CapoCheckBox" type="CheckBox" parent="HBoxContainer"]
+layout_mode = 2
+text = "Show Capo"
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="GridContainer" type="GridContainer" parent="HSplitContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainerDetails" type="VBoxContainer" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="pressed" from="HBoxContainer/RandomButton" to="." method="SelectRandom"]
+[connection signal="text_changed" from="HBoxContainer/FilterLineEdit" to="." method="UpdateFilter"]
+[connection signal="pressed" from="HBoxContainer/ResetFilterButton" to="." method="ResetFilter_Pressed"]
+[connection signal="item_selected" from="HBoxContainer/TuningOptionButton" to="." method="TuningSelected"]
+[connection signal="pressed" from="HBoxContainer/CapoCheckBox" to="." method="ShowCapo_Pressed"]
