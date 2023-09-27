@@ -103,6 +103,8 @@ public partial class SongScene : Node, IAudioStreamPosition
 
 		_player = GetNode<AudioStreamPlayer>("AudioStreamPlayer");
 		_player.Stream = _audioStream;
+		//_player.VolumeDb = 0;
+		//_player.Bus = "some bus name with phase shift"
 		_player.Play();
 		
 		var guitarChartScene = GD.Load<CSharpScript>("res://scenes/song/GuitarChart.cs").New().As<GuitarChart>();

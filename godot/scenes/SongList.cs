@@ -58,15 +58,6 @@ public partial class SongList : Control
 			Controls.Add(new Label() { Text = Instrument.CalcTuningName(mainI?.Tuning) });
 			Controls.Add(new Label() { Text = mainI?.NoteCount.ToString() });
 			Controls.Add(new Label() { Text = mainI?.GetNoteDensity(song).ToFixedPlaces(2, false) });
-			var otherInstruments = song.Instruments.Where(x => x != song.GetMainInstrument()).Take(2);
-			foreach (var otherI in otherInstruments) {
-				Controls.Add(new Label() {
-					Text = otherI.Name + ": " + Instrument.CalcTuningName(otherI.Tuning, otherI.CapoFret)
-				});
-			}
-			for (int i = 0; i < 2 - otherInstruments.Count(); i++) {
-				Controls.Add(new Label());
-			}
 		}
 	}
 
@@ -82,8 +73,6 @@ public partial class SongList : Control
 		new Column("Tuning", (s) => Instrument.CalcTuningName(s.GetMainInstrument()?.Tuning, s.GetMainInstrument()?.CapoFret)),
 		new Column("Notes", (s) => s.GetMainInstrument()?.GetNoteDensity(s)),
 		new Column("Density", (s) => s.GetMainInstrument()?.NoteCount),
-		new Column(null, null),
-		new Column(null, null),
 	};
 
 	private SongFile _selectedSong;
@@ -107,7 +96,7 @@ public partial class SongList : Control
 	{
 		var group = new ButtonGroup();
 
-		var grid = GetNode<GridContainer>("VBoxContainer/ScrollContainer/GridContainer");
+		var grid = GetNode<GridContainer>("%GridContainer");
 		grid.Columns = HEADINGS.Count;
 		foreach (var heading in HEADINGS) {
 			if (heading.Sorted) {
@@ -192,7 +181,7 @@ public partial class SongList : Control
 	}
 
 	private void LoadTableRows() {
-		var grid = GetNode<GridContainer>("VBoxContainer/ScrollContainer/GridContainer");
+		var grid = GetNode<GridContainer>("%GridContainer");
 		foreach (var row in _rows.OrderBy(x => _sort(x.Song))) {
 			foreach (var control in row.Controls) {
 				if (control.GetParent() != null)
