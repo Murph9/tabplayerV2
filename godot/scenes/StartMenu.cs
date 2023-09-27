@@ -9,13 +9,13 @@ public partial class StartMenu : Node
 	[Signal]
 	public delegate void ClosedEventHandler();
 	[Signal]
-	public delegate void SongListOpenedEventHandler();
+	public delegate void SongPickOpenedEventHandler();
 	[Signal]
 	public delegate void ConvertMenuOpenedEventHandler();
 	[Signal]
 	public delegate void InfoMenuOpenedEventHandler();
 	[Signal]
-	public delegate void SongListChangedEventHandler();
+	public delegate void SongListFileChangedEventHandler();
 	[Signal]
 	public delegate void SettingsOpenedEventHandler();
 
@@ -28,7 +28,7 @@ public partial class StartMenu : Node
 	}
 
 	private void StartButton_Pressed() {
-		EmitSignal(SignalName.SongListOpened);
+		EmitSignal(SignalName.SongPickOpened);
 	}
 
 	private void InfoButton_Pressed() {
@@ -50,7 +50,7 @@ public partial class StartMenu : Node
 		Task.Run(() => {
 			SongFileManager.UpdateSongList((str) => _progressText = str);
 
-			CallDeferred("emit_signal", SignalName.SongListChanged);
+			CallDeferred("emit_signal", SignalName.SongListFileChanged);
 			reloadButton.SetDeferred("disabled", false);
 			convertButton.SetDeferred("disabled", false);
 			startButton.SetDeferred("disabled", false);

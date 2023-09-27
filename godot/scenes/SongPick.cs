@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace murph9.TabPlayer.scenes;
 
-public partial class SongList : Control
+public partial class SongPick : Control
 {
 	class Column {
 		public string Name { get; private set; }
@@ -87,7 +87,7 @@ public partial class SongList : Control
 	[Signal]
 	public delegate void OpenedSongEventHandler(string folder, string instrument);
 
-	public SongList() {
+	public SongPick() {
 		var songList = SongFileManager.GetSongFileList();
 		_rows = songList.Data.ToArray().Select(x => new Row(x, () => ItemActivated(x))).ToList();
 	}

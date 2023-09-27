@@ -10,12 +10,12 @@ public partial class MainScene : Node
 	// The Scene manager of the game, this has no game in it right?
 
 	private StartMenu _startMenu;
-	private SongList _songList;
+	private SongPick _songPick;
 
 	public override void _Ready()
 	{
 		LoadStartMenu();
-		LoadSongList();
+		LoadSongPick();
 	}
 	
 	private void LoadStartMenu() {
@@ -26,19 +26,19 @@ public partial class MainScene : Node
 			GD.Print("Start Menu closed");
 			GetTree().Quit();
 		};
-		_startMenu.SongListOpened += () => {
+		_startMenu.SongPickOpened += () => {
 			RemoveChild(_startMenu);
-			AddChild(_songList);
+			AddChild(_songPick);
 		};
-		_startMenu.SongListChanged += () => {
-			var loaded = _songList.IsVisibleInTree();
+		_startMenu.SongListFileChanged += () => {
+			var loaded = _songPick.IsVisibleInTree();
 			if (loaded) {
-				_songList.QueueFree();
+				_songPick.QueueFree();
 			}
-			LoadSongList();
+			LoadSongPick();
 
 			if (loaded) {
-				AddChild(_songList);
+				AddChild(_songPick);
 			}
 		};
 		_startMenu.ConvertMenuOpened += () => {
@@ -70,21 +70,21 @@ public partial class MainScene : Node
         };
 	}
 
-	private void LoadSongList() {
-		_songList = GD.Load<PackedScene>("res://scenes/SongList.tscn").Instantiate<SongList>();
-		_songList.Closed += () => {
-			RemoveChild(_songList);
+	private void LoadSongPick() {
+		_songPick = GD.Load<PackedScene>("res://scenes/SongPick.tscn").Instantiate<SongPick>();
+		_songPick.Closed += () => {
+			RemoveChild(_songPick);
 			AddChild(_startMenu);
 		};
-		_songList.OpenedSong += (string dir, string instrument) => {
-			RemoveChild(_songList);
+		_songPick.OpenedSong += (string dir, string instrument) => {
+			RemoveChild(_songPick);
 			var packedScene = ResourceLoader.Load<PackedScene>("res://scenes/SongScene.tscn");
 			var scene = packedScene.Instantiate<SongScene>();
 			scene._init(SongLoader.Load(new DirectoryInfo(dir), instrument));
 			AddChild(scene);
 			scene.Closed += () => {
 				scene.QueueFree();
-				AddChild(_songList);
+				AddChild(_songPick);
 			};
 		};
 	}
