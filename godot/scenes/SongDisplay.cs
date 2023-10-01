@@ -26,7 +26,7 @@ public partial class SongDisplay : VBoxContainer
 
 	private void LoadSong() {
 
-		var songInfo = SongLoader.Load(_folderName, "lead").SongInfo;
+		var songInfo = SongLoader.Load(_folderName, null).SongInfo;
 
 		var image = Image.LoadFromFile(Path.Combine(SongFileManager.SONG_FOLDER, _folderName, SongFileManager.ALBUM_ART_NAME));
 		GetNode<TextureRect>("AlbumArtTextureRect").Texture = ImageTexture.CreateFromImage(image);

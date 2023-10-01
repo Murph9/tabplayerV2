@@ -19,7 +19,7 @@ public class SongLoader {
         
         return new SongState() {
             SongInfo = noteInfo,
-            Instrument = noteInfo?.Instruments.First(x => x.Name == instrumentType),
+            Instrument = noteInfo?.Instruments.First(x => instrumentType == null || x.Name == instrumentType),
             Audio = audio
         };
     }
