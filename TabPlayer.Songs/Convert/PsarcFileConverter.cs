@@ -122,24 +122,24 @@ namespace murph9.TabPlayer.Songs.Convert
             return new Lyrics(lines);
         }
 
-        public string ExportPsarcMainWem(string tempFolder, bool forceConvert = false)
+        public string ExportPsarcMainWem(string outputFolder, bool forceConvert = false)
         {
-            var a = _p.ExtractArrangementManifests().First(x => (_nameFilter == null || x.Attributes.BlockAsset.Contains(_nameFilter)));
+            var a = _p.ExtractArrangementManifests().First(x => _nameFilter == null || x.Attributes.BlockAsset.Contains(_nameFilter));
             var bnk_file = a.Attributes.SongBank;
             var result = _p.InflateEntry<BkhdAsset>(_p.TOC.Entries.First(x => x.Path.Contains(bnk_file)));
 
             var w = _p.TOC.Entries.Where(x => x.Path.Contains(result.GetWemId().ToString())).Single();
 
             Console.WriteLine(w.Path);
-            var filePath = Path.Join(tempFolder, Path.GetFileName(w.Path));
+            var filePath = Path.Join(outputFolder, Path.GetFileName(w.Path));
             if (File.Exists(filePath) && !forceConvert) {
                 Console.WriteLine("Skipping extracting wem file as it already exists.");
                 return filePath;
             }
             if (forceConvert) { // delete all audio files then
-                foreach (var f in new DirectoryInfo(tempFolder).GetFiles("*.wem"))
+                foreach (var f in new DirectoryInfo(outputFolder).GetFiles("*.wem"))
                     f.Delete();
-                foreach (var f in new DirectoryInfo(tempFolder).GetFiles("*.ogg"))
+                foreach (var f in new DirectoryInfo(outputFolder).GetFiles("*.ogg"))
                     f.Delete();
             }
             
@@ -282,6 +282,12 @@ namespace murph9.TabPlayer.Songs.Convert
             }
             
             return bendList;
+        }
+
+        public void ExportAlbumArt(string outputFolder)
+        {
+            var ddsAsset = _p.ExtractAlbumArt(_p.ExtractArrangementManifests().First().Attributes);
+            ddsAsset?.Save(Path.Join(outputFolder, SongFileManager.ALBUM_ART_NAME));
         }
     }
 }

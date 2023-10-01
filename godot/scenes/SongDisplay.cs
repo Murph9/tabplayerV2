@@ -1,6 +1,7 @@
 using Godot;
 using murph9.TabPlayer.scenes.Services;
 using murph9.TabPlayer.Songs;
+using System.IO;
 
 namespace murph9.TabPlayer.scenes;
 
@@ -27,8 +28,8 @@ public partial class SongDisplay : VBoxContainer
 
 		var songInfo = SongLoader.Load(_folderName, "lead").SongInfo;
 
-		// var image = Image.LoadFromFile(@"C:\some file path");
-		// GetNode<TextureRect>("AlbumArtTextureRect").Texture = ImageTexture.CreateFromImage(image);
+		var image = Image.LoadFromFile(Path.Combine(SongFileManager.SONG_FOLDER, _folderName, SongFileManager.ALBUM_ART_NAME));
+		GetNode<TextureRect>("AlbumArtTextureRect").Texture = ImageTexture.CreateFromImage(image);
 
 		GetNode<Label>("ArtistLabel").Text = "Artist: " + songInfo.Metadata.Artist;
 		GetNode<Label>("SongNameLabel").Text = "Name: " + songInfo.Metadata.Name;

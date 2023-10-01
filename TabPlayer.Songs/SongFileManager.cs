@@ -11,6 +11,7 @@ public class SongFileManager
 {
     public readonly static string SONG_FOLDER;
     public readonly static string PLAY_DATA_FILE;
+    public readonly static string ALBUM_ART_NAME = "album.png";
     static SongFileManager() {
         SONG_FOLDER = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "murph9.TabPlayer");
         PLAY_DATA_FILE = Path.Combine(SONG_FOLDER, "playData.json");

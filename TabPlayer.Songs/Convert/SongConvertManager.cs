@@ -95,6 +95,8 @@ namespace murph9.TabPlayer.Songs.Convert
             foreach (var f in new DirectoryInfo(outputFolder.FullName).GetFiles("*.wem"))
                 f.Delete();
 
+            converter.ExportAlbumArt(outputFolder.FullName);
+
             output("Wrote " + noteInfo?.Metadata?.Name + " info to " + outputFolder.FullName);
 
             return true;
