@@ -61,8 +61,7 @@ public partial class SongPick : Control
 	}
 
 	private void SelectedItem_LoadSong(SongFile song, string instrument) {
-		var dir = new DirectoryInfo(Path.Combine(SongFileManager.SONG_FOLDER, song.FolderName));
-		EmitSignal(SignalName.OpenedSong, dir.FullName, instrument);	
+		EmitSignal(SignalName.OpenedSong, song.FolderName, instrument);
 	}
 
 	public void Back() {

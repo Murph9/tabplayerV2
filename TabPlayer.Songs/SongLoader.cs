@@ -1,14 +1,14 @@
-using System.IO;
-using System.Linq;
 using murph9.TabPlayer.Songs.Models;
 using Newtonsoft.Json;
+using System.IO;
+using System.Linq;
 
 namespace murph9.TabPlayer.Songs;
 
 public class SongLoader {
     
-    public static SongState Load(DirectoryInfo folder, string instrumentType) {
-        
+    public static SongState Load(string folderName, string instrumentType) {
+        var folder = new DirectoryInfo(Path.Combine(SongFileManager.SONG_FOLDER, folderName));
         var noteInfoFile = folder.GetFiles("*.json").First();
         var noteInfo = JsonConvert.DeserializeObject<SongInfo>(File.ReadAllText(noteInfoFile.FullName));
 

@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://drdko7a5i3o8"]
+
+[ext_resource type="Script" path="res://scenes/SongDisplay.cs" id="1_k82oa"]
+
+[sub_resource type="Gradient" id="Gradient_45u7y"]
+colors = PackedColorArray(0, 0.596078, 0.596078, 1, 0, 0.596078, 0.596078, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_348oa"]
+gradient = SubResource("Gradient_45u7y")
+
+[node name="SongDisplay" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_k82oa")
+
+[node name="AlbumArtTextureRect" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+texture = SubResource("GradientTexture2D_348oa")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="ArtistLabel" type="Label" parent="."]
+layout_mode = 2
+
+[node name="SongNameLabel" type="Label" parent="."]
+layout_mode = 2
+
+[node name="AlbumLabel" type="Label" parent="."]
+layout_mode = 2
+
+[node name="GenreLabel" type="Label" parent="."]
+layout_mode = 2
+
+[node name="YearLabel" type="Label" parent="."]
+layout_mode = 2
+
+[node name="OtherLabel" type="Label" parent="."]
+layout_mode = 2

@@ -80,12 +80,17 @@ public partial class SongList : VBoxContainer
 	private Func<SongFile, bool> _filter = null;
 	private string _tuningFilter = null;
 
+	private readonly SongDisplay _songDisplay;
+
 	[Signal]
 	public delegate void SongSelectedEventHandler(string folder);
 
 	public SongList() {
 		var songList = SongFileManager.GetSongFileList();
 		_rows = songList.Data.ToArray().Select(x => new Row(x, () => RowSelected(x))).ToList();
+
+		_songDisplay = GD.Load<PackedScene>("res://scenes/SongDisplay.tscn").Instantiate<SongDisplay>();
+		SongSelected += _songDisplay.SongChanged;
 	}
 
 	private void RowSelected(SongFile selectedSong) {
@@ -94,6 +99,9 @@ public partial class SongList : VBoxContainer
 
 	public override void _Ready()
 	{
+		var split = GetNode<VBoxContainer>("HSplitContainer/VBoxContainerDetails");
+		split.AddChild(_songDisplay);
+
 		var group = new ButtonGroup();
 
 		var grid = GetNode<GridContainer>("%GridContainer");

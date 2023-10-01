@@ -76,11 +76,11 @@ public partial class MainScene : Node
 			RemoveChild(_songPick);
 			AddChild(_startMenu);
 		};
-		_songPick.OpenedSong += (string dir, string instrument) => {
+		_songPick.OpenedSong += (string folderName, string instrument) => {
 			RemoveChild(_songPick);
 			var packedScene = ResourceLoader.Load<PackedScene>("res://scenes/SongScene.tscn");
 			var scene = packedScene.Instantiate<SongScene>();
-			scene._init(SongLoader.Load(new DirectoryInfo(dir), instrument));
+			scene._init(SongLoader.Load(folderName, instrument));
 			AddChild(scene);
 			scene.Closed += () => {
 				scene.QueueFree();
