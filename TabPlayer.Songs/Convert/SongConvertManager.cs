@@ -40,12 +40,24 @@ namespace murph9.TabPlayer.Songs.Convert
                 if (songNames.Count() <= 1) {
                     var outputFolder = await ExportSinglePsarc(p, null, reconvert, output);
                     if (copySource)
-                        File.Copy(file.FullName, Path.Combine(outputFolder.FullName, file.Name));
+                        File.Copy(file.FullName, Path.Combine(outputFolder.FullName, file.Name), true);
                 }
                 else
+                {
+                    string sourceOfSongBatch = null;
+
                     foreach (var name in songNames) {
                         try {
-                            await ExportSinglePsarc(p, name.Split(':').Last(), reconvert, output);
+                            var outputFolder = await ExportSinglePsarc(p, name.Split(':').Last(), reconvert, output);
+                            if (copySource) {
+                                if (sourceOfSongBatch == null) {
+                                    sourceOfSongBatch = Path.Combine(outputFolder.FullName, file.Name);
+                                    File.Copy(file.FullName, sourceOfSongBatch, true);
+                                } else {
+                                    await File.WriteAllTextAsync(Path.Combine(outputFolder.FullName, file.Name + ".txt"),
+                                        $"This file would have been big, saving to the first song we found.\nSee the file at '{sourceOfSongBatch}'");
+                                }
+                            }
                         } catch (IOException e) {
                             Console.WriteLine(e);
                             output("Failed to convert: " + name.Split(':').Last());
@@ -53,6 +65,7 @@ namespace murph9.TabPlayer.Songs.Convert
                             throw;
                         }
                     }
+                }
                 
             } catch (FileLoadException ef) {
                 output("Failed to convert file, see last error in log");

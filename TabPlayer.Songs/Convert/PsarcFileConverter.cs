@@ -50,8 +50,7 @@ namespace murph9.TabPlayer.Songs.Convert
             if (!sng.Arrangements.Any())
                 throw new Exception("No notes found");
 
-            var jsonManifests = _p.ExtractArrangementManifests();
-            var metadata = jsonManifests.FirstOrDefault(x => (_nameFilter == null || x.Attributes.BlockAsset.Contains(_nameFilter))
+            var metadata = _p.ExtractArrangementManifests().FirstOrDefault(x => (_nameFilter == null || x.Attributes.BlockAsset.Contains(_nameFilter))
                     && x.Attributes.ArrangementName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 
             var allNotes = new List<Note>();
@@ -68,10 +67,10 @@ namespace murph9.TabPlayer.Songs.Convert
                 }
             }
             
-            var sections = new List<Songs.Models.Section>();
+            var sections = new List<Models.Section>();
             foreach (var phr in phraseIterations) {
                 var it = sng.Phrases[phr.x.PhraseId];
-                sections.Add(new Songs.Models.Section(phr.x.StartTime, phr.x.NextPhraseTime, it.Name));
+                sections.Add(new Models.Section(phr.x.StartTime, phr.x.NextPhraseTime, it.Name));
             }
 
             var notes = allNotes.Where(x => !x.Flags.HasFlag(Note.NoteMaskFlag.CHORD))
@@ -124,8 +123,8 @@ namespace murph9.TabPlayer.Songs.Convert
 
         public string ExportPsarcMainWem(string outputFolder, bool forceConvert = false)
         {
-            var a = _p.ExtractArrangementManifests().First(x => _nameFilter == null || x.Attributes.BlockAsset.Contains(_nameFilter));
-            var bnk_file = a.Attributes.SongBank;
+            var attributeManifest = _p.ExtractArrangementManifests().First(x => _nameFilter == null || x.Attributes.BlockAsset.Contains(_nameFilter));
+            var bnk_file = attributeManifest.Attributes.SongBank;
             var result = _p.InflateEntry<BkhdAsset>(_p.TOC.Entries.First(x => x.Path.Contains(bnk_file)));
 
             var w = _p.TOC.Entries.Where(x => x.Path.Contains(result.GetWemId().ToString())).Single();
@@ -286,7 +285,8 @@ namespace murph9.TabPlayer.Songs.Convert
 
         public void ExportAlbumArt(string outputFolder)
         {
-            var ddsAsset = _p.ExtractAlbumArt(_p.ExtractArrangementManifests().First().Attributes);
+            var attributeManifest = _p.ExtractArrangementManifests().First(x => _nameFilter == null || x.Attributes.BlockAsset.Contains(_nameFilter));
+            var ddsAsset = _p.ExtractAlbumArt(attributeManifest.Attributes);
             ddsAsset?.Save(Path.Join(outputFolder, SongFileManager.ALBUM_ART_NAME));
         }
     }
