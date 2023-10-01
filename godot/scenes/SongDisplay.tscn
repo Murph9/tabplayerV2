@@ -40,13 +40,13 @@ layout_mode = 2
 [node name="AlbumLabel" type="Label" parent="."]
 layout_mode = 2
 
-[node name="GenreLabel" type="Label" parent="."]
-layout_mode = 2
-
 [node name="YearLabel" type="Label" parent="."]
 layout_mode = 2
 
 [node name="OtherLabel" type="Label" parent="."]
+layout_mode = 2
+
+[node name="InstrumentGridContainer" type="GridContainer" parent="."]
 layout_mode = 2
 
 [connection signal="pressed" from="PlayButton" to="." method="Play_Selected"]

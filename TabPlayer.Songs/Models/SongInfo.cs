@@ -29,6 +29,12 @@ public class Instrument
         ControlData = CalcControlData(Notes);
     }
 
+    public int TotalNoteCount() => Notes.Count;
+    public int ChordCount() => Notes.Count(x => x.Notes.Count() > 1);
+    public int SingleNoteCount() => Notes.Count(x => x.Notes.Count() <= 1);
+
+    public float GetNoteDensity(SongInfo songInfo) => TotalNoteCount() / songInfo.Metadata.SongLength;
+
     public static string CalcTuningName(short[] t, float? capoFret) {
         if (capoFret.HasValue && capoFret != 0 && capoFret != 255)
         {

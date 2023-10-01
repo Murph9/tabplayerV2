@@ -163,11 +163,9 @@ public partial class SongScene : Node, IAudioStreamPosition
 
 		var detailsLabel = GetNode<Label>("SongDetailsLabel");
 		var guitarTuning = "Tuning: " + Instrument.CalcTuningName(_state.Instrument.Config.Tuning, _state.Instrument.Config.CapoFret);
-		var chordCount = _state.Instrument.Notes.Where(x => x.Notes.Count() > 1).Count();
-		var singleNoteCount = _state.Instrument.Notes.Count - chordCount;
 		detailsLabel.Text = $@"Playing: {_state.Instrument.Name}
-Notes: {singleNoteCount}
-Chords: {chordCount}
+Notes: {_state.Instrument.SingleNoteCount()}
+Chords: {_state.Instrument.ChordCount()}
 {guitarTuning}
 First note @ {_state.Instrument.Notes.First().Time.ToMinSec()}
 Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}";

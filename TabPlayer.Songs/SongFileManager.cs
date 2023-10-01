@@ -61,7 +61,7 @@ public class SongFileManager
             
             var noteInfo = JsonConvert.DeserializeObject<SongInfo>(File.ReadAllText(file.FullName));
             output($"{i}/{total} Reading all songs, current: {noteInfo?.Metadata?.Name}");
-            var instruments = noteInfo.Instruments.Select(x => new SongFileInstrument(x.Name, x == noteInfo.MainInstrument, x.Config.Tuning, x.Notes.Count, x.Config.CapoFret)).ToArray();
+            var instruments = noteInfo.Instruments.Select(x => new SongFileInstrument(x.Name, x == noteInfo.MainInstrument, x.Config.Tuning, x.TotalNoteCount(), x.Config.CapoFret)).ToArray();
             var lyrics = noteInfo.Lyrics != null ? new SongFileLyrics(noteInfo.Lyrics.Lines?.Sum(x => x.Words?.Count) ?? 0) : null;
             songList.Data.Add(new SongFile(songDir.Name, noteInfo.Metadata.Name,
                 noteInfo.Metadata.Artist, noteInfo.Metadata.Album, noteInfo.Metadata.Year,
@@ -114,7 +114,7 @@ public record SongFile(string FolderName, string SongName, string Artist, string
 public record SongFileInstrument(string Name, bool IsMain, short[] Tuning, int NoteCount, float CapoFret)
 {
     public float GetNoteDensity(SongFile song) {
-        return this.NoteCount / song.Length;
+        return NoteCount / song.Length;
     }
 }
 
