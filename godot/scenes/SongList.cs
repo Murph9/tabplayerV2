@@ -22,16 +22,18 @@ public partial class SongList : VBoxContainer
 	}
 
 	class Row {
-		public SongFile Song { get; private set; }
-		public List<Control> Controls { get; private set; }
+		private readonly Action<SongFile> _callback;
+		public SongFile Song { get; }
+		public List<Control> Controls { get; }
 		public Row(SongFile song, Action<SongFile> buttonAction) {
 			Song = song;
+			_callback = buttonAction;
 
 			Controls = new List<Control>();
 			var b = new Button() {
 				Text = "▶"
 			};
-			b.Pressed += () => buttonAction(song);
+			b.Pressed += RowSelected;
 			Controls.Add(b);
 			Controls.Add(new Label() {
 				Text = song.SongName.FixedWidthString(30)
@@ -57,6 +59,10 @@ public partial class SongList : VBoxContainer
 			Controls.Add(new Label() { Text = Instrument.CalcTuningName(mainI?.Tuning) });
 			Controls.Add(new Label() { Text = mainI?.NoteCount.ToString() });
 			Controls.Add(new Label() { Text = mainI?.GetNoteDensity(song).ToFixedPlaces(2, false) });
+		}
+		
+		private void RowSelected() {
+			_callback(Song);
 		}
 	}
 	
