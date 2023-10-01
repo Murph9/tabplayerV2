@@ -159,6 +159,8 @@ public class SongInfo
         MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == COMBO3_NAME);
         MainInstrument ??= Instruments.FirstOrDefault(x => x.Name == COMBO4_NAME);
 
+        MainInstrument = Instruments.FirstOrDefault(); // default to the first one when we have no option
+
         if (MainInstrument == null)
             throw new Exception("No instrument found");
 
@@ -199,8 +201,7 @@ public class SongMetadata
     public float SongLength { get; private set; }
     public string Genre { get; private set; }
 
-    public SongMetadata(string name, string artist, string album, int? year, float songLength) : this(name, artist, album, year, songLength, null) {
-    }
+    public SongMetadata(string name, string artist, string album, int? year, float songLength) : this(name, artist, album, year, songLength, null) {}
 
     [JsonConstructor]
     public SongMetadata(string name, string artist, string album, int? year, float songLength, string genre)

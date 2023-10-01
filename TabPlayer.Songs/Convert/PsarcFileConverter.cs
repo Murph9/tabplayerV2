@@ -35,7 +35,8 @@ namespace murph9.TabPlayer.Songs.Convert
 
             var vocals = ConvertVocals();
 
-            var metadata = new SongMetadata(firstMetadata.Attributes.SongName, firstMetadata.Attributes.ArtistName, firstMetadata.Attributes.AlbumName, firstMetadata.Attributes.SongYear, firstMetadata.Attributes.SongLength);
+            var metadata = new SongMetadata(firstMetadata.Attributes.SongName, firstMetadata.Attributes.ArtistName,
+                firstMetadata.Attributes.AlbumName, firstMetadata.Attributes.SongYear, firstMetadata.Attributes.SongLength);
             return new SongInfo(metadata, instruments.Where(x => x != null), vocals);
         }
 
