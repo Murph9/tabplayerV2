@@ -17,6 +17,11 @@ text = "This page allows you to select a single .psarc file or all in a folder"
 layout_mode = 2
 text = "Overwrite existing files"
 
+[node name="CopySourceRadio" type="CheckButton" parent="VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Copy psarc into output"
+
 [node name="ChoseButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 text = "Manually Choose Files"
@@ -49,7 +54,6 @@ offset_bottom = 391.0
 text = "Back
 "
 
-[connection signal="toggled" from="VBoxContainer/RecreateRadio" to="." method="Recreate_Toggled"]
 [connection signal="pressed" from="VBoxContainer/ChoseButton" to="." method="ChoseButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer/FromDownloadsButton" to="." method="FromDownloadsButton_Pressed"]
 [connection signal="dir_selected" from="FileDialog" to="." method="Dir_Selected"]

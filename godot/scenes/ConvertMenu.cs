@@ -10,16 +10,12 @@ namespace murph9.TabPlayer.scenes;
 
 public partial class ConvertMenu : Node2D
 {
-	private bool _recreate;
-
 	[Signal]
 	public delegate void ClosedEventHandler();
 	
 	public override void _Ready() { }
 
 	public override void _Process(double delta) { }
-
-	public void Recreate_Toggled(bool state) => _recreate = state;
 
 	private void ChoseButton_Pressed() {
 		var infoLabel = GetNode<Label>("VBoxContainer/InfoLabel");
@@ -52,11 +48,14 @@ public partial class ConvertMenu : Node2D
 			return;
 		}
 		
+		var recreate = GetNode<CheckButton>("VBoxContainer/RecreateRadio").ButtonPressed;
+		var copySource = GetNode<CheckButton>("VBoxContainer/CopySourceRadio").ButtonPressed;
+
 		var completed = new List<string>();
 		var failed = new List<string>();
 		foreach (var psarc in files) {
 			try {
-				var success = await SongConvertManager.ConvertFile(SongConvertManager.SongType.Psarc, psarc, _recreate, (string str) => {infoLabel.Text = str;});
+				var success = await SongConvertManager.ConvertFile(SongConvertManager.SongType.Psarc, psarc, recreate, copySource, (string str) => {infoLabel.Text = str;});
 				if (success)
 					completed.Add(psarc);
 				else

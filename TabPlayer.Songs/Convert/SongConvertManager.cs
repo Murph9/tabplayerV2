@@ -13,14 +13,14 @@ namespace murph9.TabPlayer.Songs.Convert
         public enum SongType {
             Psarc, Midi
         }
-        public static async Task<bool> ConvertFile(SongType type, string location, bool reconvert, Action<string> output) {
+        public static async Task<bool> ConvertFile(SongType type, string location, bool reconvert, bool copySource, Action<string> output) {
             bool success = false;
             
             try {
                 if (type == SongType.Midi)
                     success = ExportMidi(new DirectoryInfo(location), output);
                 if (type == SongType.Psarc)
-                    success = await ExportPsarc(new FileInfo(location), reconvert, output);
+                    success = await ExportPsarc(new FileInfo(location), reconvert, copySource, output);
             } catch (Exception e) {
                 Console.WriteLine(e);
                 Console.WriteLine($"Failed to convert file '{location}'");
@@ -30,15 +30,18 @@ namespace murph9.TabPlayer.Songs.Convert
             return success;
         }
 
-        private static async Task<bool> ExportPsarc(FileInfo file, bool reconvert, Action<string> output) {
+        private static async Task<bool> ExportPsarc(FileInfo file, bool reconvert, bool copySource, Action<string> output) {
             PsarcFile p = null;
             try {
                 output("Converting: " + file.FullName);
                 p = new PsarcFile(file.FullName);
 
                 var songNames = p.ExtractArrangementManifests().Select(x => x.Attributes.BlockAsset).Distinct();
-                if (songNames.Count() <= 1)
-                    await ExportSinglePsarc(p, null, reconvert, output);
+                if (songNames.Count() <= 1) {
+                    var outputFolder = await ExportSinglePsarc(p, null, reconvert, output);
+                    if (copySource)
+                        File.Copy(file.FullName, Path.Combine(outputFolder.FullName, file.Name));
+                }
                 else
                     foreach (var name in songNames) {
                         try {
@@ -69,7 +72,7 @@ namespace murph9.TabPlayer.Songs.Convert
             return true;
         }
 
-        private static async Task<bool> ExportSinglePsarc(PsarcFile p, string songFilter, bool reconvert, Action<string> output)
+        private static async Task<DirectoryInfo> ExportSinglePsarc(PsarcFile p, string songFilter, bool reconvert, Action<string> output)
         {
             var converter = new PsarcFileConverter(p, songFilter);
             var noteInfo = converter.ConvertToSongInfo();
@@ -79,7 +82,7 @@ namespace murph9.TabPlayer.Songs.Convert
                 // don't convert a file again
                 Console.WriteLine("Output folder already exists, please use arg to reconvert");
                 output("Did not convert because it already exists, please start application with a special arg to reconvert");
-                return true; // already converted
+                return outputFolder; // already converted
             }
             foreach (var f in outputFolder.GetFiles("*.json"))
                 f.Delete();
@@ -99,7 +102,7 @@ namespace murph9.TabPlayer.Songs.Convert
 
             output("Wrote " + noteInfo?.Metadata?.Name + " info to " + outputFolder.FullName);
 
-            return true;
+            return outputFolder;
             
         }
 
