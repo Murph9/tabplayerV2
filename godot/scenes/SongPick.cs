@@ -15,14 +15,20 @@ public partial class SongPick : Control
 	public delegate void OpenedSongEventHandler(string folder, string instrument);
 
 	private SongList _songList;
+	private SongDisplay _songDisplay;
 
 	public SongPick() {
-		_songList = GD.Load<PackedScene>("res://scenes/SongList.tscn").Instantiate<SongList>();
-		_songList.SongSelected += (string s) =>
+		_songDisplay = GD.Load<PackedScene>("res://scenes/SongDisplay.tscn").Instantiate<SongDisplay>();
+		_songDisplay.SongSelected += (string s) =>
         {
             SongFileList songList = SongFileManager.GetSongFileList();
 			ChooseSong(songList.Data.First(x => s == x.FolderName));
 		};
+		
+		_songList = GD.Load<PackedScene>("res://scenes/SongList.tscn").Instantiate<SongList>();
+		_songList.SetDisplay(_songDisplay);
+
+		_songList.SongSelected += _songDisplay.SongChanged;
 	}
 
 	public override void _Ready() {

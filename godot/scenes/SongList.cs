@@ -24,14 +24,14 @@ public partial class SongList : VBoxContainer
 	class Row {
 		public SongFile Song { get; private set; }
 		public List<Control> Controls { get; private set; }
-		public Row(SongFile song, Action buttonAction) {
+		public Row(SongFile song, Action<SongFile> buttonAction) {
 			Song = song;
 
 			Controls = new List<Control>();
 			var b = new Button() {
 				Text = "▶"
 			};
-			b.Pressed += buttonAction;
+			b.Pressed += () => buttonAction(song);
 			Controls.Add(b);
 			Controls.Add(new Label() {
 				Text = song.SongName.FixedWidthString(30)
@@ -80,17 +80,18 @@ public partial class SongList : VBoxContainer
 	private Func<SongFile, bool> _filter = null;
 	private string _tuningFilter = null;
 
-	private readonly SongDisplay _songDisplay;
+	private SongDisplay _songDisplay;
 
 	[Signal]
 	public delegate void SongSelectedEventHandler(string folder);
 
 	public SongList() {
 		var songList = SongFileManager.GetSongFileList();
-		_rows = songList.Data.ToArray().Select(x => new Row(x, () => RowSelected(x))).ToList();
+		_rows = songList.Data.ToArray().Select(x => new Row(x, RowSelected)).ToList();
+	}
 
-		_songDisplay = GD.Load<PackedScene>("res://scenes/SongDisplay.tscn").Instantiate<SongDisplay>();
-		SongSelected += _songDisplay.SongChanged;
+	public void SetDisplay(SongDisplay songDisplay) {
+		_songDisplay = songDisplay;
 	}
 
 	private void RowSelected(SongFile selectedSong) {
