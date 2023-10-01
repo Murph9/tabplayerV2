@@ -22,53 +22,66 @@ public partial class SongList : VBoxContainer
 	}
 
 	class Row {
+		private static readonly StyleBox ROW_HIGHLIGHTED = new StyleBoxFlat
+		{
+			BgColor = Colors.Gray
+		};
+
 		private readonly Action<SongFile> _callback;
 		public SongFile Song { get; }
 		public List<Control> Controls { get; }
-		public Row(SongFile song, Action<SongFile> buttonAction) {
+        private bool _selected;
+		public bool Selected {
+			get { return _selected; }
+			set {
+				_selected = value;
+				if (_selected) {
+                    Controls.ForEach(x => x.AddThemeStyleboxOverride("normal", ROW_HIGHLIGHTED));
+				} else {
+					Controls.ForEach(x => x.RemoveThemeStyleboxOverride("normal"));
+				}
+			}
+		}
+
+        public Row(SongFile song, Action<SongFile> buttonAction) {
 			Song = song;
 			_callback = buttonAction;
 
-			Controls = new List<Control>();
-			var b = new Button() {
-				Text = "▶"
-			};
-			b.Pressed += RowSelected;
-			Controls.Add(b);
-			Controls.Add(new Label() {
-				Text = song.SongName.FixedWidthString(30)
-			});
-			Controls.Add(new Label() {
-				Text = song.Artist.FixedWidthString(24)
-			});
-			Controls.Add(new Label() {
-				Text = song.Album.FixedWidthString(20)
-			});
-			Controls.Add(new Label() {
-				Text = song.Year.ToString()
-			});
-			Controls.Add(new Label() {
-				Text = song.Length.ToMinSec()
-			});
-			Controls.Add(new Label() {
-				Text = song.GetInstrumentChars()
-			});
-
 			var mainI = song.GetMainInstrument();
-			Controls.Add(new Label() { Text = mainI?.Name });
-			Controls.Add(new Label() { Text = Instrument.CalcTuningName(mainI?.Tuning) });
-			Controls.Add(new Label() { Text = mainI?.NoteCount.ToString() });
-			Controls.Add(new Label() { Text = mainI?.GetNoteDensity(song).ToFixedPlaces(2, false) });
+
+			Controls = new List<Control>
+            {
+                CreateLabel(song.SongName.FixedWidthString(30)),
+                CreateLabel(song.Artist.FixedWidthString(24)),
+                CreateLabel(song.Album.FixedWidthString(20)),
+                CreateLabel(song.Year.ToString()),
+                CreateLabel(song.Length.ToMinSec()),
+                CreateLabel(song.GetInstrumentChars()),
+                CreateLabel(mainI?.Name),
+                CreateLabel(Instrument.CalcTuningName(mainI?.Tuning)),
+                CreateLabel(mainI?.NoteCount.ToString()),
+                CreateLabel(mainI?.GetNoteDensity(song).ToFixedPlaces(2, false))
+            };
 		}
-		
-		private void RowSelected() {
-			_callback(Song);
+
+		private Label CreateLabel(string text) {
+			var l = new Label() {
+				Text = text,
+				MouseFilter = MouseFilterEnum.Stop
+			};
+			l.GuiInput += RowSelectedForReal;
+			return l;
 		}
+
+        private void RowSelectedForReal(InputEvent @event)
+        {
+            if (@event is InputEventMouseButton e)
+				if (e.ButtonIndex == MouseButton.Left && e.Pressed)
+					_callback(Song);
+        }
 	}
 	
-
 	private static readonly List<Column> HEADINGS = new() {
-		new Column(null, null),
 		new Column("Song Name", (s) => s.SongName),
 		new Column("Artist", (s) => s.Artist),
 		new Column("Album", (s) => s.Album),
@@ -101,6 +114,13 @@ public partial class SongList : VBoxContainer
 	}
 
 	private void RowSelected(SongFile selectedSong) {
+		var selectedRow = _rows.FirstOrDefault(x => x.Song == selectedSong);
+		selectedRow.Selected = true;
+		foreach (var r in _rows) {
+			if (r != selectedRow && r.Selected) {
+				r.Selected = false;
+			}
+		}
 		EmitSignal(SignalName.SongSelected, selectedSong.FolderName);
 	}
 
@@ -219,6 +239,7 @@ public partial class SongList : VBoxContainer
 		var song = validSongs[index];
 		
 		RowSelected(song.Song);
+		// TODO scroll
 	}
 
 	private void ShowCapo_Pressed() {
