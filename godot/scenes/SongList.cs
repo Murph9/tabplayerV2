@@ -56,11 +56,7 @@ public partial class SongList : VBoxContainer
                 CreateLabel(song.Album.FixedWidthString(20)),
                 CreateLabel(song.Year.ToString()),
                 CreateLabel(song.Length.ToMinSec()),
-                CreateLabel(song.GetInstrumentChars()),
-                CreateLabel(mainI?.Name),
-                CreateLabel(Instrument.CalcTuningName(mainI?.Tuning)),
-                CreateLabel(mainI?.NoteCount.ToString()),
-                CreateLabel(mainI?.GetNoteDensity(song).ToFixedPlaces(2, false))
+                CreateLabel(song.GetInstrumentChars())
             };
 		}
 
@@ -87,11 +83,7 @@ public partial class SongList : VBoxContainer
 		new Column("Album", (s) => s.Album),
 		new Column("Year", (s) => s.Year),
 		new Column("Length", (s) => s.Length),
-		new Column("Parts", (s) => s.GetInstrumentChars()),
-		new Column("Main", (s) => s.GetMainInstrument()?.Name),
-		new Column("Tuning", (s) => Instrument.CalcTuningName(s.GetMainInstrument()?.Tuning, s.GetMainInstrument()?.CapoFret)),
-		new Column("Notes", (s) => s.GetMainInstrument()?.GetNoteDensity(s)),
-		new Column("Density", (s) => s.GetMainInstrument()?.NoteCount),
+		new Column("Parts", (s) => s.GetInstrumentChars())
 	};
 
 	private readonly List<Row> _rows;

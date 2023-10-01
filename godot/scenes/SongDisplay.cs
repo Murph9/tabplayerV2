@@ -36,7 +36,7 @@ public partial class SongDisplay : VBoxContainer
 		GetNode<Label>("ArtistLabel").Text = "Artist: " + songInfo.Metadata.Artist;
 		GetNode<Label>("SongNameLabel").Text = "Name: " + songInfo.Metadata.Name;
 		GetNode<Label>("AlbumLabel").Text = "Album: " + songInfo.Metadata.Album;
-		GetNode<Label>("YearLabel").Text = "Year:" + songInfo.Metadata.Year.ToString();
+		GetNode<Label>("YearLabel").Text = "Year: " + songInfo.Metadata.Year.ToString();
 		GetNode<Label>("OtherLabel").Text = "Length: " + songInfo.Metadata.SongLength.ToMinSec();
 
 		var grid = GetNode<GridContainer>("InstrumentGridContainer");
