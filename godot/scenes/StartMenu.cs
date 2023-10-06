@@ -1,4 +1,5 @@
 using Godot;
+using murph9.TabPlayer.scenes.Services;
 using murph9.TabPlayer.Songs;
 using System.Threading.Tasks;
 
@@ -19,23 +20,42 @@ public partial class StartMenu : Node
 	[Signal]
 	public delegate void SettingsOpenedEventHandler();
 
+
 	private string _progressText;
 
-	public override void _Ready() { }
+	private Vector2 _menuInitialPosition;
+	private Vector2 _menuFinalPosition;
+
+	public override void _Ready() {
+		var obj = GetNode<VBoxContainer>("VBoxContainer");
+		var screen = GetViewport().GetVisibleRect().Size;
+
+		obj.Position = new Vector2(obj.Position.X, screen.Y - obj.Size.Y - 80);
+		_menuInitialPosition = obj.Position;
+
+		_menuFinalPosition = new Vector2(80, _menuInitialPosition.Y);
+
+		AnimateIn();
+	}
 
 	public override void _Process(double delta) {
 		GetNode<Label>("ReloadProgressLabel").Text = _progressText;
+
+		GD.Print(GetNode<VBoxContainer>("VBoxContainer").Position);
 	}
 
 	private void StartButton_Pressed() {
+		AnimateOut();
 		EmitSignal(SignalName.SongPickOpened);
 	}
 
 	private void InfoButton_Pressed() {
+		AnimateOut();
 		EmitSignal(SignalName.InfoMenuOpened);
 	}
 
 	private void ConvertButton_Pressed() {
+		AnimateOut();
 		EmitSignal(SignalName.ConvertMenuOpened);
 	}
 
@@ -62,6 +82,19 @@ public partial class StartMenu : Node
 	}
 
 	private void SettingsButton_Pressed() {
+		AnimateOut();
 		EmitSignal(SignalName.SettingsOpened);
+	}
+
+	public void Show() => AnimateIn();
+
+	private void AnimateIn() {
+		var tween = GetTree().CreateTween();
+		TweenHelper.TweenPosition(tween, GetNode<VBoxContainer>("VBoxContainer"), _menuFinalPosition, 1);
+	}
+
+	private void AnimateOut() {
+		var tween = GetTree().CreateTween();
+		TweenHelper.TweenPosition(tween, GetNode<VBoxContainer>("VBoxContainer"), _menuInitialPosition, 1);
 	}
 }

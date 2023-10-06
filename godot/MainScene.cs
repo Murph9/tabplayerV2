@@ -43,28 +43,25 @@ public partial class MainScene : Node
 		};
 		_startMenu.ConvertMenuOpened += () => {
 			var convertMenu = GD.Load<PackedScene>("res://scenes/ConvertMenu.tscn").Instantiate<ConvertMenu>();
-			RemoveChild(_startMenu);
 			convertMenu.Closed += () => {
 				RemoveChild(convertMenu);
-				AddChild(_startMenu);
+				_startMenu.Show();
 			};
 			AddChild(convertMenu);
 		};
 		_startMenu.InfoMenuOpened += () => {
 			var infoMenu = GD.Load<PackedScene>("res://scenes/InfoPage.tscn").Instantiate<InfoPage>();
-			RemoveChild(_startMenu);
 			infoMenu.Closed += () => {
 				RemoveChild(infoMenu);
-				AddChild(_startMenu);
+				_startMenu.Show();
 			};
 			AddChild(infoMenu);
         };
 		_startMenu.SettingsOpened += () => {
 			var settingsMenu = GD.Load<CSharpScript>("res://scenes/SettingsPage.cs").New().As<SettingsPage>();
-			RemoveChild(_startMenu);
 			settingsMenu.Closed += () => {
 				RemoveChild(settingsMenu);
-				AddChild(_startMenu);
+				_startMenu.Show();
 			};
 			AddChild(settingsMenu);
         };
