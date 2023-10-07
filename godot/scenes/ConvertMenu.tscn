@@ -1,43 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://dnewt4oe3noao"]
+[gd_scene load_steps=3 format=3 uid="uid://dnewt4oe3noao"]
 
 [ext_resource type="Script" path="res://scenes/ConvertMenu.cs" id="1_3s682"]
 
-[node name="ConvertMenu" type="Node2D"]
+[sub_resource type="LabelSettings" id="LabelSettings_yv0al"]
+font_size = 32
+
+[node name="ConvertMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_3s682")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Label" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-text = "This page allows you to select a single .psarc file or all in a folder"
-
-[node name="RecreateRadio" type="CheckButton" parent="VBoxContainer"]
-layout_mode = 2
-text = "Overwrite existing files"
-
-[node name="CopySourceRadio" type="CheckButton" parent="VBoxContainer"]
-layout_mode = 2
-button_pressed = true
-text = "Copy psarc into output"
-
-[node name="ChoseButton" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-text = "Manually Choose Files"
-
-[node name="Label2" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-text = " or"
-horizontal_alignment = 1
-
-[node name="FromDownloadsButton" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-text = "Convert All from Downloads"
-
-[node name="InfoLabel" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-text = " "
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open a File or Directory"
@@ -46,17 +21,69 @@ ok_button_text = "Open"
 file_mode = 3
 access = 2
 
-[node name="BackButton" type="Button" parent="."]
-offset_left = 1.0
-offset_top = 360.0
-offset_right = 73.0
-offset_bottom = 391.0
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
 text = "Back
 "
 
-[connection signal="pressed" from="VBoxContainer/ChoseButton" to="." method="ChoseButton_Pressed"]
-[connection signal="pressed" from="VBoxContainer/FromDownloadsButton" to="." method="FromDownloadsButton_Pressed"]
+[node name="HeadingLabel" type="Label" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Convert a single .psarc file or select a folder to search"
+label_settings = SubResource("LabelSettings_yv0al")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RecreateRadio" type="CheckButton" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Overwrite existing files"
+
+[node name="CopySourceRadio" type="CheckButton" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Copy psarc into output"
+
+[node name="ChoseButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Manually Choose Files"
+
+[node name="OrLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = " or"
+horizontal_alignment = 1
+
+[node name="FromDownloadsButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Convert All from Downloads"
+
+[node name="InfoLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = " "
+
+[node name="AfterLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "After converting songs they won't be loaded yet"
+
 [connection signal="dir_selected" from="FileDialog" to="." method="Dir_Selected"]
 [connection signal="file_selected" from="FileDialog" to="." method="File_Selected"]
 [connection signal="files_selected" from="FileDialog" to="." method="Files_Selected"]
-[connection signal="pressed" from="BackButton" to="." method="BackButton_Pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer/BackButton" to="." method="BackButton_Pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/ChoseButton" to="." method="ChoseButton_Pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/FromDownloadsButton" to="." method="FromDownloadsButton_Pressed"]

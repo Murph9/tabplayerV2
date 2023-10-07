@@ -1,7 +1,6 @@
 using Godot;
 using murph9.TabPlayer.scenes;
 using murph9.TabPlayer.Songs;
-using System.IO;
 
 namespace murph9.TabPlayer;
 
@@ -72,6 +71,7 @@ public partial class MainScene : Node
 		_songPick.Closed += () => {
 			RemoveChild(_songPick);
 			AddChild(_startMenu);
+			_startMenu.Show();
 		};
 		_songPick.OpenedSong += (string folderName, string instrument) => {
 			RemoveChild(_songPick);

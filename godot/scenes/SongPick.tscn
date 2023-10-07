@@ -16,26 +16,33 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_tdao1")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="PopupPanel" type="PopupPanel" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="BackButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Back"
 
-[node name="Title" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Select a song below:"
+text = "Select a song"
 label_settings = SubResource("LabelSettings_88tyd")
 
-[node name="PopupPanel" type="PopupPanel" parent="."]
-
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/BackButton" to="." method="Back"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/BackButton" to="." method="Back"]

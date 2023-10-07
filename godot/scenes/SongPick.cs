@@ -33,7 +33,7 @@ public partial class SongPick : Control
 	public override void _Ready() {
 		_songList.LayoutMode = 3;
 		
-		var vbox = GetNode<VBoxContainer>("VBoxContainer");
+		var vbox = GetNode<VBoxContainer>("MarginContainer/VBoxContainer");
 		vbox.AddChild(_songList);
 	}
 

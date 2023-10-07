@@ -18,7 +18,7 @@ public partial class ConvertMenu : Node2D
 	public override void _Process(double delta) { }
 
 	private void ChoseButton_Pressed() {
-		var infoLabel = GetNode<Label>("VBoxContainer/InfoLabel");
+		var infoLabel = GetNode<Label>("CenterContainer/VBoxContainer/InfoLabel");
 		infoLabel.Text = "";
 		
 		var a = GetNode<FileDialog>("FileDialog");
@@ -28,7 +28,7 @@ public partial class ConvertMenu : Node2D
 	}
 
 	private async void FromDownloadsButton_Pressed() {
-		var infoLabel = GetNode<Label>("VBoxContainer/InfoLabel");
+		var infoLabel = GetNode<Label>("CenterContainer/VBoxContainer/InfoLabel");
 		var downloadsFolder = OS.GetSystemDir(OS.SystemDir.Downloads);
 
 		infoLabel.Text = "Downloading from " + downloadsFolder;
@@ -40,7 +40,7 @@ public partial class ConvertMenu : Node2D
 	public async void Files_Selected(string[] paths) => await ConvertFiles(paths);
 
 	private async Task ConvertFiles(string[] files) {
-		var infoLabel = GetNode<Label>("VBoxContainer/InfoLabel");
+		var infoLabel = GetNode<Label>("CenterContainer/VBoxContainer/InfoLabel");
 
 		files = files.Where(x => x.EndsWith(".psarc")).ToArray();
 		if (!files.Any()) {
@@ -48,8 +48,8 @@ public partial class ConvertMenu : Node2D
 			return;
 		}
 		
-		var recreate = GetNode<CheckButton>("VBoxContainer/RecreateRadio").ButtonPressed;
-		var copySource = GetNode<CheckButton>("VBoxContainer/CopySourceRadio").ButtonPressed;
+		var recreate = GetNode<CheckButton>("CenterContainer/VBoxContainer/RecreateRadio").ButtonPressed;
+		var copySource = GetNode<CheckButton>("CenterContainer/VBoxContainer/CopySourceRadio").ButtonPressed;
 
 		var completed = new List<string>();
 		var failed = new List<string>();

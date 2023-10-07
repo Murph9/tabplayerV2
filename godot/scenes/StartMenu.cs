@@ -40,8 +40,6 @@ public partial class StartMenu : Node
 
 	public override void _Process(double delta) {
 		GetNode<Label>("ReloadProgressLabel").Text = _progressText;
-
-		GD.Print(GetNode<VBoxContainer>("VBoxContainer").Position);
 	}
 
 	private void StartButton_Pressed() {
