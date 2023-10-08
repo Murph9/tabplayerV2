@@ -4,11 +4,30 @@ namespace murph9.TabPlayer.scenes.Services;
 
 public class TweenHelper {
 
-    public static void TweenPosition(Tween t, Control n, Vector2 position, float time) {
-        t.TweenProperty(n, "position", position, time).SetTrans(Tween.TransitionType.Quad);
+    private readonly SceneTree _sceneTree;
+    private readonly Control _control;
+    private readonly string _propName;
+    private readonly Godot.Variant _initialProp;
+    private readonly Godot.Variant _finalProp;
+
+    public TweenHelper(SceneTree sceneTree, Control control, string propName, Godot.Variant initial, Godot.Variant final) {
+        _sceneTree = sceneTree;
+        _control = control;
+        _propName = propName;
+        _initialProp = initial;
+        _finalProp = final;
     }
-    
-    public static void TweenAddPosition(Tween t, Control n, Vector2 addedPosition, float time) {
-        t.TweenProperty(n, "position", n.Position + addedPosition, time).SetTrans(Tween.TransitionType.Quad);
-    }
+
+    public float Speed { get; set; } = 1;
+    public Tween.TransitionType Type { get; set; } = Tween.TransitionType.Quad;
+
+    public void ToFinal() =>
+        _sceneTree.CreateTween()
+            .TweenProperty(_control, _propName, _finalProp, Speed)
+            .SetTrans(Type);
+
+    public void ToInital() =>
+        _sceneTree.CreateTween()
+            .TweenProperty(_control, _propName, _initialProp, Speed)
+            .SetTrans(Type);
 }

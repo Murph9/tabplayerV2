@@ -22,18 +22,13 @@ public partial class StartMenu : Node
 
 
 	private string _progressText;
-
-	private Vector2 _menuInitialPosition;
-	private Vector2 _menuFinalPosition;
+	private TweenHelper _tween;
 
 	public override void _Ready() {
 		var obj = GetNode<VBoxContainer>("VBoxContainer");
 		var screen = GetViewport().GetVisibleRect().Size;
-
 		obj.Position = new Vector2(obj.Position.X, screen.Y - obj.Size.Y - 80);
-		_menuInitialPosition = obj.Position;
-
-		_menuFinalPosition = new Vector2(80, _menuInitialPosition.Y);
+		_tween = new TweenHelper(GetTree(), GetNode<VBoxContainer>("VBoxContainer"), "position", obj.Position, new Vector2(80, obj.Position.Y));
 
 		AnimateIn();
 	}
@@ -86,13 +81,6 @@ public partial class StartMenu : Node
 
 	public void Show() => AnimateIn();
 
-	private void AnimateIn() {
-		var tween = GetTree().CreateTween();
-		TweenHelper.TweenPosition(tween, GetNode<VBoxContainer>("VBoxContainer"), _menuFinalPosition, 1);
-	}
-
-	private void AnimateOut() {
-		var tween = GetTree().CreateTween();
-		TweenHelper.TweenPosition(tween, GetNode<VBoxContainer>("VBoxContainer"), _menuInitialPosition, 1);
-	}
+	private void AnimateIn() => _tween.ToFinal();
+	private void AnimateOut() => _tween.ToInital();
 }
