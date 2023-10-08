@@ -5,23 +5,17 @@ using System.Collections.Generic;
 
 namespace murph9.TabPlayer.scenes;
 
-public partial class SettingsPage : CenterContainer
+public partial class SettingsPage : VBoxContainer, ITransistionScene
 {
 	[Signal]
 	public delegate void ClosedEventHandler();
 	
 	private Settings _settings;
+	private TweenHelper _tween;
 
 	public override void _Ready() {
 		_settings = SettingsService.Settings();
-
-		LayoutMode = 3;
-		AnchorsPreset = 15;
-
-		var vboxContainer = new VBoxContainer() {
-		};
-		AddChild(vboxContainer);
-		
+	
 		var hBoxContainer = new HBoxContainer();
 		hBoxContainer.AddChild(new Label() {
 			Text = "Settings         ", // its for cheap spacing
@@ -37,8 +31,8 @@ public partial class SettingsPage : CenterContainer
 		};
 		hBoxContainer.AddChild(exitButton);
 		
-		vboxContainer.AddChild(hBoxContainer);
-		vboxContainer.AddChild(new Label() {
+		AddChild(hBoxContainer);
+		AddChild(new Label() {
 			Text = "Set String Colours (low to high):"
 		});
 
@@ -65,10 +59,10 @@ public partial class SettingsPage : CenterContainer
 				SettingsService.UpdateSettings(_settings);
 			};
 			box.AddChild(picker);
-			vboxContainer.AddChild(box);
+			AddChild(box);
 		}
 
-		vboxContainer.AddChild(new Label() {
+		AddChild(new Label() {
 			Text = "Other Settings"
 		});
 		var otherBox = new HBoxContainer() {
@@ -83,8 +77,15 @@ public partial class SettingsPage : CenterContainer
 			SettingsService.UpdateSettings(_settings);
 		};
 		otherBox.AddChild(lowIsLowCheck);
-		vboxContainer.AddChild(otherBox);
+		AddChild(otherBox);
+
+		_tween = new TweenHelper(GetTree(), this, "position", new Vector2(-500, Position.Y), Position);
+		Position = new Vector2(-500, Position.Y);
 	}
 
 	public override void _Process(double delta) { }
+
+    public void AnimateIn() => _tween.ToFinal();
+
+    public void AnimateOut() => _tween.ToInitial();
 }

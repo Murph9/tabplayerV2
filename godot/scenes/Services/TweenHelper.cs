@@ -26,7 +26,7 @@ public class TweenHelper {
             .TweenProperty(_control, _propName, _finalProp, Speed)
             .SetTrans(Type);
 
-    public void ToInital() =>
+    public void ToInitial() =>
         _sceneTree.CreateTween()
             .TweenProperty(_control, _propName, _initialProp, Speed)
             .SetTrans(Type);

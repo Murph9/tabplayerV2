@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace murph9.TabPlayer.scenes;
 
-public partial class StartMenu : Node
+public partial class StartMenu : Node, ITransistionScene
 {
 	[Signal]
 	public delegate void ClosedEventHandler();
@@ -79,8 +79,6 @@ public partial class StartMenu : Node
 		EmitSignal(SignalName.SettingsOpened);
 	}
 
-	public void Show() => AnimateIn();
-
-	private void AnimateIn() => _tween.ToFinal();
-	private void AnimateOut() => _tween.ToInital();
+	public void AnimateIn() => _tween.ToFinal();
+	public void AnimateOut() => _tween.ToInitial();
 }

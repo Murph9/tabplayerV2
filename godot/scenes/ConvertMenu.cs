@@ -1,4 +1,5 @@
 using Godot;
+using murph9.TabPlayer.scenes.Services;
 using murph9.TabPlayer.Songs.Convert;
 using System;
 using System.Collections.Generic;
@@ -8,17 +9,23 @@ using System.Threading.Tasks;
 
 namespace murph9.TabPlayer.scenes;
 
-public partial class ConvertMenu : Node2D
+public partial class ConvertMenu : Control, ITransistionScene
 {
 	[Signal]
 	public delegate void ClosedEventHandler();
 	
-	public override void _Ready() { }
+	private TweenHelper _tween;
+	
+	public override void _Ready() {
+		var initialPos = new Vector2(-Size.X, Position.Y);
+		_tween = new TweenHelper(GetTree(), this, "position", initialPos, new Vector2(Position.X, Position.Y));
+		Position = initialPos;
+	}
 
 	public override void _Process(double delta) { }
 
 	private void ChoseButton_Pressed() {
-		var infoLabel = GetNode<Label>("CenterContainer/VBoxContainer/InfoLabel");
+		var infoLabel = GetNode<Label>("InfoLabel");
 		infoLabel.Text = "";
 		
 		var a = GetNode<FileDialog>("FileDialog");
@@ -28,7 +35,7 @@ public partial class ConvertMenu : Node2D
 	}
 
 	private async void FromDownloadsButton_Pressed() {
-		var infoLabel = GetNode<Label>("CenterContainer/VBoxContainer/InfoLabel");
+		var infoLabel = GetNode<Label>("InfoLabel");
 		var downloadsFolder = OS.GetSystemDir(OS.SystemDir.Downloads);
 
 		infoLabel.Text = "Downloading from " + downloadsFolder;
@@ -40,7 +47,7 @@ public partial class ConvertMenu : Node2D
 	public async void Files_Selected(string[] paths) => await ConvertFiles(paths);
 
 	private async Task ConvertFiles(string[] files) {
-		var infoLabel = GetNode<Label>("CenterContainer/VBoxContainer/InfoLabel");
+		var infoLabel = GetNode<Label>("InfoLabel");
 
 		files = files.Where(x => x.EndsWith(".psarc")).ToArray();
 		if (!files.Any()) {
@@ -48,8 +55,8 @@ public partial class ConvertMenu : Node2D
 			return;
 		}
 		
-		var recreate = GetNode<CheckButton>("CenterContainer/VBoxContainer/RecreateRadio").ButtonPressed;
-		var copySource = GetNode<CheckButton>("CenterContainer/VBoxContainer/CopySourceRadio").ButtonPressed;
+		var recreate = GetNode<CheckButton>("RecreateRadio").ButtonPressed;
+		var copySource = GetNode<CheckButton>("CopySourceRadio").ButtonPressed;
 
 		var completed = new List<string>();
 		var failed = new List<string>();
@@ -75,6 +82,11 @@ public partial class ConvertMenu : Node2D
 	}
 
 	public void BackButton_Pressed() {
+		_tween.ToInitial();
 		EmitSignal(SignalName.Closed);
 	}
+
+    public void AnimateIn() => _tween.ToFinal();
+
+    public void AnimateOut() => _tween.ToInitial();
 }
