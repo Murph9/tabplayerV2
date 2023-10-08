@@ -10,7 +10,7 @@ namespace murph9.TabPlayer.scenes;
 public partial class SongDisplay : VBoxContainer
 {
 	[Signal]
-	public delegate void SongSelectedEventHandler(string folder);
+	public delegate void SongSelectedEventHandler(string folder, string instrument);
 
 	private string _folderName;
 
@@ -18,11 +18,8 @@ public partial class SongDisplay : VBoxContainer
 
 	public override void _Process(double delta) { }
 
-	private void Play_Selected() => EmitSignal(SignalName.SongSelected, _folderName);
-
 	public void SongChanged(string folderName) {
 		_folderName = folderName;
-		GetNode<Button>("PlayButton").Visible = true; // please don't press it before we are ready
 		LoadSong();
 	}
 
@@ -42,18 +39,30 @@ public partial class SongDisplay : VBoxContainer
 		var grid = GetNode<GridContainer>("InstrumentGridContainer");
 		grid.GetChildren().ToList().ForEach(grid.RemoveChild); // remove all children from the grid
 
-		grid.AddChild(new Label() { Text = "Instrument Name"});
+		grid.AddChild(new Label());
 		grid.AddChild(new Label() { Text = "Tuning"});
 		grid.AddChild(new Label() { Text = "Note Counts"});
 		grid.AddChild(new Label() { Text = "Note Density"});
-
+		
 		grid.Columns = grid.GetChildren().Count;
 
-		foreach (var i in songInfo.Instruments) {
-			grid.AddChild(new Label() { Text = i.Name });
+		var insturmentsOrdered = songInfo.Instruments.OrderBy(x => 
+			{
+				if (SongInfo.INSTRUMENT_ORDER.ContainsKey(x.Name))
+					return SongInfo.INSTRUMENT_ORDER[x.Name];
+				// handle all other entries as in given order
+				return 999;
+			}).ToList();
+
+		foreach (var i in insturmentsOrdered) {
+			var button = new Button() { Text = "Play " + i.Name.Capitalize() };
+			button.Pressed += () => {
+				EmitSignal(SignalName.SongSelected, _folderName, i.Name);
+			};
+			grid.AddChild(button);
 			grid.AddChild(new Label() { Text = Instrument.CalcTuningName(i.Config.Tuning, i.Config.CapoFret) });
 			grid.AddChild(new Label() { Text = $"{i.TotalNoteCount()}, c: {i.ChordCount()}, n: {i.SingleNoteCount()}" });
-			grid.AddChild(new Label() { Text = i.GetNoteDensity(songInfo).ToString() });
+			grid.AddChild(new Label() { Text = i.GetNoteDensity(songInfo).ToFixedPlaces(2) });
 		}
 	}
 }

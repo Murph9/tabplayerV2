@@ -36,7 +36,7 @@ public partial class StartMenu : Node, ITransistionScene
 		GetNode<Label>("ReloadProgressLabel").Text = _progressText;
 	}
 
-	private void StartButton_Pressed() {
+	private void PlayButton_Pressed() {
 		AnimateOut();
 		EmitSignal(SignalName.SongPickOpened);
 	}
@@ -52,8 +52,8 @@ public partial class StartMenu : Node, ITransistionScene
 	}
 
 	private void ReloadButton_Pressed() {
-		var startButton = GetNode<Button>("%StartButton");
-		startButton.Disabled = true;
+		var PlayButton = GetNode<Button>("%PlayButton");
+		PlayButton.Disabled = true;
 		var convertButton = GetNode<Button>("%ConvertButton");
 		convertButton.Disabled = true;
 		var reloadButton = GetNode<Button>("%ReloadButton");
@@ -65,7 +65,7 @@ public partial class StartMenu : Node, ITransistionScene
 			CallDeferred("emit_signal", SignalName.SongListFileChanged);
 			reloadButton.SetDeferred("disabled", false);
 			convertButton.SetDeferred("disabled", false);
-			startButton.SetDeferred("disabled", false);
+			PlayButton.SetDeferred("disabled", false);
 		});
 	}
 

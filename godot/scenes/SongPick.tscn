@@ -16,8 +16,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_tdao1")
 
-[node name="PopupPanel" type="PopupPanel" parent="."]
-
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15

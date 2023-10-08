@@ -25,11 +25,6 @@ texture = SubResource("GradientTexture2D_348oa")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="PlayButton" type="Button" parent="."]
-visible = false
-layout_mode = 2
-text = "Play"
-
 [node name="ArtistLabel" type="Label" parent="."]
 layout_mode = 2
 text = "Select a song to start"
@@ -48,5 +43,3 @@ layout_mode = 2
 
 [node name="InstrumentGridContainer" type="GridContainer" parent="."]
 layout_mode = 2
-
-[connection signal="pressed" from="PlayButton" to="." method="Play_Selected"]

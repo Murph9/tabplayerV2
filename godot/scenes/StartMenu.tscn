@@ -54,11 +54,11 @@ offset_top = 700.0
 offset_right = 250.0
 offset_bottom = 906.0
 
-[node name="StartButton" type="Button" parent="VBoxContainer"]
+[node name="PlayButton" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
-text = "Start"
+text = "Play"
 
 [node name="ConvertButton" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
@@ -84,7 +84,7 @@ layout_mode = 2
 text = "Quit
 "
 
-[connection signal="pressed" from="VBoxContainer/StartButton" to="." method="StartButton_Pressed"]
+[connection signal="pressed" from="VBoxContainer/PlayButton" to="." method="PlayButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer/ConvertButton" to="." method="ConvertButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer/ReloadButton" to="." method="ReloadButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer/InfoButton" to="." method="InfoButton_Pressed"]
