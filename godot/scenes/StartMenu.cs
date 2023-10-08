@@ -26,11 +26,10 @@ public partial class StartMenu : Node, ITransistionScene
 
 	public override void _Ready() {
 		var obj = GetNode<VBoxContainer>("VBoxContainer");
-		var screen = GetViewport().GetVisibleRect().Size;
-		obj.Position = new Vector2(obj.Position.X, screen.Y - obj.Size.Y - 80);
-		_tween = new TweenHelper(GetTree(), GetNode<VBoxContainer>("VBoxContainer"), "position", obj.Position, new Vector2(80, obj.Position.Y));
-
-		AnimateIn();
+		var initialPos = new Vector2(-obj.Size.X, obj.Position.Y);
+		_tween = new TweenHelper(GetTree(), GetNode<VBoxContainer>("VBoxContainer"), "position", initialPos, new Vector2(80, obj.Position.Y));
+		obj.Position = initialPos;
+		_tween.ToFinal();
 	}
 
 	public override void _Process(double delta) {
