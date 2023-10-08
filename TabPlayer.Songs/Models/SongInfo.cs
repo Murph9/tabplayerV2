@@ -135,6 +135,24 @@ public class SongInfo
     public const string VOCALS_NAME = "vocals";
     public static readonly string[] STANDARD_INSTRUMENT_TYPES = new string[] { LEAD_NAME, RHYTHM_NAME, BASS_NAME };
 
+    public static readonly Dictionary<string, int> INSTRUMENT_ORDER = new() {
+        {LEAD_NAME, 0},
+        {LEAD1_NAME, 1},
+        {LEAD2_NAME, 2},
+        {COMBO_NAME, 3},
+        {COMBO1_NAME, 4},
+        {COMBO2_NAME, 5},
+        {COMBO3_NAME, 6},
+        {COMBO4_NAME, 7},
+        {RHYTHM_NAME, 8},
+        {RHYTHM1_NAME, 9},
+        {RHYTHM2_NAME, 10},
+        {BASS_NAME, 11},
+        {BASS1_NAME, 12},
+        {BASS2_NAME, 13},
+        {VOCALS_NAME, 14},
+    };
+
     [JsonIgnore]
     public Instrument MainInstrument { get; private set; }
     public ICollection<Instrument> Instruments { get; private set; }

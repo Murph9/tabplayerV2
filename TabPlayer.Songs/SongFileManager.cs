@@ -88,11 +88,11 @@ public record SongFile(string FolderName, string SongName, string Artist, string
     public string GetInstrumentChars()
     {
         var chars = new char[] { ' ', ' ', ' ', ' ', ' '};
-        if (Instruments.Any(x => x.Name == SongInfo.LEAD_NAME))
+        if (Instruments.Any(x => x.Name == SongInfo.LEAD_NAME || x.Name == SongInfo.LEAD1_NAME || x.Name == SongInfo.LEAD2_NAME))
             chars[0] = 'L';
-        if (Instruments.Any(x => x.Name == SongInfo.RHYTHM_NAME))
+        if (Instruments.Any(x => x.Name == SongInfo.RHYTHM_NAME || x.Name == SongInfo.RHYTHM1_NAME || x.Name == SongInfo.RHYTHM2_NAME))
             chars[1] = 'R';
-        if (Instruments.Any(x => x.Name == SongInfo.BASS_NAME))
+        if (Instruments.Any(x => x.Name == SongInfo.BASS_NAME || x.Name == SongInfo.BASS1_NAME || x.Name == SongInfo.BASS2_NAME))
             chars[2] = 'B';
         if (Lyrics != null && Lyrics.WordCount > 0)
             chars[3] = 'V';
