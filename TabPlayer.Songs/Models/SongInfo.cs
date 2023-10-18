@@ -58,7 +58,7 @@ public class Instrument
         if (Enumerable.SequenceEqual(t, new short[] { -1, -1, -1, -1, -1, -1 }))
             return "Eb Standard";
         if (Enumerable.SequenceEqual(t, new short[] { -3, -1, -1, -1, -1, -1 }))
-            return "Eb Drop D";
+            return "Eb Drop Db";
         if (Enumerable.SequenceEqual(t, new short[] { -2, -2, -2, -2, -2, -2 }))
             return "D Standard";
         if (Enumerable.SequenceEqual(t, new short[] { -4, -2, -2, -2, -2, -2 }))
