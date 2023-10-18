@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace murph9.TabPlayer.scenes.Services;
 
-public record Settings(IList<Color> StringColours, bool LowStringIsLow);
+public record Settings(IList<Color> StringColours, bool LowStringIsLow, float CameraAimSpeed);
 
 public class SettingsService {
     
@@ -19,7 +19,7 @@ public class SettingsService {
             Colors.Orange,
             Colors.Green,
             Colors.Purple
-        }, true);
+        }, true, 10);
 
     private static Settings _settings;
     public static Settings Settings() {

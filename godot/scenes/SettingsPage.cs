@@ -65,8 +65,8 @@ public partial class SettingsPage : VBoxContainer, ITransistionScene
 		AddChild(new Label() {
 			Text = "Other Settings"
 		});
-		var otherBox = new HBoxContainer() {
-			Name = "OtherHBoxContainer"
+		var otherBox = new VBoxContainer() {
+			Name = "OtherVBoxContainer"
 		};
 		var lowIsLowCheck = new CheckBox() {
 			Text = "Low String at the bottom: ",
@@ -77,10 +77,37 @@ public partial class SettingsPage : VBoxContainer, ITransistionScene
 			SettingsService.UpdateSettings(_settings);
 		};
 		otherBox.AddChild(lowIsLowCheck);
+
+		otherBox = new VBoxContainer() {
+			Name = "OtherVBoxContainer"
+		};
+		var cameraAimLabel = new Label() { Text = "Change Camera Aim Speed: " + _settings.CameraAimSpeed };
+		otherBox.AddChild(cameraAimLabel);
+		var cameraAimUpButton = new Button() {
+			Text = "Increase"
+		};
+		cameraAimUpButton.Pressed += () => SetCameraAimSpeed(cameraAimLabel, 1);
+		otherBox.AddChild(cameraAimUpButton);
+		var cameraAimDownButton = new Button() {
+			Text = "Decrease"
+		};
+		cameraAimDownButton.Pressed += () => SetCameraAimSpeed(cameraAimLabel, -1);
+		otherBox.AddChild(cameraAimDownButton);
+		
 		AddChild(otherBox);
 
 		_tween = new TweenHelper(GetTree(), this, "position", new Vector2(-500, Position.Y), Position);
 		Position = new Vector2(-500, Position.Y);
+	}
+
+	private void SetCameraAimSpeed(Label l, int dx) {
+		var newSpeed = _settings.CameraAimSpeed + dx;
+		if (newSpeed > 30 || newSpeed < 1)
+			return;
+		
+		_settings = _settings with { CameraAimSpeed = newSpeed };
+		l.Text = "Change Camera Aim Speed: " + _settings.CameraAimSpeed;
+		SettingsService.UpdateSettings(_settings);
 	}
 
 	public override void _Process(double delta) { }

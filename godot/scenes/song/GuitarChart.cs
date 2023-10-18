@@ -118,9 +118,9 @@ public partial class GuitarChart : Node3D {
         var block = NextNoteBlock();
         if (block != null) {
             var cam = GetTree().Root.GetCamera3D();
-            
+            var camMoveSpeed = SettingsService.Settings().CameraAimSpeed / 50f; //so the setting has more logic numbers
             var wantPos = DisplayConst.CalcMiddleWindowZ(block.FretWindowStart, block.FretWindowLength);
-            var newZ = cam.Position.Z*(1-delta*CAM_MOVE_SPEED) + wantPos*delta*CAM_MOVE_SPEED;
+            var newZ = cam.Position.Z*(1 - delta * camMoveSpeed) + wantPos * delta * camMoveSpeed;
             cam.Position = new Vector3(cam.Position.X, cam.Position.Y, (float)newZ);
         }
 
