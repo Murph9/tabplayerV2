@@ -47,8 +47,6 @@ public partial class SongList : VBoxContainer
 			Song = song;
 			_callback = buttonAction;
 
-			var mainI = song.GetMainInstrument();
-
 			Controls = new List<Control>
             {
                 CreateLabel(song.SongName.FixedWidthString(30)),
@@ -90,6 +88,7 @@ public partial class SongList : VBoxContainer
 	private Func<SongFile, object> _sort = (s) => s.SongName;
 	private Func<SongFile, bool> _filter = null;
 	private string _tuningFilter = null;
+	public string TuningFilter => _tuningFilter;
 
 	private SongDisplay _songDisplay;
 
