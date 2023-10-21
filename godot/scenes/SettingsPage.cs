@@ -69,7 +69,7 @@ public partial class SettingsPage : VBoxContainer, ITransistionScene
 			Name = "OtherVBoxContainer"
 		};
 		var lowIsLowCheck = new CheckBox() {
-			Text = "Low String at the bottom: ",
+			Text = "Low String at the bottom",
 			ButtonPressed = _settings.LowStringIsLow
 		};
 		lowIsLowCheck.Pressed += () => {
@@ -77,24 +77,27 @@ public partial class SettingsPage : VBoxContainer, ITransistionScene
 			SettingsService.UpdateSettings(_settings);
 		};
 		otherBox.AddChild(lowIsLowCheck);
+		AddChild(otherBox);
 
-		otherBox = new VBoxContainer() {
-			Name = "OtherVBoxContainer"
+		var cameraBox = new VBoxContainer() {
+			Name = "CameraVBoxContainer"
 		};
 		var cameraAimLabel = new Label() { Text = "Change Camera Aim Speed: " + _settings.CameraAimSpeed };
-		otherBox.AddChild(cameraAimLabel);
+		cameraBox.AddChild(cameraAimLabel);
+		var cameraButtonBox = new HBoxContainer();
 		var cameraAimUpButton = new Button() {
 			Text = "Increase"
 		};
 		cameraAimUpButton.Pressed += () => SetCameraAimSpeed(cameraAimLabel, 1);
-		otherBox.AddChild(cameraAimUpButton);
+		cameraButtonBox.AddChild(cameraAimUpButton);
 		var cameraAimDownButton = new Button() {
 			Text = "Decrease"
 		};
 		cameraAimDownButton.Pressed += () => SetCameraAimSpeed(cameraAimLabel, -1);
-		otherBox.AddChild(cameraAimDownButton);
+		cameraButtonBox.AddChild(cameraAimDownButton);
+		cameraBox.AddChild(cameraButtonBox);
 		
-		AddChild(otherBox);
+		AddChild(cameraBox);
 
 		_tween = new TweenHelper(GetTree(), this, "position", new Vector2(-500, Position.Y), Position);
 		Position = new Vector2(-500, Position.Y);
