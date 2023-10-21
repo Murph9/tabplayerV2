@@ -44,8 +44,10 @@ public partial class SongPick : Control
 	private void ChooseSong(SongFile song, string instrument) {
 		GD.Print($"Selected: {song.SongName} with path {instrument}");
 		
-		if (string.IsNullOrEmpty(_songList.TuningFilter))
+		if (string.IsNullOrEmpty(_songList.TuningFilter)) {
 			EmitSignal(SignalName.OpenedSong, song.FolderName, instrument);
+			return;
+		}
 
 		var pickedInstrument = song.Instruments.First(x => x.Name == instrument);
 		if (Instrument.CalcTuningName(pickedInstrument.Tuning) != _songList.TuningFilter) {
