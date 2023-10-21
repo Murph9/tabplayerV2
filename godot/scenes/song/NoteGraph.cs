@@ -1,9 +1,9 @@
+using Godot;
+using murph9.TabPlayer.scenes.Services;
+using murph9.TabPlayer.Songs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Godot;
-using murph9.TabPlayer.Songs;
-using murph9.TabPlayer.Songs.Models;
 
 namespace murph9.TabPlayer.scenes.song;
 
@@ -12,12 +12,29 @@ public partial class NoteGraph : Node {
     private const float BUCKET_SIZE = 3;
     private const float BUCKET_PIXEL_WIDTH = 7;
     private const float BUCKET_NOTE_PIXEL_HEIGHT = 5;
-    private const float BUCKET_BOTTOM_OFFSET = 15;
+    private const float BUCKET_BOTTOM_OFFSET = 20;
 
-    record GraphSection {
-        public ColorRect Chord;
-        public ColorRect Note;
-        public ColorRect Unique;
+    partial class GraphSection : Control {
+        public Vector2 Pos;
+        public readonly ColorRect Chord;
+        public readonly ColorRect Note;
+        public readonly ColorRect[] StringNums;
+
+        public GraphSection(Vector2 offsetPos, ColorRect chord, ColorRect note, ColorRect[] strings) {
+            AnchorsPreset = 3;
+            OffsetTop = offsetPos.Y;
+            OffsetLeft = offsetPos.X;
+            Pos = offsetPos;
+            Chord = chord;
+            Note = note;
+            StringNums = strings;
+
+            AddChild(chord);
+            AddChild(note);
+            foreach (var s in StringNums) {
+                AddChild(s);
+            }
+        }
     }
 
     private Color _chordColour = new(0, 0, 0.3f, 0.5f);
@@ -43,10 +60,15 @@ public partial class NoteGraph : Node {
             AnchorsPreset = 3,
         };
         AddChild(barNode);
-        
+
+        var stringColours = SettingsService.Settings().StringColours.ToArray();
+        var stringOrder = Enumerable.Range(0, 6);
+            if (SettingsService.Settings().LowStringIsLow)
+                stringOrder = stringOrder.Reverse();
+
         // TODO align to section starts
         var noteBuckets = _songState.Instrument.Notes.ToLookup(x => Math.Round(x.Time/BUCKET_SIZE));
-        var maxBucket = Math.Round(noteBuckets.Last().Key + 1);
+        var maxBucket = Math.Round(noteBuckets.Last().Key + 3);
         for (var i = 0; i < maxBucket; i++) {
             // get count of note and count of chords
             var totalCount = noteBuckets[i].Count();
@@ -57,53 +79,46 @@ public partial class NoteGraph : Node {
             var noteCount = totalCount - chordCount;
             var noteHeight = noteCount*BUCKET_NOTE_PIXEL_HEIGHT;
 
-            var uniqueList = new List<NoteBlock>();
+            var stringCounts = new float[] { 0,0,0,0,0,0 };
             foreach (var n in noteBuckets[i]) {
-                var foundSimilar = false;
-                foreach (var u in uniqueList) {
-                    if (u.IsSameChordAs(n, maxInterval: float.MaxValue)) {
-                        foundSimilar = true;
-                        break;
-                    }
-                }
-                if (!foundSimilar) {
-                    uniqueList.Add(n);
+                foreach (var a in n.Notes) {
+                    stringCounts[a.StringNum]++;
                 }
             }
-            var uniquePercent = uniqueList.Count / Math.Max(1f, totalCount);
-
+            var stringSum = stringCounts.Sum();
+            
             var chord = new ColorRect() {
                 Color = _chordColour,
                 AnchorsPreset = 3,
-                OffsetTop = -BUCKET_BOTTOM_OFFSET - chordHeight,
-                OffsetLeft = -BUCKET_PIXEL_WIDTH * (float)(maxBucket - i),
+                OffsetTop = -chordHeight,
                 Size = new Vector2(BUCKET_PIXEL_WIDTH, chordHeight)
             };
             var note = new ColorRect() {
                 Color = _noteColour,
                 AnchorsPreset = 3,
-                OffsetTop = -BUCKET_BOTTOM_OFFSET - chordHeight - noteHeight,
-                OffsetLeft = -BUCKET_PIXEL_WIDTH*(float)(maxBucket - i),
+                OffsetTop = -chordHeight - noteHeight,
                 Size = new Vector2(BUCKET_PIXEL_WIDTH, noteHeight)
             };
-            var unique = new ColorRect() {
-                Color = _uniqueColour,
-                AnchorsPreset = 3,
-                OffsetTop = -BUCKET_BOTTOM_OFFSET,
-                OffsetLeft = -BUCKET_PIXEL_WIDTH*(float)(maxBucket - i),
-                Size = new Vector2(BUCKET_PIXEL_WIDTH, BUCKET_BOTTOM_OFFSET * uniquePercent)
-            };
 
-            _graphBars.Add(i, new GraphSection() {
-                Chord = chord,
-                Note = note,
-                Unique = unique
-            });
-        }
-        foreach (var n in _graphBars) {
-            barNode.AddChild(n.Value.Chord);
-            barNode.AddChild(n.Value.Note);
-            barNode.AddChild(n.Value.Unique);
+            var stringOffsetPos = 0f;
+            var stringNums = stringOrder.Select(x => {
+                var newOffset = stringOffsetPos;
+                var y = 0f;
+                if (stringSum > 0) {
+                    y = BUCKET_BOTTOM_OFFSET * stringCounts[x]/stringSum;
+                }
+                stringOffsetPos += y; // for the next one
+                return new ColorRect() { 
+                    Color = stringColours[x] * 0.6f,
+                    AnchorsPreset = 3,
+                    OffsetTop = newOffset,
+                    Size = new Vector2(BUCKET_PIXEL_WIDTH - 2, y)
+                };
+            }).ToArray();
+
+            var g = new GraphSection(new Vector2(-BUCKET_PIXEL_WIDTH*(float)(maxBucket - i), -BUCKET_BOTTOM_OFFSET), chord, note, stringNums);
+            _graphBars.Add(i, g);
+            barNode.AddChild(g);
         }
 	}
 
@@ -118,11 +133,9 @@ public partial class NoteGraph : Node {
             if (bar.Key == bucket) {
                 bar.Value.Chord.Color = _chordColour * 2;
                 bar.Value.Note.Color = _noteColour * 2;
-                bar.Value.Unique.Color = _uniqueColour * 2;
             } else {
                 bar.Value.Chord.Color = _chordColour;
                 bar.Value.Note.Color = _noteColour;
-                bar.Value.Unique.Color = _uniqueColour;
             }
         }
 	}
