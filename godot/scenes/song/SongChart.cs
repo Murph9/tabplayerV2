@@ -93,9 +93,14 @@ public partial class SongChart : Node3D {
             }
         }
         
-        list.Add(MeshGenerator.BoxLine(Colors.LightGray, bottomLeftPos + chordDirUp, bottomLeftPos));
-        list.Add(MeshGenerator.BoxLine(Colors.LightGray, bottomLeftPos, bottomLeftPos + across));
-        list.Add(MeshGenerator.BoxLine(Colors.LightGray, bottomLeftPos + across, bottomLeftPos + across + chordDirUp));
+        var notesAllChildren = noteBlock.Notes.All(x => x.Type.Contains(NoteType.CHILD));
+        if (!notesAllChildren) {
+            // only show chord box when it contains notes to hit
+            list.Add(MeshGenerator.BoxLine(Colors.LightGray, bottomLeftPos + chordDirUp, bottomLeftPos));
+            list.Add(MeshGenerator.BoxLine(Colors.LightGray, bottomLeftPos, bottomLeftPos + across));
+            list.Add(MeshGenerator.BoxLine(Colors.LightGray, bottomLeftPos + across, bottomLeftPos + across + chordDirUp));
+        }
+
         return list;
     }
 
