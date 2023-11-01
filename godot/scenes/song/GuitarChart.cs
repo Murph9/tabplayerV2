@@ -135,7 +135,7 @@ public partial class GuitarChart : Node3D {
             if (block == null) return;
 
             _lastNoteBlockNode = new Node3D();
-            AddChild(_lastNoteBlockNode);
+            AddChild(_lastNoteBlockNode); // TODO show sustains
 
             var config = _songState.Instrument.Config;
             foreach (var n in block.Notes) {

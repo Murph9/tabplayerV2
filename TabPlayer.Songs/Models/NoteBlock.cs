@@ -34,12 +34,9 @@ public class NoteBlock
 
     private readonly static NoteType[] IGNORED_TYPES = new NoteType[] { NoteType.UNDEFINED, NoteType.MISSING, NoteType.CHORD, NoteType.OPEN, NoteType.IGNORE, NoteType.HIGHDENSITY, NoteType.SINGLE, NoteType.CHORDNOTES, NoteType.DOUBLESTOP, NoteType.MISSING2, NoteType.STRUM, NoteType.ACCENT };
 
-    public bool IsSameChordAs(NoteBlock other, float maxInterval = 2)
+    public bool IsSameChordAs(NoteBlock other)
     {
         if (other == null)
-            return false;
-
-        if (Math.Abs(other.Time - this.Time) > maxInterval)
             return false;
 
         var thisHasStuff = Notes.Any(x => (x.Bends != null && x.Bends.Any()) || x.Slide != null);

@@ -79,8 +79,7 @@ public partial class SongChart : Node3D {
             list.Add(lineA);
             var lineB = MeshGenerator.BoxLine(Colors.LightGray, bottomLeftPos + across, bottomLeftPos + chordDirUp*0.5f);
             list.Add(lineB);
-        }
-        else if (!noteBlock.IsSameChordAs(_lastChord)) {
+        } else if (!noteBlock.IsSameChordAs(_lastChord) || (_lastChord != null && Math.Abs(noteBlock.Time - _lastChord.Time) > 1.2f)) {
             foreach (var note in noteBlock.Notes) {
                 list.AddRange(NoteGenerator.GetNote(note, config, noteBlock));
                 list.AddRange(NoteGenerator.CreateNoteLine(noteBlock, note, config));
