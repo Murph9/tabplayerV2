@@ -58,8 +58,7 @@ public class NoteGenerator {
     }
 
     public static IEnumerable<Node3D> CreateNoteLine(NoteBlock noteBlock, SingleNote note, InstrumentConfig config) {
-        var notePosZ = DisplayConst.CalcInFretPosZ(note.FretNum);
-        var notePos = new Vector3(noteBlock.Time * config.NoteSpeed, DisplayConst.CalcNoteHeightY(note.StringNum), notePosZ);
+        var notePos = new Vector3(noteBlock.Time * config.NoteSpeed, DisplayConst.CalcNoteHeightY(note.StringNum), DisplayConst.CalcInFretPosZ(note.FretNum));
 
         if (note.FretNum == 0) {
             notePos = new Vector3(notePos.X, notePos.Y, DisplayConst.CalcMiddleWindowZ(noteBlock.FretWindowStart, noteBlock.FretWindowLength));
@@ -74,31 +73,61 @@ public class NoteGenerator {
             yield break;
         }
 
+        var noteColour = SettingsService.GetColorFromStringNum(note.StringNum);
+        var finalLinePos = notePos + new Vector3(config.NoteSpeed*note.Length, 0, 0);
         if (note.Type.Contains(NoteType.BEND) && note.Bends.Any()) {
             var lastPos = notePos;
             if (Math.Abs(note.Bends.First().Time - noteBlock.Time) > 1e-3) {
-                lastPos = notePos; // TODO wrong
+                lastPos = notePos; // TODO probably wrong
             }
             
             foreach (var b in note.Bends) {
                 var endPos = new Vector3(b.Time*config.NoteSpeed, notePos.Y + DisplayConst.STRING_DISTANCE_APART*b.Step, notePos.Z);
-                yield return MeshGenerator.BoxLine(SettingsService.GetColorFromStringNum(note.StringNum), lastPos, endPos);
+                yield return MeshGenerator.BoxLine(noteColour, lastPos, endPos);
                 lastPos = endPos;
             }
 
             if (noteBlock.Time + note.Length > note.Bends.Last().Time) {
                 var endPos2 = new Vector3((noteBlock.Time + note.Length)*config.NoteSpeed, notePos.Y, notePos.Z);
-                yield return MeshGenerator.BoxLine(SettingsService.GetColorFromStringNum(note.StringNum), lastPos, endPos2);
+                yield return MeshGenerator.BoxLine(noteColour, lastPos, endPos2);
             }
+            finalLinePos = lastPos;
 
         } else if (note.Type.Contains(NoteType.SLIDE) || note.Type.Contains(NoteType.SLIDEUNPITCHEDTO)) {
             if (note.Slide == null || !note.Slide.HasValue)
                 throw new Exception("A slide without a slide"); // TODO should really have not passed validation
             var endPos = new Vector3((noteBlock.Time + note.Length) * config.NoteSpeed, notePos.Y, DisplayConst.CalcInFretPosZ(note.Slide.Value.ToFret));
-            yield return MeshGenerator.BoxLine(SettingsService.GetColorFromStringNum(note.StringNum), notePos, endPos);
+            yield return MeshGenerator.BoxLine(noteColour, notePos, endPos);
+
+            finalLinePos = endPos;
 
         } else {
-            yield return MeshGenerator.BoxLine(SettingsService.GetColorFromStringNum(note.StringNum), notePos, notePos + new Vector3(config.NoteSpeed*note.Length, 0, 0));
+            if (!note.Type.Contains(NoteType.VIBRATO)) {
+                yield return MeshGenerator.BoxLine(noteColour, notePos, notePos + new Vector3(config.NoteSpeed*note.Length, 0, 0));
+            } else {
+                // wibble and wobble the line (on both axis for visual help)
+                int wibbleWobble = 0;
+                var curX = notePos.X;
+                var lastPos = notePos;
+                while (curX < finalLinePos.X) {
+                    curX += 1.5f;
+                    var curPos = new Vector3(curX, notePos.Y + (float)Math.Sin(wibbleWobble * Math.PI / 2f) * 0.4f, notePos.Z + (float)Math.Cos(wibbleWobble * Math.PI / 2f) * 0.2f);
+                    yield return MeshGenerator.BoxLine(noteColour, lastPos, curPos);
+                    wibbleWobble += 1;
+                    lastPos = curPos;
+                }
+            }
+        }
+
+        if (note.Type.Contains(NoteType.TREMOLO)) {
+            // place notes along the line to display that we play it fast
+            var curPos = notePos;
+            while (curPos.X < finalLinePos.X) {
+                var b = MeshGenerator.Box(noteColour, curPos);
+                b.Scale *= 0.45f;
+                yield return b;
+                curPos += new Vector3(1.25f, 0, 0).Project(finalLinePos - notePos);
+            }
         }
     }
 }

@@ -16,8 +16,8 @@ public class NoteHelper
         // if (note.Type.Contains(NoteType.SLIDE))
             // yield return "s";
 
-        if (note.Type.Contains(NoteType.TREMOLO))
-            yield return "tr";
+        // if (note.Type.Contains(NoteType.TREMOLO))
+            // yield return "tr";
 
         if (note.Type.Contains(NoteType.BEND))
             yield return "b" + note.Bends.Max(x => (int)x.Step);
@@ -34,8 +34,8 @@ public class NoteHelper
         if (note.Type.Contains(NoteType.TAP))
             yield return "T";
 
-        if (note.Type.Contains(NoteType.VIBRATO))
-            yield return "~";
+        // if (note.Type.Contains(NoteType.VIBRATO))
+            // yield return "~";
 
         if (note.Type.Contains(NoteType.HARMONIC))
             yield return "H";
