@@ -14,7 +14,7 @@ public class NoteHelper
             yield return "p";
 
         // if (note.Type.Contains(NoteType.SLIDE))
-        // yield return "s";
+            // yield return "s";
 
         if (note.Type.Contains(NoteType.TREMOLO))
             yield return "tr";
@@ -46,13 +46,13 @@ public class NoteHelper
         if (note.Type.Contains(NoteType.FRETHANDMUTE))
             yield return ".";
 
-        if (note.Type.Contains(NoteType.SLIDEUNPITCHEDTO) && note.Slide.HasValue && note.Slide.Value.SlideUnpitched && note.FretNum > note.Slide.Value.ToFret)
-            yield return "\\";
+        // if (note.Type.Contains(NoteType.SLIDEUNPITCHEDTO) && note.Slide.HasValue && note.Slide.Value.SlideUnpitched && note.FretNum > note.Slide.Value.ToFret)
+            // yield return "\\";
 
-        if (note.Type.Contains(NoteType.SLIDEUNPITCHEDTO) && note.Slide.HasValue && note.Slide.Value.SlideUnpitched && note.FretNum < note.Slide.Value.ToFret)
-            yield return "/";
+        // if (note.Type.Contains(NoteType.SLIDEUNPITCHEDTO) && note.Slide.HasValue && note.Slide.Value.SlideUnpitched && note.FretNum < note.Slide.Value.ToFret)
+            // yield return "/";
 
         // if (note.Type.Contains(NoteType.OPEN))
-        // yield return "-"; //why would i need to know?
+            // yield return "-"; //why would i need to know?
     }
 }

@@ -91,7 +91,7 @@ public class NoteGenerator {
                 yield return MeshGenerator.BoxLine(SettingsService.GetColorFromStringNum(note.StringNum), lastPos, endPos2);
             }
 
-        } else if (note.Type.Contains(NoteType.SLIDE)) {
+        } else if (note.Type.Contains(NoteType.SLIDE) || note.Type.Contains(NoteType.SLIDEUNPITCHEDTO)) {
             if (note.Slide == null || !note.Slide.HasValue)
                 throw new Exception("A slide without a slide"); // TODO should really have not passed validation
             var endPos = new Vector3((noteBlock.Time + note.Length) * config.NoteSpeed, notePos.Y, DisplayConst.CalcInFretPosZ(note.Slide.Value.ToFret));
