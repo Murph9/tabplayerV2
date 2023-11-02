@@ -193,7 +193,7 @@ public partial class SongList : VBoxContainer
 			foreach (var control in row.Controls) {
 				control.Visible = enabled && tuningEnabled;
 			}
-			if (enabled) {
+			if (enabled && tuningEnabled) {
 				countShown++;
 			}
 		}
