@@ -183,6 +183,7 @@ public partial class SongList : VBoxContainer
 	private void LoadTableFilter() {
 		var capoShown = GetNode<CheckBox>("HBoxContainer/CapoCheckBox").ButtonPressed;
 
+		int countShown = 0;
 		foreach (var row in _rows) {
 			var instrument = row.Song.GetMainInstrument();
 			var tuningEnabled = (string.IsNullOrEmpty(_tuningFilter) || Instrument.CalcTuningName(instrument.Tuning) == _tuningFilter)
@@ -192,7 +193,13 @@ public partial class SongList : VBoxContainer
 			foreach (var control in row.Controls) {
 				control.Visible = enabled && tuningEnabled;
 			}
+			if (enabled) {
+				countShown++;
+			}
 		}
+		
+		var songCountLabel = GetNode<Label>("HBoxContainer/SongsLoadedLabel");
+		songCountLabel.Text = countShown + " songs shown";
 	}
 
 	private void Heading_Pressed(BaseButton b) {
