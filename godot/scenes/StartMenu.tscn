@@ -51,8 +51,8 @@ label_settings = SubResource("LabelSettings_csdhn")
 layout_mode = 2
 offset_left = 80.0
 offset_top = 700.0
-offset_right = 250.0
-offset_bottom = 906.0
+offset_right = 230.0
+offset_bottom = 914.0
 
 [node name="PlayButton" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
@@ -65,10 +65,22 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Convert Songs"
 
-[node name="ReloadButton" type="Button" parent="VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ReloadButton" type="Button" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Reload Song List"
+
+[node name="SongCountLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "X songs"
 
 [node name="InfoButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
@@ -86,7 +98,7 @@ text = "Quit
 
 [connection signal="pressed" from="VBoxContainer/PlayButton" to="." method="PlayButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer/ConvertButton" to="." method="ConvertButton_Pressed"]
-[connection signal="pressed" from="VBoxContainer/ReloadButton" to="." method="ReloadButton_Pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ReloadButton" to="." method="ReloadButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer/InfoButton" to="." method="InfoButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer/SettingsButton" to="." method="SettingsButton_Pressed"]
 [connection signal="pressed" from="VBoxContainer/QuitButton" to="." method="QuitButton_Pressed"]

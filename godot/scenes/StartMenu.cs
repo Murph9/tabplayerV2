@@ -25,6 +25,9 @@ public partial class StartMenu : Node, ITransistionScene
 	private TweenHelper _tween;
 
 	public override void _Ready() {
+		var songCountLabel = GetNode<Label>("%SongCountLabel");
+		songCountLabel.Text = SongFileManager.GetSongFileList().Data.Count + " songs";
+
 		var obj = GetNode<VBoxContainer>("VBoxContainer");
 		var initialPos = new Vector2(-obj.Size.X, obj.Position.Y);
 		_tween = new TweenHelper(GetTree(), GetNode<VBoxContainer>("VBoxContainer"), "position", initialPos, new Vector2(80, obj.Position.Y));
