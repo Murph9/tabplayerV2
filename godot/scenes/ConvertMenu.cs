@@ -1,5 +1,6 @@
 using Godot;
 using murph9.TabPlayer.scenes.Services;
+using murph9.TabPlayer.Songs;
 using murph9.TabPlayer.Songs.Convert;
 using System;
 using System.Collections.Generic;
@@ -62,11 +63,16 @@ public partial class ConvertMenu : Control, ITransistionScene
 		var failed = new List<string>();
 		foreach (var psarc in files) {
 			try {
-				var success = await SongConvertManager.ConvertFile(SongConvertManager.SongType.Psarc, psarc, recreate, copySource, (string str) => {infoLabel.Text = str;});
-				if (success)
-					completed.Add(psarc);
-				else
+				var outputFolder = await SongConvertManager.ConvertFile(SongConvertManager.SongType.Psarc, psarc, recreate, copySource, (string str) => {infoLabel.Text = str;});
+				if (outputFolder != null) {
+					var success = SongFileManager.AddSingleSong(outputFolder.FullName);
+					if (success)
+						completed.Add(psarc);
+					else
+						failed.Add(psarc);
+				} else {
 					failed.Add(psarc);
+				}
 			} catch (Exception e) {
 				GD.Print(e, "ogg file not converted: " + psarc);
 				infoLabel.Text = "Failed to convert psarc file: " + psarc;

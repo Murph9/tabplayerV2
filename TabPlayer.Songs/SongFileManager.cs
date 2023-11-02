@@ -56,17 +56,12 @@ public class SongFileManager
         int total = songDirs.Count;
         int i = 0;
         foreach (var songDir in songDirs) {
-            var file = songDir.GetFiles("*.json").FirstOrDefault();
-            if (file == null) continue;
-            
-            var noteInfo = JsonConvert.DeserializeObject<SongInfo>(File.ReadAllText(file.FullName));
-            output($"{i}/{total} Reading all songs, current: {noteInfo?.Metadata?.Name}");
-            var instruments = noteInfo.Instruments.Select(x => new SongFileInstrument(x.Name, x == noteInfo.MainInstrument, x.Config.Tuning, x.TotalNoteCount(), x.Config.CapoFret)).ToArray();
-            var lyrics = noteInfo.Lyrics != null ? new SongFileLyrics(noteInfo.Lyrics.Lines?.Sum(x => x.Words?.Count) ?? 0) : null;
-            songList.Data.Add(new SongFile(songDir.Name, noteInfo.Metadata.Name,
-                noteInfo.Metadata.Artist, noteInfo.Metadata.Album, noteInfo.Metadata.Year,
-                noteInfo.MainInstrument.LastNoteTime, instruments, lyrics));
-            
+            output($"{i}/{total} Reading all songs, current: {songDir.Name}");
+            var song = ReadSingleSong(songDir);
+            if (song == null)
+                continue;
+            songList.Data.Add(song);
+
             i++;
         }
         songList.Data.Sort((x, y) => x.SongName.CompareTo(y.SongName)); // default sort of name
@@ -76,6 +71,30 @@ public class SongFileManager
         File.WriteAllText(PLAY_DATA_FILE, songListContents);
 
         output($"Loaded all songs {total}/{total} into {PLAY_DATA_FILE}");
+    }
+
+    public static bool AddSingleSong(string dataFolderName) {
+        var songList = GetSongFileList();
+        var song = ReadSingleSong(new DirectoryInfo(dataFolderName));
+        if (song == null)
+            return false;
+        songList.Data.Add(song);
+        var songListContents = JsonConvert.SerializeObject(songList);
+        File.WriteAllText(PLAY_DATA_FILE, songListContents);
+        return true;
+    }
+
+    private static SongFile? ReadSingleSong(DirectoryInfo songDir) {
+        var file = songDir.GetFiles("*.json").FirstOrDefault();
+        if (file == null) return null;
+        
+        var noteInfo = JsonConvert.DeserializeObject<SongInfo>(File.ReadAllText(file.FullName));
+        
+        var instruments = noteInfo.Instruments.Select(x => new SongFileInstrument(x.Name, x == noteInfo.MainInstrument, x.Config.Tuning, x.TotalNoteCount(), x.Config.CapoFret)).ToArray();
+        var lyrics = noteInfo.Lyrics != null ? new SongFileLyrics(noteInfo.Lyrics.Lines?.Sum(x => x.Words?.Count) ?? 0) : null;
+        return new SongFile(songDir.Name, noteInfo.Metadata.Name,
+            noteInfo.Metadata.Artist, noteInfo.Metadata.Album, noteInfo.Metadata.Year,
+            noteInfo.MainInstrument.LastNoteTime, instruments, lyrics);
     }
 }
 

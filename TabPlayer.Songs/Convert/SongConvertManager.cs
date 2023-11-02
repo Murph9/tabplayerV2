@@ -13,32 +13,33 @@ namespace murph9.TabPlayer.Songs.Convert
         public enum SongType {
             Psarc, Midi
         }
-        public static async Task<bool> ConvertFile(SongType type, string location, bool reconvert, bool copySource, Action<string> output) {
-            bool success = false;
+        public static async Task<DirectoryInfo> ConvertFile(SongType type, string location, bool reconvert, bool copySource, Action<string> output) {
+            DirectoryInfo outputFolder = null;
             
             try {
                 if (type == SongType.Midi)
-                    success = ExportMidi(new DirectoryInfo(location), output);
+                    outputFolder = ExportMidi(new DirectoryInfo(location), output);
                 if (type == SongType.Psarc)
-                    success = await ExportPsarc(new FileInfo(location), reconvert, copySource, output);
+                    outputFolder = await ExportPsarc(new FileInfo(location), reconvert, copySource, output);
             } catch (Exception e) {
                 Console.WriteLine(e);
                 Console.WriteLine($"Failed to convert file '{location}'");
-                return false;
+                return null;
             }
             
-            return success;
+            return outputFolder;
         }
 
-        private static async Task<bool> ExportPsarc(FileInfo file, bool reconvert, bool copySource, Action<string> output) {
+        private static async Task<DirectoryInfo> ExportPsarc(FileInfo file, bool reconvert, bool copySource, Action<string> output) {
             PsarcFile p = null;
+            DirectoryInfo outputFolder = null;
             try {
                 output("Converting: " + file.FullName);
                 p = new PsarcFile(file.FullName);
 
                 var songNames = p.ExtractArrangementManifests().Select(x => x.Attributes.BlockAsset).Distinct();
                 if (songNames.Count() <= 1) {
-                    var outputFolder = await ExportSinglePsarc(p, null, reconvert, output);
+                    outputFolder = await ExportSinglePsarc(p, null, reconvert, output);
                     if (copySource)
                         File.Copy(file.FullName, Path.Combine(outputFolder.FullName, file.Name), true);
                 }
@@ -48,7 +49,7 @@ namespace murph9.TabPlayer.Songs.Convert
 
                     foreach (var name in songNames) {
                         try {
-                            var outputFolder = await ExportSinglePsarc(p, name.Split(':').Last(), reconvert, output);
+                            outputFolder = await ExportSinglePsarc(p, name.Split(':').Last(), reconvert, output);
                             if (copySource) {
                                 if (sourceOfSongBatch == null) {
                                     sourceOfSongBatch = Path.Combine(outputFolder.FullName, file.Name);
@@ -71,18 +72,18 @@ namespace murph9.TabPlayer.Songs.Convert
                 output("Failed to convert file, see last error in log");
                 Console.WriteLine(ef);
                 Console.WriteLine($"File format was weird for {file.FullName}");
-                return false;
+                return null;
             } catch (Exception e) {
                 output("Failed to convert file, see last error in log");
                 Console.WriteLine(e);
                 Console.WriteLine($"Failed to convert file: {file.FullName}");
-                return false;
+                return null;
             } finally {
                 Console.WriteLine($"Converted {file.FullName}");
                 p?.Dispose();
             }
             
-            return true;
+            return outputFolder;
         }
 
         private static async Task<DirectoryInfo> ExportSinglePsarc(PsarcFile p, string songFilter, bool reconvert, Action<string> output)
@@ -130,7 +131,7 @@ namespace murph9.TabPlayer.Songs.Convert
             return jsonFile;
         }
 
-        private static bool ExportMidi(DirectoryInfo f, Action<string> output) {
+        private static DirectoryInfo ExportMidi(DirectoryInfo f, Action<string> output) {
             throw new Exception("Midi not supported, here for reference");
         }
     }

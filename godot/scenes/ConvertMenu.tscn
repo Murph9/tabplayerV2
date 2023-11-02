@@ -59,10 +59,6 @@ text = "Convert All from Downloads"
 layout_mode = 2
 text = " "
 
-[node name="AfterLabel" type="Label" parent="."]
-layout_mode = 2
-text = "After converting songs they won't be loaded yet"
-
 [connection signal="dir_selected" from="FileDialog" to="." method="Dir_Selected"]
 [connection signal="file_selected" from="FileDialog" to="." method="File_Selected"]
 [connection signal="files_selected" from="FileDialog" to="." method="Files_Selected"]

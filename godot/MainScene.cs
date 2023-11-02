@@ -28,6 +28,9 @@ public partial class MainScene : Node
 		_convertMenu.Closed += () => {
 			_convertMenu.AnimateOut();
 			_startMenu.AnimateIn();
+
+			// then reload the song list globally so converted songs exist
+			ReloadSongList();
 		};
 
 		_infoPage = GD.Load<PackedScene>("res://scenes/InfoPage.tscn").Instantiate<InfoPage>();
@@ -60,17 +63,7 @@ public partial class MainScene : Node
 			RemoveChild(_infoPage);
 			AddChild(_songPick);
 		};
-		_startMenu.SongListFileChanged += () => {
-			var loaded = _songPick.IsVisibleInTree();
-			if (loaded) {
-				_songPick.QueueFree();
-			}
-			LoadSongPick();
-
-			if (loaded) {
-				AddChild(_songPick);
-			}
-		};
+		_startMenu.SongListFileChanged += ReloadSongList;
 		_startMenu.ConvertMenuOpened += () => {
 			_convertMenu.AnimateIn();
 			_startMenu.AnimateOut();
@@ -83,6 +76,18 @@ public partial class MainScene : Node
 			_settingsPage.AnimateIn();
 			_startMenu.AnimateOut();
         };
+	}
+
+	private void ReloadSongList() {
+		var loaded = _songPick.IsVisibleInTree();
+		if (loaded) {
+			_songPick.QueueFree();
+		}
+		LoadSongPick();
+
+		if (loaded) {
+			AddChild(_songPick);
+		}
 	}
 
 	private void LoadSongPick() {
