@@ -30,3 +30,6 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+
+# generated exe files can also be ignored
+*.exe
