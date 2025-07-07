@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dnewt4oe3noao"]
 
-[ext_resource type="Script" path="res://scenes/ConvertMenu.cs" id="1_3s682"]
+[ext_resource type="Script" uid="uid://bjg2vy7l1qxw1" path="res://scenes/ConvertMenu.cs" id="1_3s682"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_yv0al"]
 font_size = 32

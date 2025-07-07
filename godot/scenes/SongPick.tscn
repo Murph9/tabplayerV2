@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cjt4fuduh34qh"]
 
-[ext_resource type="Script" path="res://scenes/SongPick.cs" id="1_tdao1"]
+[ext_resource type="Script" uid="uid://d3kp2whpmvl8m" path="res://scenes/SongPick.cs" id="1_tdao1"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_88tyd"]
 font_size = 20

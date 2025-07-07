@@ -1,0 +1,20 @@
+root = true
+
+[*]
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.cs]
+csharp_new_line_before_open_brace = none
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_finally = false
+
+# IDE1006: Naming Styles (godot likes methods with underscores)
+dotnet_diagnostic.IDE1006.severity = none
+
+[*.json]
+indent_style = space
+indent_size = 2

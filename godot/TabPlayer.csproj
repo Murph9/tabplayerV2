@@ -1,6 +1,6 @@
-<Project Sdk="Godot.NET.Sdk/4.2.0-dev.3">
+<Project Sdk="Godot.NET.Sdk/4.4.1">
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <RootNamespace>murph9.TabPlayer</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

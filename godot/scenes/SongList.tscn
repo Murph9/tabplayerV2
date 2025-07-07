@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b8cwde4vswi6a"]
 
-[ext_resource type="Script" path="res://scenes/SongList.cs" id="1_tdao1"]
+[ext_resource type="Script" uid="uid://dxnvqsncithjm" path="res://scenes/SongList.cs" id="1_tdao1"]
 
 [node name="SongList" type="VBoxContainer"]
 anchors_preset = 15

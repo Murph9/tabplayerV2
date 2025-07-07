@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://1274mds3lc08"]
 
-[ext_resource type="Script" path="res://scenes/SongScene.cs" id="1_jxipg"]
+[ext_resource type="Script" uid="uid://c7dweto26pri1" path="res://scenes/SongScene.cs" id="1_jxipg"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_smbfm"]
 line_spacing = 0.0
