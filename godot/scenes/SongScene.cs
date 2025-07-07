@@ -24,6 +24,9 @@ public partial class SongScene : Node, IAudioStreamPosition {
 
     public bool SongPlaying => _player?.Playing == true;
 
+    private double _aPosition;
+    private double _bPosition;
+
     [Signal]
     public delegate void ClosedEventHandler();
 
@@ -117,13 +120,23 @@ public partial class SongScene : Node, IAudioStreamPosition {
         effect.PitchScale = 1/_player.PitchScale;
     }
 
+    private void PickA() {
+        _aPosition = GetSongPosition();
+    }
+    private void PickB() {
+        _bPosition = GetSongPosition();
+    }
+    private void ClearLoopTimes() {
+        _aPosition = default;
+        _bPosition = default;
+    }
+
     public override void _Ready() {
         var info = _state.SongInfo;
         SetUILabels(info);
 
         _player = GetNode<AudioStreamPlayer>("AudioStreamPlayer");
         _player.Stream = _audioStream;
-        //_player.VolumeDb = 0;
         _player.Bus = "SongPlayback";
         _player.Play();
 
@@ -144,24 +157,36 @@ public partial class SongScene : Node, IAudioStreamPosition {
         }
     }
 
-    public override void _Process(double delta)
-    {
+    public override void _Process(double delta) {
         _cachedSongPosition = null;
         if (!_player.Playing)
             return;
 
+        var songPosition = GetSongPosition();
         var nextNote = NextNoteBlock();
 
-        var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - GetSongPosition(), 1);
+        var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - songPosition, 1);
 
         var debugText = @$"Song Speed: {Mathf.Round(_player.PitchScale * 100)}%
 {noteText}
-{Engine.GetFramesPerSecond()}fps | {delta*1000:000.0}ms
-{GetSongPosition().ToMinSec(true)}
+{Engine.GetFramesPerSecond()}fps | {delta * 1000:000.0}ms
+{songPosition.ToMinSec(true)}
 ";
         GetNode<Label>("RunningDetailsLabel").Text = debugText;
 
         UpdateLyrics(GetNode<RichTextLabel>("HBoxContainer/LyricsLabel"));
+
+        // update the AB positions
+        var aLabel = GetNode<Label>("GridContainer/ABLabel");
+        aLabel.Text = _aPosition == default ? "" : _aPosition.ToMinSec(true);
+        var bLabel = GetNode<Label>("GridContainer/ABLabel2");
+        bLabel.Text = _bPosition == default ? "" : _bPosition.ToMinSec(true);
+
+        if (_aPosition != default && _bPosition != default) {
+            if (_aPosition < songPosition && delta + songPosition > _bPosition) {
+                _player.Seek((float)_aPosition);
+            }
+        }
     }
 
     public double GetSongPosition()
