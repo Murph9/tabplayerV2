@@ -101,6 +101,22 @@ layout_mode = 2
 text = "[S] or [↓]"
 label_settings = SubResource("LabelSettings_42vc3")
 
+[node name="SlowDownButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "Slow Down Song"
+
+[node name="SlowDownLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "[PgDown]"
+
+[node name="SpeedUpButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "Speed Up Song"
+
+[node name="SpeedUpLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "[PgUp]"
+
 [node name="PauseWindow" type="Window" parent="."]
 initial_position = 1
 visible = false
@@ -155,6 +171,8 @@ autowrap_mode = 0
 [connection signal="pressed" from="GridContainer/RestartSongButton" to="." method="RestartSong"]
 [connection signal="pressed" from="GridContainer/SkipForwardButton" to="." method="Skip10Sec"]
 [connection signal="pressed" from="GridContainer/SkipBackwardButton" to="." method="Back10Sec"]
+[connection signal="pressed" from="GridContainer/SlowDownButton" to="." method="SlowDownPlayback"]
+[connection signal="pressed" from="GridContainer/SpeedUpButton" to="." method="SpeedUpPlayback"]
 [connection signal="close_requested" from="PauseWindow" to="." method="Resume"]
 [connection signal="window_input" from="PauseWindow" to="." method="PauseWindow_Input"]
 [connection signal="pressed" from="PauseWindow/VBoxContainer/ResumeButton" to="." method="Resume"]
