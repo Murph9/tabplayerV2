@@ -7,10 +7,10 @@ public static class NumberHelper {
         return ((double)value).ToMinSec(frac);
     }
     public static string ToMinSec(this double value, bool frac = false) {
-        var fracStr = frac ? $" {(int)((decimal)value % 1 * 1000)}ms" : null;
-        return $"{Math.Floor(value/60f)}m {Math.Floor(value % 60)}s{fracStr}";
+        var fracStr = frac ? $" {(int)((decimal)value % 1 * 1000):000}ms" : null;
+        return $"{Math.Floor(value/60f)}m {Math.Floor(value % 60):00}s{fracStr}";
     }
-    
+
     public static string ToFixedPlaces(this float value, int count, bool leadChar = false) {
         return ((double)value).ToFixedPlaces(count, leadChar);
     }

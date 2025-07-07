@@ -5,6 +5,7 @@ using murph9.TabPlayer.Songs;
 using murph9.TabPlayer.Songs.Models;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace murph9.TabPlayer.scenes;
 
@@ -44,16 +45,15 @@ public partial class SongScene : Node, IAudioStreamPosition {
 
     private void Pause() {
         _player.StreamPaused = true;
-        
-        var pause = GetNode<Window>("PauseWindow");
-        pause.PopupCentered();
-        pause.ChildControlsChanged();
+
+        var pause = GetNode<CenterContainer>("PauseWindow");
+        pause.Show();
     }
 
     private void Resume() {
         _player.StreamPaused = false;
-        
-        var pause = GetNode<Window>("PauseWindow");
+
+        var pause = GetNode<CenterContainer>("PauseWindow");
         if (pause.Visible)
             pause.Hide();
     }
@@ -61,17 +61,13 @@ public partial class SongScene : Node, IAudioStreamPosition {
     private void Quit() {
         _player.Stop();
         Pause(); // prevent errors in final update frame
-        
-        EmitSignal(SignalName.Closed);
-    }
 
-    private void PauseWindow_Input(InputEvent @event) {
-        _Input(@event);
+        EmitSignal(SignalName.Closed);
     }
 
     public override void _Input(InputEvent @event) {
         if (@event.IsActionPressed("ui_cancel") || @event.IsActionPressed("song_pause")) {
-            var pause = GetNode<Window>("PauseWindow");
+            var pause = GetNode<CenterContainer>("PauseWindow");
             if (!pause.Visible) {
                 Pause();
             } else {
@@ -131,6 +127,39 @@ public partial class SongScene : Node, IAudioStreamPosition {
         _bPosition = default;
     }
 
+    private async void MoveSongPosition() {
+        var posTextEdit = GetNode<TextEdit>("GridContainer/PositionSetTextEdit");
+        // parse from the 2 supported formats:
+        // number directly
+        _ = float.TryParse(posTextEdit.Text, out float pos);
+
+        // and 'XXm XXs XXXms' which is already set
+        if (pos == default) {
+            var result = SongPositionRegex().Match(posTextEdit.Text);
+            if (result.Success) {
+                var results = result.Groups;
+                pos = float.Parse(results[1].Value) * 60 + float.Parse(results[2].Value) + float.Parse(results[3].Value) / 1000f;
+            }
+        }
+
+        if (pos == default)
+            return;
+
+        // validate that its in the song
+        if (pos < 0)
+            return;
+        if (pos > _player.Stream.GetLength())
+            return;
+
+        _player.StreamPaused = false;
+        _player.Seek(pos);
+
+        // wait 2 frames to trigger this re-pause so it shows the position update
+        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        CallDeferred(MethodName.Pause);
+    }
+
     public override void _Ready() {
         var info = _state.SongInfo;
         SetUILabels(info);
@@ -159,10 +188,24 @@ public partial class SongScene : Node, IAudioStreamPosition {
 
     public override void _Process(double delta) {
         _cachedSongPosition = null;
+
+        var songPosition = GetSongPosition();
+
+        // update the AB positions
+        var aLabel = GetNode<Label>("GridContainer/ABLabel");
+        aLabel.Text = _aPosition == default ? "" : _aPosition.ToMinSec(true);
+        var bLabel = GetNode<Label>("GridContainer/ABLabel2");
+        bLabel.Text = _bPosition == default ? "" : _bPosition.ToMinSec(true);
+
+        if (_aPosition != default && _bPosition != default) {
+            if (_aPosition < songPosition && delta + songPosition > _bPosition) {
+                _player.Seek((float)_aPosition);
+            }
+        }
+
         if (!_player.Playing)
             return;
 
-        var songPosition = GetSongPosition();
         var nextNote = NextNoteBlock();
 
         var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - songPosition, 1);
@@ -176,17 +219,9 @@ public partial class SongScene : Node, IAudioStreamPosition {
 
         UpdateLyrics(GetNode<RichTextLabel>("HBoxContainer/LyricsLabel"));
 
-        // update the AB positions
-        var aLabel = GetNode<Label>("GridContainer/ABLabel");
-        aLabel.Text = _aPosition == default ? "" : _aPosition.ToMinSec(true);
-        var bLabel = GetNode<Label>("GridContainer/ABLabel2");
-        bLabel.Text = _bPosition == default ? "" : _bPosition.ToMinSec(true);
-
-        if (_aPosition != default && _bPosition != default) {
-            if (_aPosition < songPosition && delta + songPosition > _bPosition) {
-                _player.Seek((float)_aPosition);
-            }
-        }
+        // update the set position box
+        var posTextEdit = GetNode<TextEdit>("GridContainer/PositionSetTextEdit");
+        posTextEdit.Text = songPosition.ToMinSec(true);
     }
 
     public double GetSongPosition()
@@ -269,4 +304,7 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}";
 
         return Array.Empty<LyricLine>();
     }
+
+    [GeneratedRegex(@"^.*(\d+)\s*m\s+(\d+)\s*s\s+(\d+)\s*ms.*$")]
+    private static partial Regex SongPositionRegex();
 }
