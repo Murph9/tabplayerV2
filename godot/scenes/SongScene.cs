@@ -87,6 +87,14 @@ public partial class SongScene : Node, IAudioStreamPosition {
             SlowDownPlayback();
         } else if (@event.IsActionPressed("song_speed_up")) {
             SpeedUpPlayback();
+        } else if (@event.IsActionPressed("song_set_loop_start")) {
+            PickA();
+        } else if (@event.IsActionPressed("song_set_loop_end")) {
+            PickB();
+        } else if (@event.IsActionPressed("song_reset_loop")) {
+            ClearLoopTimes();
+        } else if (@event.IsActionPressed("song_reset_speed")) {
+            ResetSongSpeed();
         }
     }
 
@@ -131,14 +139,14 @@ public partial class SongScene : Node, IAudioStreamPosition {
     }
 
     private async void MoveSongPosition() {
-        var posTextEdit = GetNode<TextEdit>("GridContainer/PositionSetTextEdit");
+        var posLineEdit = GetNode<LineEdit>("GridContainer/PositionSetLineEdit");
         // parse from the 2 supported formats:
         // number directly
-        _ = float.TryParse(posTextEdit.Text, out float pos);
+        _ = float.TryParse(posLineEdit.Text, out float pos);
 
         // and 'XXm XXs XXXms' which is already set
         if (pos == default) {
-            var result = SongPositionRegex().Match(posTextEdit.Text);
+            var result = SongPositionRegex().Match(posLineEdit.Text);
             if (result.Success) {
                 var results = result.Groups;
                 pos = float.Parse(results[1].Value) * 60 + float.Parse(results[2].Value) + float.Parse(results[3].Value) / 1000f;
@@ -195,9 +203,9 @@ public partial class SongScene : Node, IAudioStreamPosition {
         var songPosition = GetSongPosition();
 
         // update the AB positions
-        var aLabel = GetNode<Label>("GridContainer/ABLabel");
+        var aLabel = GetNode<Label>("GridContainer/ABLabelStart");
         aLabel.Text = _aPosition == default ? "" : _aPosition.ToMinSec(true);
-        var bLabel = GetNode<Label>("GridContainer/ABLabel2");
+        var bLabel = GetNode<Label>("GridContainer/ABLabelEnd");
         bLabel.Text = _bPosition == default ? "" : _bPosition.ToMinSec(true);
 
         if (_aPosition != default && _bPosition != default) {
@@ -211,18 +219,20 @@ public partial class SongScene : Node, IAudioStreamPosition {
 
         var nextNote = NextNoteBlock();
 
+        var nextNoteLabel = GetNode<Label>("GridContainer/SkipToNextLabel2");
+        nextNoteLabel.Text = "at " + nextNote.Time.ToMinSec(false);
+
         var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - songPosition, 1);
 
         GetNode<Label>("RunningDetailsLabel").Text = @$"{noteText}
 {Engine.GetFramesPerSecond()}fps | {delta * 1000:000.0}ms
-{songPosition.ToMinSec(true)}
-";
+{songPosition.ToMinSec(true)}";
 
         UpdateLyrics(songPosition, GetNode<RichTextLabel>("HBoxContainer/LyricsLabel"));
 
         // update the set position box
-        var posTextEdit = GetNode<TextEdit>("GridContainer/PositionSetTextEdit");
-        posTextEdit.Text = songPosition.ToMinSec(true);
+        var posLineEdit = GetNode<LineEdit>("GridContainer/PositionSetLineEdit");
+        posLineEdit.Text = songPosition.ToMinSec(true);
 
         var songSpeedLabel = GetNode<Label>("GridContainer/SongSpeedLabel");
         songSpeedLabel.Text = Math.Round(_player.PitchScale * 100, 1) + "%";

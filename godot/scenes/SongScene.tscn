@@ -50,16 +50,33 @@ horizontal_alignment = 2
 [node name="GridContainer" type="GridContainer" parent="."]
 offset_right = 40.0
 offset_bottom = 40.0
-columns = 2
+columns = 3
+
+[node name="HeaderLabel1" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Action"
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="HeaderLabel2" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "Key Bind"
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="HeaderLabel3" type="Label" parent="GridContainer"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_42vc3")
 
 [node name="PauseButton" type="Button" parent="GridContainer"]
 layout_mode = 2
-text = "Pause"
+text = "[Esc] Pause"
 
 [node name="PauseButtonLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
-text = "[Esc] or [Space]
-"
+text = "[Space]"
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="PauseButtonLabel2" type="Label" parent="GridContainer"]
+layout_mode = 2
 label_settings = SubResource("LabelSettings_42vc3")
 
 [node name="SkipToNextButton" type="Button" parent="GridContainer"]
@@ -68,8 +85,11 @@ text = "Skip to Next Note"
 
 [node name="SkipToNextLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
-text = "[F]
-"
+text = "[F]"
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="SkipToNextLabel2" type="Label" parent="GridContainer"]
+layout_mode = 2
 label_settings = SubResource("LabelSettings_42vc3")
 
 [node name="RestartSongButton" type="Button" parent="GridContainer"]
@@ -78,8 +98,11 @@ text = "Restart Song"
 
 [node name="RestartSongLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
-text = "[R]
-"
+text = "[R]"
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="RestartSongLabel2" type="Label" parent="GridContainer"]
+layout_mode = 2
 label_settings = SubResource("LabelSettings_42vc3")
 
 [node name="SkipForwardButton" type="Button" parent="GridContainer"]
@@ -88,8 +111,11 @@ text = "Forward 10 sec"
 
 [node name="SkipForwardLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
-text = "[W] or [↑]
-"
+text = "[W] or [↑]"
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="SkipForwardLabel2" type="Label" parent="GridContainer"]
+layout_mode = 2
 label_settings = SubResource("LabelSettings_42vc3")
 
 [node name="SkipBackwardButton" type="Button" parent="GridContainer"]
@@ -99,8 +125,23 @@ text = "Back 10 sec
 
 [node name="SkipBackwardsLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
-text = "[S] or [↓]
-"
+text = "[S] or [↓]"
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="SkipBackwardsLabel2" type="Label" parent="GridContainer"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="HeaderLabel4" type="Label" parent="GridContainer"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="HeaderLabel5" type="Label" parent="GridContainer"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="HeaderLabel6" type="Label" parent="GridContainer"]
+layout_mode = 2
 label_settings = SubResource("LabelSettings_42vc3")
 
 [node name="SlowDownButton" type="Button" parent="GridContainer"]
@@ -109,8 +150,10 @@ text = "Slow Down Song"
 
 [node name="SlowDownLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
-text = "[PgDown]
-"
+text = "[PgDown]"
+
+[node name="SlowDownLabel2" type="Label" parent="GridContainer"]
+layout_mode = 2
 
 [node name="SpeedUpButton" type="Button" parent="GridContainer"]
 layout_mode = 2
@@ -118,8 +161,34 @@ text = "Speed Up Song"
 
 [node name="SpeedUpLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
-text = "[PgUp]
-"
+text = "[PgUp]"
+
+[node name="SpeedUpLabel2" type="Label" parent="GridContainer"]
+layout_mode = 2
+
+[node name="ResetSongSpeedButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "Reset Speed to 100%"
+
+[node name="ResetSongLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "[0]"
+
+[node name="SongSpeedLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "NOTE SPEED"
+
+[node name="HeaderLabel7" type="Label" parent="GridContainer"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="HeaderLabel8" type="Label" parent="GridContainer"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_42vc3")
+
+[node name="HeaderLabel9" type="Label" parent="GridContainer"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_42vc3")
 
 [node name="ABStartButton" type="Button" parent="GridContainer"]
 layout_mode = 2
@@ -127,6 +196,11 @@ text = "Set Loop Start"
 
 [node name="ABLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
+text = "[Home]"
+
+[node name="ABLabelStart" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "LOOPSTART"
 
 [node name="ABEndButton" type="Button" parent="GridContainer"]
 layout_mode = 2
@@ -134,28 +208,34 @@ text = "Set Loop End"
 
 [node name="ABLabel2" type="Label" parent="GridContainer"]
 layout_mode = 2
+text = "[End]"
+
+[node name="ABLabelEnd" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "LOOPEND"
 
 [node name="ABResetButton" type="Button" parent="GridContainer"]
 layout_mode = 2
 text = "Clear Loop Times"
 
-[node name="BufferLabel" type="Label" parent="GridContainer"]
+[node name="ABResetLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "[Delete]"
+
+[node name="ABResetLabel2" type="Label" parent="GridContainer"]
 layout_mode = 2
 
 [node name="PositionSetButton" type="Button" parent="GridContainer"]
 layout_mode = 2
 text = "Set Song Position to:"
 
-[node name="PositionSetTextEdit" type="TextEdit" parent="GridContainer"]
+[node name="PositionSetLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
 
-[node name="ResetSongSpeedButton" type="Button" parent="GridContainer"]
+[node name="PositionSetLineEdit" type="LineEdit" parent="GridContainer"]
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
-text = "Reset Speed to 100%"
-
-[node name="SongSpeedLabel" type="Label" parent="GridContainer"]
-layout_mode = 2
-text = "NOTE SPEED"
+max_length = 30
 
 [node name="PauseWindow" type="CenterContainer" parent="."]
 visible = false
@@ -210,11 +290,11 @@ autowrap_mode = 0
 [connection signal="pressed" from="GridContainer/SkipBackwardButton" to="." method="Back10Sec"]
 [connection signal="pressed" from="GridContainer/SlowDownButton" to="." method="SlowDownPlayback"]
 [connection signal="pressed" from="GridContainer/SpeedUpButton" to="." method="SpeedUpPlayback"]
+[connection signal="pressed" from="GridContainer/ResetSongSpeedButton" to="." method="ResetSongSpeed"]
 [connection signal="pressed" from="GridContainer/ABStartButton" to="." method="PickA"]
 [connection signal="pressed" from="GridContainer/ABEndButton" to="." method="PickB"]
 [connection signal="pressed" from="GridContainer/ABResetButton" to="." method="ClearLoopTimes"]
 [connection signal="pressed" from="GridContainer/PositionSetButton" to="." method="MoveSongPosition"]
-[connection signal="pressed" from="GridContainer/ResetSongSpeedButton" to="." method="ResetSongSpeed"]
 [connection signal="pressed" from="PauseWindow/VBoxContainer/ResumeButton" to="." method="Resume"]
 [connection signal="pressed" from="PauseWindow/VBoxContainer/QuitButton" to="." method="Quit"]
 [connection signal="finished" from="AudioStreamPlayer" to="." method="SongFinished"]
