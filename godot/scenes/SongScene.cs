@@ -102,18 +102,21 @@ public partial class SongScene : Node, IAudioStreamPosition {
 
     private void SlowDownPlayback() => AdjustPitch(SONG_SPEED_DIFF);
     private void SpeedUpPlayback() => AdjustPitch(1f / SONG_SPEED_DIFF);
-
     private void AdjustPitch(float amount) {
         if (_player.PitchScale < 0.5f && amount < 1)
             return;
         if (_player.PitchScale > 1.7f && amount > 1)
             return;
 
-        _player.PitchScale *= amount;
+        SetSongSpeed(_player.PitchScale * amount);
+    }
+    private void ResetSongSpeed() => SetSongSpeed(1);
+    private void SetSongSpeed(float fraction) {
+        _player.PitchScale = fraction;
 
         var busId = AudioServer.GetBusIndex("SongPlayback");
         var effect = AudioServer.GetBusEffect(busId, 0) as AudioEffectPitchShift;
-        effect.PitchScale = 1/_player.PitchScale;
+        effect.PitchScale = 1 / _player.PitchScale;
     }
 
     private void PickA() {
@@ -210,22 +213,22 @@ public partial class SongScene : Node, IAudioStreamPosition {
 
         var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - songPosition, 1);
 
-        var debugText = @$"Song Speed: {Mathf.Round(_player.PitchScale * 100)}%
-{noteText}
+        GetNode<Label>("RunningDetailsLabel").Text = @$"{noteText}
 {Engine.GetFramesPerSecond()}fps | {delta * 1000:000.0}ms
 {songPosition.ToMinSec(true)}
 ";
-        GetNode<Label>("RunningDetailsLabel").Text = debugText;
 
         UpdateLyrics(GetNode<RichTextLabel>("HBoxContainer/LyricsLabel"));
 
         // update the set position box
         var posTextEdit = GetNode<TextEdit>("GridContainer/PositionSetTextEdit");
         posTextEdit.Text = songPosition.ToMinSec(true);
+
+        var songSpeedLabel = GetNode<Label>("GridContainer/SongSpeedLabel");
+        songSpeedLabel.Text = Math.Round(_player.PitchScale * 100, 1) + "%";
     }
 
-    public double GetSongPosition()
-    {
+    public double GetSongPosition() {
         if (_cachedSongPosition.HasValue) {
             return _cachedSongPosition.Value;
         }
@@ -261,12 +264,11 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}";
         return null;
     }
 
-    private void UpdateLyrics(RichTextLabel label) {
+    private void UpdateLyrics(double songPos, RichTextLabel label) {
         label.Clear();
         label.PushFontSize(40);
 
-        //TODO don't move to the next lyrics until the next set starts
-        var songPos = GetSongPosition();
+        // TODO don't move to the next lyrics until the next set starts
         var curList = GetCurLines(_state, songPos);
         if (curList.Length < 1) {
             label.Text = null;

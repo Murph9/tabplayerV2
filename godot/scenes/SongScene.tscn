@@ -142,12 +142,20 @@ text = "Clear Loop Times"
 [node name="BufferLabel" type="Label" parent="GridContainer"]
 layout_mode = 2
 
+[node name="PositionSetButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "Set Song Position to:"
+
 [node name="PositionSetTextEdit" type="TextEdit" parent="GridContainer"]
 layout_mode = 2
 
-[node name="PositionSetButton" type="Button" parent="GridContainer"]
+[node name="ResetSongSpeedButton" type="Button" parent="GridContainer"]
 layout_mode = 2
-text = "Set Song Position"
+text = "Reset Speed to 100%"
+
+[node name="SongSpeedLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "NOTE SPEED"
 
 [node name="PauseWindow" type="CenterContainer" parent="."]
 visible = false
@@ -206,6 +214,7 @@ autowrap_mode = 0
 [connection signal="pressed" from="GridContainer/ABEndButton" to="." method="PickB"]
 [connection signal="pressed" from="GridContainer/ABResetButton" to="." method="ClearLoopTimes"]
 [connection signal="pressed" from="GridContainer/PositionSetButton" to="." method="MoveSongPosition"]
+[connection signal="pressed" from="GridContainer/ResetSongSpeedButton" to="." method="ResetSongSpeed"]
 [connection signal="pressed" from="PauseWindow/VBoxContainer/ResumeButton" to="." method="Resume"]
 [connection signal="pressed" from="PauseWindow/VBoxContainer/QuitButton" to="." method="Quit"]
 [connection signal="finished" from="AudioStreamPlayer" to="." method="SongFinished"]
