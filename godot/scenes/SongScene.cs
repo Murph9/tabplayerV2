@@ -218,7 +218,7 @@ public partial class SongScene : Node, IAudioStreamPosition {
 {songPosition.ToMinSec(true)}
 ";
 
-        UpdateLyrics(GetNode<RichTextLabel>("HBoxContainer/LyricsLabel"));
+        UpdateLyrics(songPosition, GetNode<RichTextLabel>("HBoxContainer/LyricsLabel"));
 
         // update the set position box
         var posTextEdit = GetNode<TextEdit>("GridContainer/PositionSetTextEdit");
