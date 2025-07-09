@@ -219,10 +219,13 @@ public partial class SongScene : Node, IAudioStreamPosition {
 
         var nextNote = NextNoteBlock();
 
-        var nextNoteLabel = GetNode<Label>("GridContainer/SkipToNextLabel2");
-        nextNoteLabel.Text = "at " + nextNote.Time.ToMinSec(false);
+        string noteText = "No note";
+        if (nextNote != null) {
+            var nextNoteLabel = GetNode<Label>("GridContainer/SkipToNextLabel2");
+            nextNoteLabel.Text = "at " + nextNote.Time.ToMinSec(false);
 
-        var noteText = (nextNote == null) ? "No note" : "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - songPosition, 1);
+            noteText = "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - songPosition, 1);
+        }
 
         GetNode<Label>("RunningDetailsLabel").Text = @$"{noteText}
 {Engine.GetFramesPerSecond()}fps | {delta * 1000:000.0}ms

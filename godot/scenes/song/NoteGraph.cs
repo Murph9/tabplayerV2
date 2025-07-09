@@ -73,13 +73,14 @@ public partial class NoteGraph : Node {
         _bucketCount = (int)Math.Round(noteBuckets.Last().Key);
 
         // draw a single note rate reference line
+        // TODO this might not align with the actual position in the song
         // TODO align to absolute start and end of the song
         var rateLine = new Line2D() {
             DefaultColor = Colors.Gray,
             Width = 1
         };
-        rateLine.AddPoint(new Vector2(-BUCKET_PIXEL_WIDTH * BUCKETS_RIGHT_SIDE_OFFSET, -BUCKET_BOTTOM_OFFSET - 3 * 3 * BUCKET_NOTE_PIXEL_HEIGHT));
-        rateLine.AddPoint(new Vector2(-BUCKET_PIXEL_WIDTH * (_bucketCount + BUCKETS_RIGHT_SIDE_OFFSET), -BUCKET_BOTTOM_OFFSET - 3 * 3 * BUCKET_NOTE_PIXEL_HEIGHT));
+        rateLine.AddPoint(new Vector2(-BUCKET_PIXEL_WIDTH * (BUCKETS_RIGHT_SIDE_OFFSET - 1), -BUCKET_BOTTOM_OFFSET - 3 * 3 * BUCKET_NOTE_PIXEL_HEIGHT));
+        rateLine.AddPoint(new Vector2(-BUCKET_PIXEL_WIDTH * (_bucketCount + BUCKETS_RIGHT_SIDE_OFFSET - 1), -BUCKET_BOTTOM_OFFSET - 3 * 3 * BUCKET_NOTE_PIXEL_HEIGHT));
         barNode.AddChild(rateLine);
         var rateNumber = new Label() {
             Position = new Vector2(-30, -BUCKET_BOTTOM_OFFSET - 3 * 3 * BUCKET_NOTE_PIXEL_HEIGHT),
@@ -139,7 +140,7 @@ public partial class NoteGraph : Node {
             barNode.AddChild(g);
         }
 
-        // setup the current position line
+        // setup the current position line (at the end so its on the top)
         _currentPostionLine = new Line2D() {
             DefaultColor = Colors.Gray,
             Width = 1
