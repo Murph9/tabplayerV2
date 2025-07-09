@@ -6,20 +6,20 @@ using Newtonsoft.Json;
 
 namespace murph9.TabPlayer.scenes.Services;
 
-public record Settings(IList<Color> StringColours, bool LowStringIsLow, float CameraAimSpeed);
+public record Settings(IList<Color> StringColours, bool LowStringIsLow, float CameraAimSpeed, double AudioPositionOffsetMs);
 
 public class SettingsService {
-    
+
     private readonly static string SETTINGS_FILE = Path.Combine(SongFileManager.SONG_FOLDER, "settings.json");
 
-    private readonly static Settings DEFAULT = new(new List<Color>() {
+    private readonly static Settings DEFAULT = new([
             Colors.Red,
             Colors.Yellow,
             Colors.Blue,
             Colors.Orange,
             Colors.Green,
             Colors.Purple
-        }, true, 10);
+        ], true, 10, -50f);
 
     private static Settings _settings;
     public static Settings Settings() {
@@ -34,7 +34,7 @@ public class SettingsService {
 
             using var sr = new StreamReader(SETTINGS_FILE);
             string result = sr.ReadToEnd();
-        
+
             _settings = JsonConvert.DeserializeObject<Settings>(result) ?? DEFAULT;
         }
 

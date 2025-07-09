@@ -12,7 +12,7 @@ public partial class GuitarChart : Node3D {
 
     private SongState _songState;
     private IAudioStreamPosition _audio;
-    
+
     private NoteBlock _lastNoteBlock;
     private Node3D _lastNoteBlockNode;
 
@@ -21,8 +21,7 @@ public partial class GuitarChart : Node3D {
         _audio = audio;
     }
 
-    public override void _Ready()
-	{
+    public override void _Ready() {
         var material = new StandardMaterial3D() {
             AlbedoColor = Colors.Tan
         };
@@ -51,24 +50,24 @@ public partial class GuitarChart : Node3D {
 
         // set strings
         const int STRING_LENGTH = 50;
-        
+
         foreach (var i in Enumerable.Range(0, 6)) {
             var colour = SettingsService.GetColorFromStringNum(i);
             var stringMaterial = new StandardMaterial3D() {
                 AlbedoColor = colour
             };
-            
+
             var stringMesh = new BoxMesh() {
                 Size = new Vector3(0.08f, 0.08f, STRING_LENGTH),
                 Material = stringMaterial
             };
             var stringObj = new MeshInstance3D() {
-                Transform = new Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, DisplayConst.CalcNoteHeightY(i), STRING_LENGTH/2f),
+                Transform = new Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, DisplayConst.CalcNoteHeightY(i), STRING_LENGTH / 2f),
                 Mesh = stringMesh
             };
             AddChild(stringObj);
         }
-        
+
         // set frets and fret lines
         var fretMaterial = new StandardMaterial3D() {
             AlbedoColor = Colors.Tan
@@ -98,7 +97,7 @@ public partial class GuitarChart : Node3D {
             AddChild(pathObj);
         }
 
-        foreach (var i in new []{3,5,7,9,12,15,17,19,21,24}) {
+        foreach (var i in new[] { 3, 5, 7, 9, 12, 15, 17, 19, 21, 24 }) {
             var label3d = new Label3D() {
                 Text = i.ToString(),
                 FontSize = 200,
@@ -108,24 +107,24 @@ public partial class GuitarChart : Node3D {
 
             AddChild(label3d);
         }
-	}
+    }
 
-	public override void _Process(double delta)
-	{
-		if (!_audio.SongPlaying)
-			return;
+    public override void _Process(double delta) {
+        if (!_audio.SongPlaying)
+            return;
 
         var block = NextNoteBlock();
         if (block != null) {
             var cam = GetTree().Root.GetCamera3D();
             var camMoveSpeed = SettingsService.Settings().CameraAimSpeed / 50f; //so the setting has more logic numbers
             var wantPos = DisplayConst.CalcMiddleWindowZ(block.FretWindowStart, block.FretWindowLength);
-            var newZ = cam.Position.Z*(1 - delta * camMoveSpeed) + wantPos * delta * camMoveSpeed;
+            var newZ = cam.Position.Z * (1 - delta * camMoveSpeed) + wantPos * delta * camMoveSpeed;
             cam.Position = new Vector3(cam.Position.X, cam.Position.Y, (float)newZ);
         }
 
-		var newPos = new Vector3((float)_audio.GetSongPosition() * _songState.Instrument.Config.NoteSpeed, Position.Y, Position.Z);
-		Position = newPos;
+        var realCamSongPos = _audio.GetSongPosition() - SettingsService.Settings().AudioPositionOffsetMs / 1000f;
+        var newPos = new Vector3((float)realCamSongPos * _songState.Instrument.Config.NoteSpeed, Position.Y, Position.Z);
+        Position = newPos;
 
         if (block?.Time != _lastNoteBlock?.Time) { // diff notes i hope
             _lastNoteBlock = block;
@@ -140,19 +139,19 @@ public partial class GuitarChart : Node3D {
             var config = _songState.Instrument.Config;
             foreach (var n in block.Notes) {
                 // .2 so we can see the open notes
-                var note = NoteGenerator.GetBasicNote(n, config, 0.2f/config.NoteSpeed, _lastNoteBlock.FretWindowStart, _lastNoteBlock.FretWindowLength);
+                var note = NoteGenerator.GetBasicNote(n, config, 0.2f / config.NoteSpeed, _lastNoteBlock.FretWindowStart, _lastNoteBlock.FretWindowLength);
                 // TODO scale with open notes working
                 _lastNoteBlockNode.AddChild(note);
             }
         }
-	}
+    }
 
     private NoteBlock NextNoteBlock() {
-		var songPos = _audio.GetSongPosition();
-		foreach (var b in _songState.Instrument.Notes) {
-			if (b.Time > songPos)
-				return b;
-		}
-		return null;
-	}
+        var songPos = _audio.GetSongPosition();
+        foreach (var b in _songState.Instrument.Notes) {
+            if (b.Time > songPos)
+                return b;
+        }
+        return null;
+    }
 }
