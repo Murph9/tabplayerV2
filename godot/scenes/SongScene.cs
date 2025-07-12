@@ -122,6 +122,13 @@ public partial class SongScene : Node, IAudioStreamPosition {
     private void SetSongSpeed(float fraction) {
         _player.PitchScale = fraction;
 
+        // PitchShift causes issues sometimes, see why: https://github.com/godotengine/godot/issues/20198
+        if (fraction == 1) {
+            _player.Bus = "Master";
+        } else {
+            _player.Bus = "SongPlayback";
+        }
+
         var busId = AudioServer.GetBusIndex("SongPlayback");
         var effect = AudioServer.GetBusEffect(busId, 0) as AudioEffectPitchShift;
         effect.PitchScale = 1 / _player.PitchScale;
@@ -177,7 +184,6 @@ public partial class SongScene : Node, IAudioStreamPosition {
 
         _player = GetNode<AudioStreamPlayer>("AudioStreamPlayer");
         _player.Stream = _audioStream;
-        _player.Bus = "SongPlayback";
         _player.Play();
 
         var guitarChartScene = GD.Load<CSharpScript>("res://scenes/song/GuitarChart.cs").New().As<GuitarChart>();
