@@ -26,10 +26,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 placeholder_text = "Search"
-
-[node name="ResetFilterButton" type="Button" parent="HBoxContainer"]
-layout_mode = 2
-text = "Reset Search"
+clear_button_enabled = true
 
 [node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
 layout_mode = 2
@@ -47,7 +44,7 @@ layout_mode = 2
 
 [node name="CapoCheckBox" type="CheckBox" parent="HBoxContainer"]
 layout_mode = 2
-text = "Show Capo"
+text = "Capo Songs"
 
 [node name="VSeparator4" type="VSeparator" parent="HBoxContainer"]
 layout_mode = 2
@@ -78,6 +75,5 @@ size_flags_horizontal = 3
 
 [connection signal="pressed" from="HBoxContainer/RandomButton" to="." method="SelectRandom"]
 [connection signal="text_changed" from="HBoxContainer/FilterLineEdit" to="." method="UpdateFilter"]
-[connection signal="pressed" from="HBoxContainer/ResetFilterButton" to="." method="ResetFilter_Pressed"]
 [connection signal="item_selected" from="HBoxContainer/TuningOptionButton" to="." method="TuningSelected"]
 [connection signal="pressed" from="HBoxContainer/CapoCheckBox" to="." method="ShowCapo_Pressed"]
