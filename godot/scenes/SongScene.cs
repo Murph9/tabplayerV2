@@ -230,12 +230,24 @@ public partial class SongScene : Node, IAudioStreamPosition {
             var nextNoteLabel = GetNode<Label>("GridContainer/SkipToNextLabel2");
             nextNoteLabel.Text = "at " + nextNote.Time.ToMinSec(false);
 
-            noteText = "Next: " + Math.Round(nextNote.Time, 3) + " in " + Math.Round(nextNote.Time - songPosition, 1);
+            noteText = "Next Note: " + nextNote.Time.ToMinSec(false) + " in " + Math.Round(nextNote.Time - songPosition, 1);
         }
 
-        GetNode<Label>("RunningDetailsLabel").Text = @$"{noteText}
-{Engine.GetFramesPerSecond()}fps | {delta * 1000:000.0}ms
+        GetNode<Label>("RunningDetailsLabel").Text = @$"{Engine.GetFramesPerSecond()}fps | {delta * 1000:000.0}ms
 {songPosition.ToMinSec(true)}";
+
+        var detailsLabel = GetNode<Label>("SongDetailsLabel");
+        var guitarTuning = "Tuning: " + Instrument.CalcTuningName(_state.Instrument.Config.Tuning, _state.Instrument.Config.CapoFret);
+        detailsLabel.Text = $@"Playing: {_state.Instrument.Name}
+{guitarTuning}
+---------
+Notes: {_state.Instrument.SingleNoteCount()}
+Chords: {_state.Instrument.ChordCount()}
+First note @ {_state.Instrument.Notes.First().Time.ToMinSec()}
+Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}
+---------
+{noteText}
+";
 
         UpdateLyrics(songPosition, GetNode<RichTextLabel>("HBoxContainer/LyricsLabel"));
 
@@ -263,15 +275,6 @@ public partial class SongScene : Node, IAudioStreamPosition {
     private void SetUILabels(SongInfo info) {
         var infoLabel = GetNode<Label>("SongInfoLabel");
         infoLabel.Text = $"{info.Metadata.Name} ({info.Metadata.Year})\n{info.Metadata.Artist}";
-
-        var detailsLabel = GetNode<Label>("SongDetailsLabel");
-        var guitarTuning = "Tuning: " + Instrument.CalcTuningName(_state.Instrument.Config.Tuning, _state.Instrument.Config.CapoFret);
-        detailsLabel.Text = $@"Playing: {_state.Instrument.Name}
-Notes: {_state.Instrument.SingleNoteCount()}
-Chords: {_state.Instrument.ChordCount()}
-{guitarTuning}
-First note @ {_state.Instrument.Notes.First().Time.ToMinSec()}
-Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}";
     }
 
     private NoteBlock NextNoteBlock() {
