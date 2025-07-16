@@ -43,36 +43,36 @@ public partial class SongScene : Node, IAudioStreamPosition {
         Pause();
     }
 
+    private void PauseButton_Pressed() {
+        if (_player.StreamPaused) {
+            Resume();
+        } else {
+            Pause();
+        }
+    }
+
     private void Pause() {
         _player.StreamPaused = true;
-
-        var pause = GetNode<CenterContainer>("PauseWindow");
-        pause.Show();
     }
 
     private void Resume() {
         _player.StreamPaused = false;
-
-        var pause = GetNode<CenterContainer>("PauseWindow");
-        if (pause.Visible)
-            pause.Hide();
     }
 
     private void Quit() {
-        _player.Stop();
         Pause(); // prevent errors in final update frame
+        _player.Stop();
 
         EmitSignal(SignalName.Closed);
     }
 
     public override void _Input(InputEvent @event) {
-        if (@event.IsActionPressed("ui_cancel") || @event.IsActionPressed("song_pause")) {
-            var pause = GetNode<CenterContainer>("PauseWindow");
-            if (!pause.Visible) {
-                Pause();
-            } else {
-                Resume();
-            }
+        if (@event.IsActionPressed("ui_cancel")) {
+            Quit();
+        }
+
+        if (@event.IsActionPressed("song_pause")) {
+            PauseButton_Pressed();
         }
 
         if (@event.IsActionPressed("song_skip_forward_10")) {
