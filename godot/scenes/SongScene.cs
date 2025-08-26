@@ -122,7 +122,7 @@ public partial class SongScene : Node, IAudioStreamPosition {
     private void SetSongSpeed(float fraction) {
         _player.PitchScale = fraction;
 
-        // PitchShift causes issues sometimes, see why: https://github.com/godotengine/godot/issues/20198
+        // PitchShift causes issues so we only enable it if we have to, see why: https://github.com/godotengine/godot/issues/20198
         if (fraction == 1) {
             _player.Bus = "Master";
         } else {
@@ -238,7 +238,7 @@ public partial class SongScene : Node, IAudioStreamPosition {
 
         var detailsLabel = GetNode<Label>("SongDetailsLabel");
         var guitarTuning = "Tuning: " + Instrument.CalcTuningName(_state.Instrument.Config.Tuning, _state.Instrument.Config.CapoFret);
-        detailsLabel.Text = $@"Playing: {_state.Instrument.Name}
+        detailsLabel.Text = $@"Instrument: {_state.Instrument.Name}
 {guitarTuning}
 ---------
 Notes: {_state.Instrument.SingleNoteCount()}
@@ -268,8 +268,6 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}
         time -= AudioServer.GetOutputLatency();
         _cachedSongPosition = time;
         return time;
-
-        // TODO this might have some stuttering which we'll need to fix
     }
 
     private void SetUILabels(SongInfo info) {
@@ -312,8 +310,8 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}
 
     private static LyricLine[] GetCurLines(SongState state, double songPos) {
         var lyrics = state.SongInfo.Lyrics;
-        if (lyrics == null || !lyrics.Lines.Any())
-            return Array.Empty<LyricLine>();
+        if (lyrics == null || lyrics.Lines.Count == 0)
+            return [];
 
         if (lyrics.Lines.First().StartTime > songPos) {
             // its the first one time
@@ -326,7 +324,7 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}
             return lyrics.Lines.SkipWhile(x => x != s).Take(2).ToArray();
         }
 
-        return Array.Empty<LyricLine>();
+        return [];
     }
 
     [GeneratedRegex(@"^.*(\d+)\s*m\s+(\d+)\s*s\s+(\d+)\s*ms.*$")]
