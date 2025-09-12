@@ -8,7 +8,7 @@ using murph9.TabPlayer.Songs.Models;
 namespace murph9.TabPlayer.scenes.song;
 
 public partial class SongChart : Node3D {
-    
+
     private NoteBlock _lastChord;
     private Instrument _instrument;
 
@@ -16,21 +16,19 @@ public partial class SongChart : Node3D {
         _instrument = instrument;
     }
 
-    public override void _Ready()
-	{
+    public override void _Ready() {
         var itemList = LoadNotes(_instrument);
         foreach (var item in itemList) {
             AddChild(item);
         }
-	}
+    }
 
-	public override void _Process(double delta)
-	{
-	}
+    public override void _Process(double delta) {
+    }
 
     private IEnumerable<Node3D> LoadNotes(Instrument instrument) {
         var fretNumLastPlacedMap = new Dictionary<int, float>();
-        
+
         foreach (var noteBlock in instrument.Notes) {
             if (noteBlock.Notes.Count() > 1) {
                 foreach (var x in Chord(noteBlock, instrument.Config)) yield return x;
@@ -39,14 +37,14 @@ public partial class SongChart : Node3D {
                 foreach (var x in SingleNote(noteBlock, instrument.Config)) yield return x;
                 _lastChord = null;
             }
-            
+
             foreach (var note in noteBlock.Notes.Reverse()) { // reverse because we want the numbers to above the notes (and notes block otherwise)
                 if (note.FretNum == 0 || note.FretNum > 30)
                     continue;
 
                 if (!fretNumLastPlacedMap.ContainsKey(note.FretNum))
                     fretNumLastPlacedMap[note.FretNum] = -10;
-                
+
                 // put some numbers on the track where notes are for reading
                 if (Math.Abs(noteBlock.Time - fretNumLastPlacedMap[note.FretNum]) > 0.6f) {
                     fretNumLastPlacedMap[note.FretNum] = noteBlock.Time;
@@ -56,8 +54,7 @@ public partial class SongChart : Node3D {
             }
         }
 
-        foreach (var x in GenerateNoteBlockFrets(instrument))
-        {
+        foreach (var x in GenerateNoteBlockFrets(instrument)) {
             yield return x;
         }
     }
@@ -65,33 +62,33 @@ public partial class SongChart : Node3D {
     private IEnumerable<Node3D> Chord(NoteBlock noteBlock, InstrumentConfig config) {
         if (noteBlock.Notes.Count() < 2)
             throw new ArgumentException("must have mote than one note", nameof(noteBlock));
-        
+
         var list = new List<Node3D>();
-        
-        var lineStartZ = DisplayConst.CalcFretPosZ(noteBlock.FretWindowStart-1);
+
+        var lineStartZ = DisplayConst.CalcFretPosZ(noteBlock.FretWindowStart - 1);
         var across = new Vector3(0, 0, DisplayConst.CalcFretWidthZ(noteBlock.FretWindowStart, noteBlock.FretWindowLength));
         var bottomLeftPos = new Vector3(noteBlock.Time * config.NoteSpeed, DisplayConst.TRACK_BOTTOM_WORLD + 0.01f, lineStartZ);
-        var chordDirUp = new Vector3(0,1,0) * 6 * DisplayConst.STRING_DISTANCE_APART;
+        var chordDirUp = new Vector3(0, 1, 0) * 6 * DisplayConst.STRING_DISTANCE_APART;
 
         // generate the notes only if the chord is new (compared with the last one)
         if (noteBlock.ChordFlags.Contains(NoteBlockFlags.MUTE)) {
-            var lineA = MeshGenerator.BoxLine(Colors.LightGray, bottomLeftPos, bottomLeftPos + across + chordDirUp*0.5f);
+            var lineA = MeshGenerator.BoxLine(Colors.LightGray, bottomLeftPos, bottomLeftPos + across + chordDirUp * 0.5f);
             list.Add(lineA);
-            var lineB = MeshGenerator.BoxLine(Colors.LightGray, bottomLeftPos + across, bottomLeftPos + chordDirUp*0.5f);
+            var lineB = MeshGenerator.BoxLine(Colors.LightGray, bottomLeftPos + across, bottomLeftPos + chordDirUp * 0.5f);
             list.Add(lineB);
         } else if (!noteBlock.IsSameChordAs(_lastChord) || (_lastChord != null && Math.Abs(noteBlock.Time - _lastChord.Time) > 1.2f)) {
             foreach (var note in noteBlock.Notes) {
                 list.AddRange(NoteGenerator.GetNote(note, config, noteBlock));
                 list.AddRange(NoteGenerator.CreateNoteLine(noteBlock, note, config));
             }
-            
+
             // display label of the first chord in sequence
             if (!string.IsNullOrWhiteSpace(noteBlock.Label)) {
                 var pos = new Vector3(noteBlock.Time * config.NoteSpeed, 7 * DisplayConst.STRING_DISTANCE_APART, DisplayConst.CalcInFretPosZ(noteBlock.FretWindowStart));
                 list.Add(MeshGenerator.TextVertical(noteBlock.Label, pos));
             }
         }
-        
+
         var notesAllChildren = noteBlock.Notes.All(x => x.Type.Contains(NoteType.CHILD));
         if (!notesAllChildren) {
             // only show chord box when it contains notes to hit
@@ -106,7 +103,7 @@ public partial class SongChart : Node3D {
     private static IEnumerable<Node3D> SingleNote(NoteBlock noteBlock, InstrumentConfig config) {
         if (noteBlock.Notes.Count() != 1)
             throw new ArgumentException("must have only 1 note for this method", nameof(noteBlock));
-        
+
         var note = noteBlock.Notes.First();
 
         foreach (var o in NoteGenerator.GetNote(note, config, noteBlock)) yield return o;
@@ -122,12 +119,12 @@ public partial class SongChart : Node3D {
             yield return MeshGenerator.BoxLine(SettingsService.GetColorFromStringNum(note.StringNum), start, start + dir);
 
             // and a horizontal one for position
-            var pos = new Vector3(notePos.X, DisplayConst.TRACK_BOTTOM_WORLD+0.01f, DisplayConst.CalcFretPosZ(note.FretNum-1));
+            var pos = new Vector3(notePos.X, DisplayConst.TRACK_BOTTOM_WORLD + 0.01f, DisplayConst.CalcFretPosZ(note.FretNum - 1));
             var across = new Vector3(0, 0, DisplayConst.CalcFretWidthZ(note.FretNum));
             yield return MeshGenerator.BoxLine(SettingsService.GetColorFromStringNum(note.StringNum), pos, pos + across);
         }
     }
-    
+
     private static IEnumerable<Node3D> GenerateNoteBlockFrets(Instrument instrument) {
         float startOfCurSection = -10;
         int curStart = -1;
@@ -156,10 +153,10 @@ public partial class SongChart : Node3D {
             }
         }
     }
-    
+
     private static Node3D CreateWindowPiece(int fret, int length, float endTime, float startTime, InstrumentConfig config) {
         var across = DisplayConst.CalcFretWidthZ(fret, length);
-        var pos = new Vector3((endTime + startTime)/2*config.NoteSpeed - 0.5f, DisplayConst.TRACK_BOTTOM_WORLD-0.01f, DisplayConst.CalcFretPosZ(fret - 1) + across/2); //avg
-        return MeshGenerator.Plane(Colors.DarkSlateBlue, pos, new Vector2(config.NoteSpeed*(endTime - startTime), across));
+        var pos = new Vector3((endTime + startTime) / 2 * config.NoteSpeed - 0.5f, DisplayConst.TRACK_BOTTOM_WORLD - 0.01f, DisplayConst.CalcFretPosZ(fret - 1) + across / 2); //avg
+        return MeshGenerator.Plane(Colors.DarkSlateBlue, pos, new Vector2(config.NoteSpeed * (endTime - startTime), across));
     }
 }
