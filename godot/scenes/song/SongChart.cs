@@ -59,7 +59,7 @@ public partial class SongChart : Node3D {
         }
     }
 
-    private IEnumerable<Node3D> Chord(NoteBlock noteBlock, InstrumentConfig config) {
+    private List<Node3D> Chord(NoteBlock noteBlock, InstrumentConfig config) {
         if (noteBlock.Notes.Count() < 2)
             throw new ArgumentException("must have mote than one note", nameof(noteBlock));
 

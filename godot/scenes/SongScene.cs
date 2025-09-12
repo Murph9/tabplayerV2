@@ -23,6 +23,10 @@ public partial class SongScene : Node, IAudioStreamPosition {
     private AudioStreamPlayer _player;
     private double? _cachedSongPosition;
 
+    private NoteGraph _noteGraphScene;
+    private SongChart _songChartScene;
+
+
     public bool SongPlaying => _player?.Playing == true;
 
     private double _aPosition;
@@ -34,6 +38,25 @@ public partial class SongScene : Node, IAudioStreamPosition {
     public void _init(SongState state) {
         _state = state;
         _audioStream = AudioStreamOggVorbis.LoadFromBuffer(state.Audio);
+
+        var instrumentList = GetNode<MenuButton>("DetailsVBoxContainer/VBoxContainer/InstrumentMenuButton");
+        instrumentList.Text = state.Instrument.Name;
+
+        var instrumentPopup = instrumentList.GetPopup();
+        foreach (var item in _state.SongInfo.Instruments) {
+            instrumentPopup.AddItem(item.Name);
+        }
+        instrumentPopup.SetItemChecked(_state.SongInfo.Instruments.ToList().IndexOf(state.Instrument), true);
+        instrumentPopup.IdPressed += InstrumentChanged;
+    }
+
+    private void InstrumentChanged(long id) {
+        var instrumentList = GetNode<MenuButton>("DetailsVBoxContainer/VBoxContainer/InstrumentMenuButton");
+        _state.Instrument = _state.SongInfo.Instruments.Skip((int)id).First();
+        instrumentList.Text = _state.Instrument.Name;
+
+        // load the instrument
+        LoadInstrumentFromState();
     }
 
     private void SongFinished() {
@@ -69,13 +92,9 @@ public partial class SongScene : Node, IAudioStreamPosition {
     public override void _Input(InputEvent @event) {
         if (@event.IsActionPressed("ui_cancel")) {
             Quit();
-        }
-
-        if (@event.IsActionPressed("song_pause")) {
+        } else if (@event.IsActionPressed("song_pause")) {
             PauseButton_Pressed();
-        }
-
-        if (@event.IsActionPressed("song_skip_forward_10")) {
+        } else if (@event.IsActionPressed("song_skip_forward_10")) {
             Skip10Sec();
         } else if (@event.IsActionPressed("song_skip_backward_10")) {
             Back10Sec();
@@ -190,14 +209,25 @@ public partial class SongScene : Node, IAudioStreamPosition {
         guitarChartScene._init(_state, this);
         AddChild(guitarChartScene);
 
-        var noteGraphScene = GD.Load<CSharpScript>("res://scenes/song/NoteGraph.cs").New().As<NoteGraph>();
-        noteGraphScene._init(_state, this);
-        AddChild(noteGraphScene);
+        LoadInstrumentFromState();
+    }
+
+    private void LoadInstrumentFromState() {
+        if (_noteGraphScene != null) {
+            RemoveChild(_noteGraphScene);
+        }
+
+        _noteGraphScene = GD.Load<CSharpScript>("res://scenes/song/NoteGraph.cs").New().As<NoteGraph>();
+        _noteGraphScene._init(_state, this);
+        AddChild(_noteGraphScene);
 
         try {
-            var songScene = GD.Load<CSharpScript>("res://scenes/song/SongChart.cs").New().As<SongChart>();
-            songScene._init(_state.Instrument);
-            AddChild(songScene);
+            if (_songChartScene != null) {
+                RemoveChild(_songChartScene);
+            }
+            _songChartScene = GD.Load<CSharpScript>("res://scenes/song/SongChart.cs").New().As<SongChart>();
+            _songChartScene._init(_state.Instrument);
+            AddChild(_songChartScene);
         } catch (Exception e) {
             GD.Print(e);
         }
@@ -236,10 +266,9 @@ public partial class SongScene : Node, IAudioStreamPosition {
         GetNode<Label>("RunningDetailsLabel").Text = @$"{Engine.GetFramesPerSecond()}fps | {delta * 1000:000.0}ms
 {songPosition.ToMinSec(true)}";
 
-        var detailsLabel = GetNode<Label>("SongDetailsLabel");
+        var detailsLabel = GetNode<Label>("DetailsVBoxContainer/SongDetailsLabel");
         var guitarTuning = "Tuning: " + Instrument.CalcTuningName(_state.Instrument.Config.Tuning, _state.Instrument.Config.CapoFret);
-        detailsLabel.Text = $@"Instrument: {_state.Instrument.Name}
-{guitarTuning}
+        detailsLabel.Text = $@"{guitarTuning}
 ---------
 Notes: {_state.Instrument.SingleNoteCount()}
 Chords: {_state.Instrument.ChordCount()}
@@ -271,7 +300,7 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}
     }
 
     private void SetUILabels(SongInfo info) {
-        var infoLabel = GetNode<Label>("SongInfoLabel");
+        var infoLabel = GetNode<Label>("DetailsVBoxContainer/SongInfoLabel");
         infoLabel.Text = $"{info.Metadata.Name} ({info.Metadata.Year})\n{info.Metadata.Artist}";
     }
 

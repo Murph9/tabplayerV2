@@ -11,6 +11,42 @@ line_spacing = 0.0
 [node name="SongScene" type="Node"]
 script = ExtResource("1_jxipg")
 
+[node name="DetailsVBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="SongInfoLabel" type="Label" parent="DetailsVBoxContainer"]
+layout_mode = 2
+text = "dddd (1889)
+some artist"
+horizontal_alignment = 2
+
+[node name="SongDetailsLabel" type="Label" parent="DetailsVBoxContainer"]
+layout_mode = 2
+text = "Playing: a string thing
+and some other stuff
+probably
+...
+..."
+label_settings = SubResource("LabelSettings_smbfm")
+horizontal_alignment = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DetailsVBoxContainer"]
+layout_mode = 2
+
+[node name="InstrumentLabel" type="Label" parent="DetailsVBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Current Instrument:"
+horizontal_alignment = 2
+
+[node name="InstrumentMenuButton" type="MenuButton" parent="DetailsVBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="RunningDetailsLabel" type="Label" parent="."]
 anchors_preset = 2
 anchor_top = 1.0
@@ -19,33 +55,6 @@ offset_top = -23.0
 offset_right = 40.0
 grow_vertical = 0
 text = "AAAA"
-
-[node name="SongInfoLabel" type="Label" parent="."]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -40.0
-offset_bottom = 23.0
-grow_horizontal = 0
-text = "dddd (1889)
-some artist"
-horizontal_alignment = 2
-
-[node name="SongDetailsLabel" type="Label" parent="."]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -167.0
-offset_top = 52.0
-offset_bottom = 182.0
-grow_horizontal = 0
-text = "Playing: a string thing
-and some other stuff
-probably
-...
-..."
-label_settings = SubResource("LabelSettings_smbfm")
-horizontal_alignment = 2
 
 [node name="GridContainer" type="GridContainer" parent="."]
 offset_right = 40.0

@@ -110,9 +110,6 @@ public partial class GuitarChart : Node3D {
     }
 
     public override void _Process(double delta) {
-        if (!_audio.SongPlaying)
-            return;
-
         var block = NextNoteBlock();
         if (block != null) {
             var cam = GetTree().Root.GetCamera3D();
