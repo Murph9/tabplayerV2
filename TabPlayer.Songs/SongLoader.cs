@@ -6,7 +6,7 @@ using System.Linq;
 namespace murph9.TabPlayer.Songs;
 
 public class SongLoader {
-    
+
     public static SongState Load(string folderName, string instrumentType) {
         var folder = new DirectoryInfo(Path.Combine(SongFileManager.SONG_FOLDER, folderName));
         var noteInfoFile = folder.GetFiles("*.json").First();
@@ -16,10 +16,10 @@ public class SongLoader {
         var ms = new MemoryStream();
         File.OpenRead(oggFile.FullName).CopyTo(ms);
         var audio = ms.ToArray();
-        
+
         return new SongState() {
             SongInfo = noteInfo,
-            Instrument = noteInfo?.Instruments.First(x => instrumentType == null || x.Name == instrumentType),
+            InstrumentName = noteInfo?.Instruments.First(x => instrumentType == null || x.Name == instrumentType).Name,
             Audio = audio
         };
     }
@@ -27,6 +27,8 @@ public class SongLoader {
 
 public class SongState {
     public SongInfo? SongInfo;
-    public Instrument? Instrument;
+    public string? InstrumentName;
     public byte[]? Audio;
+
+    public Instrument Instrument => SongInfo?.Instruments.FirstOrDefault(x => x.Name == InstrumentName);
 }

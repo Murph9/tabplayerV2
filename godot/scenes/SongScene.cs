@@ -52,8 +52,7 @@ public partial class SongScene : Node, IAudioStreamPosition {
 
     private void InstrumentChanged(long id) {
         var instrumentList = GetNode<MenuButton>("DetailsVBoxContainer/VBoxContainer/InstrumentMenuButton");
-        _state.Instrument = _state.SongInfo.Instruments.Skip((int)id).First();
-        instrumentList.Text = _state.Instrument.Name;
+        instrumentList.Text = _state.InstrumentName = _state.SongInfo.Instruments.Skip((int)id).First().Name;
 
         // load the instrument
         LoadInstrumentFromState();
