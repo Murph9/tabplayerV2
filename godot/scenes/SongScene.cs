@@ -23,7 +23,7 @@ public partial class SongScene : Node, IAudioStreamPosition {
     private AudioStreamPlayer _player;
     private double? _cachedSongPosition;
 
-    private NoteBucketGraph _noteBucketGraphScene;
+    private NoteMiniGraph _noteGraphScene;
     private SongChart _songChartScene;
 
 
@@ -212,13 +212,13 @@ public partial class SongScene : Node, IAudioStreamPosition {
     }
 
     private void LoadInstrumentFromState() {
-        if (_noteBucketGraphScene != null) {
-            RemoveChild(_noteBucketGraphScene);
+        if (_noteGraphScene != null) {
+            RemoveChild(_noteGraphScene);
         }
 
-        _noteBucketGraphScene = GD.Load<CSharpScript>("res://scenes/song/NoteBucketGraph.cs").New().As<NoteBucketGraph>();
-        _noteBucketGraphScene._init(_state, this);
-        AddChild(_noteBucketGraphScene);
+        _noteGraphScene = GD.Load<CSharpScript>("res://scenes/song/NoteMiniGraph.cs").New().As<NoteMiniGraph>();
+        _noteGraphScene._init(_state, this);
+        AddChild(_noteGraphScene);
 
         try {
             if (_songChartScene != null) {
@@ -266,9 +266,9 @@ public partial class SongScene : Node, IAudioStreamPosition {
 {songPosition.ToMinSec(true)}";
 
         var detailsLabel = GetNode<Label>("DetailsVBoxContainer/SongDetailsLabel");
-        var guitarTuning = "Tuning: " + Instrument.CalcTuningName(_state.Instrument.Config.Tuning, _state.Instrument.Config.CapoFret);
-        detailsLabel.Text = $@"{guitarTuning}
----------
+        // TODO move this to the LoadInstrumentFromState by taking noteText out
+        detailsLabel.Text = $@"---------
+Tuning: {Instrument.CalcTuningName(_state.Instrument.Config.Tuning, _state.Instrument.Config.CapoFret)}
 Notes: {_state.Instrument.SingleNoteCount()}
 Chords: {_state.Instrument.ChordCount()}
 First note @ {_state.Instrument.Notes.First().Time.ToMinSec()}
@@ -276,6 +276,7 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}
 ---------
 {noteText}
 ";
+
 
         UpdateLyrics(songPosition, GetNode<RichTextLabel>("HBoxContainer/LyricsLabel"));
 
