@@ -23,7 +23,7 @@ public partial class SongScene : Node, IAudioStreamPosition {
     private AudioStreamPlayer _player;
     private double? _cachedSongPosition;
 
-    private NoteGraph _noteGraphScene;
+    private NoteBucketGraph _noteBucketGraphScene;
     private SongChart _songChartScene;
 
 
@@ -212,13 +212,13 @@ public partial class SongScene : Node, IAudioStreamPosition {
     }
 
     private void LoadInstrumentFromState() {
-        if (_noteGraphScene != null) {
-            RemoveChild(_noteGraphScene);
+        if (_noteBucketGraphScene != null) {
+            RemoveChild(_noteBucketGraphScene);
         }
 
-        _noteGraphScene = GD.Load<CSharpScript>("res://scenes/song/NoteGraph.cs").New().As<NoteGraph>();
-        _noteGraphScene._init(_state, this);
-        AddChild(_noteGraphScene);
+        _noteBucketGraphScene = GD.Load<CSharpScript>("res://scenes/song/NoteBucketGraph.cs").New().As<NoteBucketGraph>();
+        _noteBucketGraphScene._init(_state, this);
+        AddChild(_noteBucketGraphScene);
 
         try {
             if (_songChartScene != null) {

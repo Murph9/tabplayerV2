@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace murph9.TabPlayer.scenes.song;
 
-public partial class NoteGraph : Node {
+public partial class NoteBucketGraph : Node {
 
     private const float BUCKET_SIZE = 3; // seconds
     private const float BUCKET_PIXEL_WIDTH = 7; // px
