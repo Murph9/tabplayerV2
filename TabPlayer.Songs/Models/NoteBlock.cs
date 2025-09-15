@@ -5,8 +5,7 @@ using Newtonsoft.Json;
 
 namespace murph9.TabPlayer.Songs.Models;
 
-public class NoteBlock
-{
+public class NoteBlock {
     public string? Label { get; set; }
     public float Time { get; set; }
     [JsonProperty("fws")] // these take up quite the space in the json file
@@ -15,11 +14,11 @@ public class NoteBlock
     public int FretWindowLength { get; set; }
     public IEnumerable<NoteBlockFlags> ChordFlags { get; set; }
     public IEnumerable<SingleNote> Notes { get; set; }
+    public bool IsChord => Notes.Count() > 1;
 
     public NoteBlock(float time, int fretWindowStart, int fretWindowLength, SingleNote note) : this(time, fretWindowStart, fretWindowLength, new SingleNote[] { note }, null) { }
     [JsonConstructor]
-    public NoteBlock(float time, int fretWindowStart, int fretWindowLength, IEnumerable<SingleNote> notes, IEnumerable<NoteBlockFlags> chordFlags)
-    {
+    public NoteBlock(float time, int fretWindowStart, int fretWindowLength, IEnumerable<SingleNote> notes, IEnumerable<NoteBlockFlags> chordFlags) {
         if (notes == null || !notes.Any())
             throw new ArgumentOutOfRangeException(nameof(notes), "must not be empty");
 
@@ -34,8 +33,7 @@ public class NoteBlock
 
     private readonly static NoteType[] IGNORED_TYPES = new NoteType[] { NoteType.UNDEFINED, NoteType.MISSING, NoteType.CHORD, NoteType.OPEN, NoteType.IGNORE, NoteType.HIGHDENSITY, NoteType.SINGLE, NoteType.CHORDNOTES, NoteType.DOUBLESTOP, NoteType.MISSING2, NoteType.STRUM, NoteType.ACCENT };
 
-    public bool IsSameChordAs(NoteBlock other)
-    {
+    public bool IsSameChordAs(NoteBlock other) {
         if (other == null)
             return false;
 
@@ -53,8 +51,7 @@ public class NoteBlock
 
         using var thisE = Notes.GetEnumerator();
         using var otherE = other.Notes.GetEnumerator();
-        while (thisE.MoveNext() && otherE.MoveNext())
-        {
+        while (thisE.MoveNext() && otherE.MoveNext()) {
             if (thisE.Current.FretNum != otherE.Current.FretNum)
                 return false;
             if (thisE.Current.StringNum != otherE.Current.StringNum)

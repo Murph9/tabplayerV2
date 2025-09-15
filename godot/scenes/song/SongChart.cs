@@ -30,7 +30,7 @@ public partial class SongChart : Node3D {
         var fretNumLastPlacedMap = new Dictionary<int, float>();
 
         foreach (var noteBlock in instrument.Notes) {
-            if (noteBlock.Notes.Count() > 1) {
+            if (noteBlock.IsChord) {
                 foreach (var x in Chord(noteBlock, instrument.Config)) yield return x;
                 _lastChord = noteBlock;
             } else {

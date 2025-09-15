@@ -5,8 +5,7 @@ using Newtonsoft.Json;
 
 namespace murph9.TabPlayer.Songs.Models;
 
-public class Instrument
-{
+public class Instrument {
     public static readonly float DEFAULT_SONG_SCALE = 40f;
     public string Name { get; private set; }
     public float LastNoteTime => Notes?.Last().Time ?? 0;
@@ -18,8 +17,7 @@ public class Instrument
     public SimulationControlData ControlData { get; private set; }
 
     [JsonConstructor]
-    public Instrument(string name, IEnumerable<NoteBlock> notes, IEnumerable<Section> sections, InstrumentConfig config)
-    {
+    public Instrument(string name, IEnumerable<NoteBlock> notes, IEnumerable<Section> sections, InstrumentConfig config) {
         Name = name;
         Notes = notes.OrderBy(x => x.Time).ToList();
         Config = config;
@@ -30,24 +28,22 @@ public class Instrument
     }
 
     public int TotalNoteCount() => Notes.Count;
-    public int ChordCount() => Notes.Count(x => x.Notes.Count() > 1);
-    public int SingleNoteCount() => Notes.Count(x => x.Notes.Count() <= 1);
+    public int ChordCount() => Notes.Count(x => x.IsChord);
+    public int SingleNoteCount() => Notes.Count(x => !x.IsChord);
 
     public float GetNoteDensity(SongInfo songInfo) => TotalNoteCount() / songInfo.Metadata.SongLength;
 
     public static string CalcTuningName(short[] t, float? capoFret) {
-        if (capoFret.HasValue && capoFret != 0 && capoFret != 255)
-        {
+        if (capoFret.HasValue && capoFret != 0 && capoFret != 255) {
             return CalcTuningName(t).Replace(" Standard", string.Empty) + $", Capo: {capoFret}";
         }
         return CalcTuningName(t);
     }
 
-    public static string CalcTuningName(short[] t)
-    {
+    public static string CalcTuningName(short[] t) {
         if (t == null)
             return "<unknown>";
-        
+
         // https://en.wikipedia.org/wiki/List_of_guitar_tunings
         if (Enumerable.SequenceEqual(t, new short[] { 1, 1, 1, 1, 1, 1 }))
             return "F Standard";
@@ -77,23 +73,19 @@ public class Instrument
         return string.Join(",", t.Select((x, i) => NoteForIndexAndOffset(i, x)));
     }
 
-    private static SimulationControlData CalcControlData(IEnumerable<NoteBlock> notes)
-    {
+    private static SimulationControlData CalcControlData(IEnumerable<NoteBlock> notes) {
         var noteCenterAt = new List<CenterFret>();
         var lastFret = -1f;
         var lastWidth = -1f;
-        foreach (var n in notes)
-        {
-            if (lastFret != n.FretWindowStart || lastWidth != n.FretWindowLength)
-            {
+        foreach (var n in notes) {
+            if (lastFret != n.FretWindowStart || lastWidth != n.FretWindowLength) {
                 noteCenterAt.Add(new CenterFret(n.Time, n.FretWindowStart, n.FretWindowLength));
                 lastFret = n.FretWindowStart;
                 lastWidth = n.FretWindowLength;
             }
         }
 
-        return new SimulationControlData()
-        {
+        return new SimulationControlData() {
             NoteCenterFret = noteCenterAt
         };
     }
@@ -102,11 +94,9 @@ public class Instrument
     private readonly static string[] NOTE_LIST = new string[] {
             "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb"
         };
-    private static string NoteForIndexAndOffset(int index, int offset)
-    {
+    private static string NoteForIndexAndOffset(int index, int offset) {
         var pos = NOTE_OFFSET[index] + offset;
-        while (pos < 0)
-        {
+        while (pos < 0) {
             pos += NOTE_LIST.Length;
         }
         var result = NOTE_LIST[pos % NOTE_LIST.Length];
@@ -116,8 +106,7 @@ public class Instrument
     }
 }
 
-public class SongInfo
-{
+public class SongInfo {
     public const string LEAD_NAME = "lead";
     public const string LEAD1_NAME = "lead1";
     public const string LEAD2_NAME = "lead2";
@@ -162,8 +151,7 @@ public class SongInfo
     public SongMetadata Metadata { get; private set; }
 
     [JsonConstructor]
-    public SongInfo(SongMetadata metadata, IEnumerable<Instrument> instruments, Lyrics lyrics)
-    {
+    public SongInfo(SongMetadata metadata, IEnumerable<Instrument> instruments, Lyrics lyrics) {
         Metadata = metadata;
         Instruments = instruments.ToArray() ?? Array.Empty<Instrument>();
         Lyrics = lyrics ?? new Lyrics(new List<LyricLine>());
@@ -216,8 +204,7 @@ public class SongInfo
 
 public record struct InstrumentConfig(float NoteSpeed, short[] Tuning, float CapoFret, float CentOffset);
 
-public class SongMetadata
-{
+public class SongMetadata {
     public string Name { get; private set; }
     public string Artist { get; private set; }
     public string Album { get; private set; }
@@ -225,11 +212,10 @@ public class SongMetadata
     public float SongLength { get; private set; }
     public string Genre { get; private set; }
 
-    public SongMetadata(string name, string artist, string album, int? year, float songLength) : this(name, artist, album, year, songLength, null) {}
+    public SongMetadata(string name, string artist, string album, int? year, float songLength) : this(name, artist, album, year, songLength, null) { }
 
     [JsonConstructor]
-    public SongMetadata(string name, string artist, string album, int? year, float songLength, string genre)
-    {
+    public SongMetadata(string name, string artist, string album, int? year, float songLength, string genre) {
         Name = name;
         Artist = artist;
         Album = album;
@@ -239,8 +225,7 @@ public class SongMetadata
     }
 }
 
-public class SimulationControlData
-{
+public class SimulationControlData {
     public ICollection<CenterFret> NoteCenterFret { get; set; } = new List<CenterFret>();
 }
 

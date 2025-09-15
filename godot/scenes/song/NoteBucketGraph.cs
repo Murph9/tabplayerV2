@@ -92,7 +92,7 @@ public partial class NoteBucketGraph : Node {
             // get count of note and count of chords
             var totalCount = noteBuckets[i].Count();
 
-            var chordCount = noteBuckets[i].Count(x => x.Notes.Count() > 1);
+            var chordCount = noteBuckets[i].Count(x => x.IsChord);
             var chordHeight = chordCount * BUCKET_NOTE_PIXEL_HEIGHT;
 
             var noteCount = totalCount - chordCount;
