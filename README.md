@@ -1,6 +1,5 @@
 # TabPlayer using Godot and C#
 
-
 This application lets you play rocksmith cldc and others by importing them in app forever.
 
 It allows stopping, rewinding and skipping through songs much faster than rocksmith.
@@ -20,16 +19,13 @@ See the MiiChannel song, note the strings and note preview at: https://www.murph
 1. Run the reload song list feature
 1. Play Songs
 
-
 ## Included C# Dependencies
-- [PsarcLib](https://github.com/kokolihapihvi/Rocksmith2014PsarcLib)
-- [revorbstd](https://github.com/overtools/revorbstd)
-- [WEMSharp](https://github.com/neon-nyan/WEMSharp)
+
+-   [PsarcLib](https://github.com/kokolihapihvi/Rocksmith2014PsarcLib)
+-   [revorbstd](https://github.com/overtools/revorbstd)
+-   [WEMSharp](https://github.com/neon-nyan/WEMSharp)
 
 Most have slight modifications to work in the c# .net 7 environment for godot.
-
-
-
 
 ### Modifying and Useful Notes
 
