@@ -301,7 +301,7 @@ Last note @ {_state.Instrument.Notes.Last().Time.ToMinSec()}
 
     private void SetUILabels(SongInfo info) {
         var infoLabel = GetNode<Label>("DetailsVBoxContainer/SongInfoLabel");
-        infoLabel.Text = $"{info.Metadata.Name} ({info.Metadata.Year})\n{info.Metadata.Artist}";
+        infoLabel.Text = $"{info.Metadata.Name} ({info.Metadata.Year})\n{info.Metadata.Artist}\n{info.Metadata.Album}";
     }
 
     private NoteBlock NextNoteBlock() {

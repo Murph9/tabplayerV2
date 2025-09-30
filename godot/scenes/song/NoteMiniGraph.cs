@@ -70,7 +70,7 @@ public partial class NoteMiniGraph : Node2D {
 
             var posXNext = ((1 - SCREEN_SPREAD) + SCREEN_SPREAD * (i + BUCKET_SIZE) / (_songState.Instrument.LastNoteTime + 4)) * (int)windowSize.End.X;
 
-            DrawRectPixels(image, new Color(Colors.Blue, 0.4f), new Vector2I((int)posX, posY), new Vector2I((int)posXNext, posY + bucket.Count()));
+            DrawRectPixels(image, new Color(Colors.Black, 0.4f), new Vector2I((int)posX, posY), new Vector2I((int)posXNext, posY + bucket.Count()));
         }
 
         _notePlotImage = ImageTexture.CreateFromImage(image);
