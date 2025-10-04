@@ -6,12 +6,11 @@ using Newtonsoft.Json;
 namespace murph9.TabPlayer.Songs.Models;
 
 public class Instrument {
-    public static readonly float DEFAULT_SONG_SCALE = 40f;
-    public string Name { get; private set; }
+    public string Name { get; }
     public float LastNoteTime => Notes?.Last().Time ?? 0;
-    public InstrumentConfig Config { get; private set; }
-    public IReadOnlyCollection<NoteBlock> Notes { get; private set; }
-    public IReadOnlyCollection<Section> Sections { get; private set; }
+    public InstrumentConfig Config { get; }
+    public IReadOnlyCollection<NoteBlock> Notes { get; }
+    public IReadOnlyCollection<Section> Sections { get; }
 
     [JsonIgnore]
     public SimulationControlData ControlData { get; private set; }

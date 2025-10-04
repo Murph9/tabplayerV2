@@ -7,24 +7,27 @@ using Rocksmith2014PsarcLib.Psarc;
 using Rocksmith2014PsarcLib.Psarc.Asset;
 using Rocksmith2014PsarcLib.Psarc.Models.Sng;
 
-namespace murph9.TabPlayer.Songs.Convert
-{
-    public class PsarcFileConverter
-    {
+namespace murph9.TabPlayer.Songs.Convert {
+    public class PsarcFileConverter {
+
+        public static readonly float DEFAULT_SONG_SCALE = 40f;
+
         private readonly PsarcFile _p;
         private readonly string _nameFilter;
-        public PsarcFileConverter(PsarcFile p, string nameFilter)
-        {
+        public PsarcFileConverter(PsarcFile p, string nameFilter) {
             _p = p;
             _nameFilter = nameFilter;
         }
 
-        public SongInfo ConvertToSongInfo()
-        {
+        public SongInfo ConvertToSongInfo() {
             var instrumentNames = _p.TOC.Entries.Where(x => (_nameFilter == null || x.Path.Contains(_nameFilter))
                     && x.Path.Contains(".sng"))
                     .Where(x => x.Path.Contains('_') && !x.Path.Contains(SongInfo.VOCALS_NAME))
-                    .Select(x => new {toc = x, label = x.Path.Split('_')[1].Replace(".sng", "")});
+                    .Select(x => new { toc = x, label = string.Join('_', x.Path.Replace(".sng", "").Split('_').Skip(1)) });
+
+            if (instrumentNames.Distinct().Count() != instrumentNames.Count()) {
+                throw new Exception("Song has multiple instruments with the same name: " + instrumentNames);
+            }
 
             var instruments = instrumentNames
                     .Select(x => ConvertInstrument(x.toc, x.label))
@@ -40,8 +43,7 @@ namespace murph9.TabPlayer.Songs.Convert
             return new SongInfo(metadata, instruments.Where(x => x != null), vocals);
         }
 
-        private Instrument ConvertInstrument(PsarcTOCEntry tocEntry, string name)
-        {            
+        private Instrument ConvertInstrument(PsarcTOCEntry tocEntry, string name) {
             var sng = new SngAsset();
             using (var mem = new MemoryStream()) {
                 _p.InflateEntry(tocEntry, mem);
@@ -56,8 +58,8 @@ namespace murph9.TabPlayer.Songs.Convert
 
             var allNotes = new List<Note>();
             // for each arrangement get the highest note count phrase (phrase.MaxDifficulty needs investigation)
-            var phraseIterations = sng.PhraseIterations.Select((x, i) => new {x, i});
-            
+            var phraseIterations = sng.PhraseIterations.Select((x, i) => new { x, i });
+
             foreach (var phr in phraseIterations) {
                 foreach (var arr in sng.Arrangements.OrderByDescending(x => x.Difficulty)) {
                     var phrNotes = arr.Notes.Where(x => x.PhraseIterationId == phr.i);
@@ -67,7 +69,7 @@ namespace murph9.TabPlayer.Songs.Convert
                     }
                 }
             }
-            
+
             var sections = new List<Models.Section>();
             foreach (var phr in phraseIterations) {
                 var it = sng.Phrases[phr.x.PhraseId];
@@ -77,12 +79,12 @@ namespace murph9.TabPlayer.Songs.Convert
             var notes = allNotes.Where(x => !x.Flags.HasFlag(Note.NoteMaskFlag.CHORD))
                 .Select(FromSingleNote)
                 .ToList();
-            
+
             // try to ignore similar notes in chords
             notes.AddRange(allNotes.Where(x => x.Flags.HasFlag(Note.NoteMaskFlag.CHORD))
                 .GroupBy(x => x.Time)
                 .Select(x => FromChord(sng, x.Single()))); // hopefully this will throw when theres more than one note
-            
+
             // parse any notes at exactly the same time and make them into a chord
             var groupedNotes = notes.Where(x => x.Notes.Count() == 1).GroupBy(x => x.Time).Where(x => x.Count() > 1).ToList();
             foreach (var n in groupedNotes.SelectMany(x => x)) {
@@ -92,16 +94,16 @@ namespace murph9.TabPlayer.Songs.Convert
             foreach (var n in groupedNotes) {
                 notes.Add(FromNotes(n));
             }
-            
-            return new Instrument(name, notes, sections, new InstrumentConfig(Instrument.DEFAULT_SONG_SCALE, sng.Metadata.Tuning, metadata?.Attributes?.CapoFret ?? 0, metadata?.Attributes?.CentOffset ?? 0));
+
+            return new Instrument(name, notes, sections, new InstrumentConfig(DEFAULT_SONG_SCALE, sng.Metadata.Tuning, metadata?.Attributes?.CapoFret ?? 0, metadata?.Attributes?.CentOffset ?? 0));
         }
 
         private Lyrics ConvertVocals() {
             var vocals = _p.TOC.Entries.Where(x => (_nameFilter == null || x.Path.Contains(_nameFilter))
-                    && x.Path.Contains(SongInfo.VOCALS_NAME) && x.Path.Contains(".sng")).FirstOrDefault();            
+                    && x.Path.Contains(SongInfo.VOCALS_NAME) && x.Path.Contains(".sng")).FirstOrDefault();
             if (vocals == null)
                 return null;
-            
+
             var sng = new SngAsset();
             using (var mem = new MemoryStream()) {
                 _p.InflateEntry(vocals, mem);
@@ -112,7 +114,7 @@ namespace murph9.TabPlayer.Songs.Convert
             var cur = new List<Lyric>();
             foreach (var v in sng.Vocals) {
                 cur.Add(new Lyric(v.Lyric.TrimEnd('+'), v.Time, v.Length));
-                
+
                 if (v.Lyric.EndsWith("+")) {
                     lines.Add(new LyricLine(cur));
                     cur = new List<Lyric>();
@@ -122,8 +124,7 @@ namespace murph9.TabPlayer.Songs.Convert
             return new Lyrics(lines);
         }
 
-        public string ExportPsarcMainWem(string outputFolder, bool forceConvert = false)
-        {
+        public string ExportPsarcMainWem(string outputFolder, bool forceConvert = false) {
             var attributeManifest = _p.ExtractArrangementManifests().First(x => _nameFilter == null || x.Attributes.BlockAsset.Contains(_nameFilter));
             var bnk_file = attributeManifest.Attributes.SongBank;
             var result = _p.InflateEntry<BkhdAsset>(_p.TOC.Entries.First(x => x.Path.Contains(bnk_file)));
@@ -142,17 +143,16 @@ namespace murph9.TabPlayer.Songs.Convert
                 foreach (var f in new DirectoryInfo(outputFolder).GetFiles("*.ogg"))
                     f.Delete();
             }
-            
+
             using var file = File.OpenWrite(filePath);
             _p.InflateEntry(w, file);
             file.Flush();
-            
+
             Console.WriteLine(filePath);
             return filePath;
         }
 
-        private static NoteBlock FromSingleNote(Note note)
-        {
+        private static NoteBlock FromSingleNote(Note note) {
             var flags = ConvertToModel(note.Flags);
 
             SingleSlide? slideTo = null;
@@ -187,7 +187,7 @@ namespace murph9.TabPlayer.Songs.Convert
                     singleNotes.Add(new SingleNote(i, chordFrets[i], 0, flags, null, null));
                 } else {
                     var mask = chordNotes.NoteMask.Length > i ? ConvertToModel((Note.NoteMaskFlag)chordNotes.NoteMask[i]) : null;
-                    
+
                     SingleSlide? slideTo = null;
                     if (chordNotes.SlideTo.Length > i && chordNotes.SlideTo[i] != 255)
                         slideTo = new SingleSlide((int)chordNotes.SlideTo[i], false);
@@ -218,8 +218,7 @@ namespace murph9.TabPlayer.Songs.Convert
             };
         }
 
-        private static NoteBlock FromNotes(IEnumerable<NoteBlock> notes)
-        {
+        private static NoteBlock FromNotes(IEnumerable<NoteBlock> notes) {
             var singleNotes = new List<SingleNote>();
             singleNotes.AddRange(notes.SelectMany(x => x.Notes));
             foreach (var n in singleNotes) {
@@ -228,8 +227,7 @@ namespace murph9.TabPlayer.Songs.Convert
             return new NoteBlock(notes.First().Time, notes.First().FretWindowStart, notes.First().FretWindowLength, singleNotes, null);
         }
 
-        private static IEnumerable<NoteType> ConvertToModel(Note.NoteMaskFlag flag)
-        {
+        private static IEnumerable<NoteType> ConvertToModel(Note.NoteMaskFlag flag) {
             // if (flag.HasFlag(Note.NoteMaskFlag.UNDEFINED)) yield return NoteType.UNDEFINED;
             if (flag.HasFlag(Note.NoteMaskFlag.MISSING)) yield return NoteType.MISSING;
             if (flag.HasFlag(Note.NoteMaskFlag.CHORD)) yield return NoteType.CHORD;
@@ -266,26 +264,24 @@ namespace murph9.TabPlayer.Songs.Convert
             if (flag.HasFlag(Note.NoteMaskFlag.STRUM)) yield return NoteType.STRUM;
         }
 
-        private static ICollection<SingleBend> FromBendData32(BendData32[] data, float noteStart, float sustainLength)
-        {
+        private static ICollection<SingleBend> FromBendData32(BendData32[] data, float noteStart, float sustainLength) {
             if (data == null || data.Length < 1)
                 return null;
-            
+
             var actualData = data.Where(x => x.Time != 0).Where(x => x.Time >= noteStart);
             if (!actualData.Any())
                 return null;
-            
+
             var bendList = actualData.Select(x => new SingleBend(x.Step, x.Time)).ToList();
             if (Math.Abs(noteStart + sustainLength - bendList.Last().Time) > 0.1f) {
                 // add a remaining bend return when it ends
                 bendList.Add(new SingleBend(0, noteStart + sustainLength));
             }
-            
+
             return bendList;
         }
 
-        public void ExportAlbumArt(string outputFolder)
-        {
+        public void ExportAlbumArt(string outputFolder) {
             var attributeManifest = _p.ExtractArrangementManifests().First(x => _nameFilter == null || x.Attributes.BlockAsset.Contains(_nameFilter));
             var ddsAsset = _p.ExtractAlbumArt(attributeManifest.Attributes);
             ddsAsset?.Save(Path.Join(outputFolder, SongFileManager.ALBUM_ART_NAME));
