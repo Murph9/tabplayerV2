@@ -15,6 +15,9 @@ csharp_new_line_before_finally = false
 # IDE1006: Naming Styles (godot likes methods with underscores)
 dotnet_diagnostic.IDE1006.severity = none
 
+# IDE0130: Namespace does not match folder structure
+dotnet_diagnostic.IDE0130.severity = silent
+
 [*.json]
 indent_style = space
 indent_size = 2
