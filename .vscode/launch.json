@@ -1,15 +1,15 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Play",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "C:\\Program Files\\Godot\\Godot_v4.3-stable_mono_win64\\Godot_v4.3-stable_mono_win64.exe",
-            "args": ["--verbose"],
-            "cwd": "${workspaceFolder}/godot",
-            "stopAtEntry": false,
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Play",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "C:\\Program Files\\Godot\\Godot_v4.5-stable_mono_win64\\Godot_v4.5-stable_mono_win64.exe",
+      "args": ["--verbose"],
+      "cwd": "${workspaceFolder}/godot",
+      "stopAtEntry": false
+    }
+  ]
 }

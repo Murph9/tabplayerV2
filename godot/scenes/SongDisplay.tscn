@@ -1,12 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://drdko7a5i3o8"]
+[gd_scene load_steps=2 format=3 uid="uid://drdko7a5i3o8"]
 
 [ext_resource type="Script" uid="uid://y2hat44fvxwr" path="res://scenes/SongDisplay.cs" id="1_k82oa"]
-
-[sub_resource type="Gradient" id="Gradient_45u7y"]
-colors = PackedColorArray(0, 0.596078, 0.596078, 1, 0, 0.596078, 0.596078, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_348oa"]
-gradient = SubResource("Gradient_45u7y")
 
 [node name="SongDisplay" type="VBoxContainer"]
 anchors_preset = 15
@@ -21,7 +15,6 @@ script = ExtResource("1_k82oa")
 [node name="AlbumArtTextureRect" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
-texture = SubResource("GradientTexture2D_348oa")
 expand_mode = 3
 stretch_mode = 5
 
