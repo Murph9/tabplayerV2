@@ -12,7 +12,7 @@ public partial class NoteMiniGraph : Node2D {
     private const float BUCKET_SIZE = 2; // seconds
     private const int BUCKET_BOTTOM_OFFSET = 30; // px
     private const int PIXEL_SIZE = 3; // px
-    private const float NOTE_CHART_PADDING_FRACT = 0.1f; // fraction
+    private const float NOTE_CHART_PADDING_FRACT = 0.07f; // fraction
     private static int NOTE_OFFSET(float windowSizeX) => (int)((1 - NOTE_CHART_PADDING_FRACT * 2) * windowSizeX);
 
     private SongState _songState;
@@ -37,7 +37,7 @@ public partial class NoteMiniGraph : Node2D {
         image.FillRect(new Rect2I(leftOffset, (int)windowSize.End.Y - BUCKET_BOTTOM_OFFSET - 25 * PIXEL_SIZE, noteOffset, (int)windowSize.End.Y - BUCKET_BOTTOM_OFFSET), new Color(Colors.White, 0.05f));
 
         foreach (var noteBlock in _songState.Instrument.Notes) {
-            var posX = leftOffset + noteOffset * noteBlock.Time / (_songState.Instrument.LastNoteTime + 4);
+            var posX = leftOffset + noteOffset * noteBlock.Time / _songState.SongInfo.Metadata.SongLength;
 
             if (noteBlock.IsChord) {
                 for (var i = noteBlock.FretWindowStart * PIXEL_SIZE; i < (noteBlock.FretWindowStart + noteBlock.FretWindowLength) * PIXEL_SIZE; i++) {
@@ -69,10 +69,10 @@ public partial class NoteMiniGraph : Node2D {
             var chordCount = bucket.Count(x => x.IsChord);
             var noteCount = bucket.Count(x => !x.IsChord);
 
-            var posX = leftOffset + noteOffset * i / (_songState.Instrument.LastNoteTime + 4);
+            var posX = leftOffset + noteOffset * i / _songState.SongInfo.Metadata.SongLength;
             var posY = (int)windowSize.End.Y - BUCKET_BOTTOM_OFFSET + PIXEL_SIZE;
 
-            var posXNext = leftOffset + noteOffset * (i + BUCKET_SIZE) / (_songState.Instrument.LastNoteTime + 4);
+            var posXNext = leftOffset + noteOffset * (i + BUCKET_SIZE) / _songState.SongInfo.Metadata.SongLength;
 
             DrawRectPixels(image, new Color(Colors.Black, 0.4f), new Vector2I((int)posX, posY), new Vector2I((int)posXNext, posY + bucket.Count()));
         }
@@ -87,7 +87,7 @@ public partial class NoteMiniGraph : Node2D {
 
         var windowSize = GetViewport().GetVisibleRect();
         var leftOffset = (int)(NOTE_CHART_PADDING_FRACT * windowSize.End.X);
-        var posX = leftOffset + NOTE_OFFSET(windowSize.End.X) * (float)_audio.GetSongPosition() / (_songState.Instrument.LastNoteTime + 4);
+        var posX = leftOffset + NOTE_OFFSET(windowSize.End.X) * (float)_audio.GetSongPosition() / _songState.SongInfo.Metadata.SongLength;
         DrawLine(new Vector2(posX, (int)windowSize.End.Y - BUCKET_BOTTOM_OFFSET), new Vector2(posX, (int)windowSize.End.Y - BUCKET_BOTTOM_OFFSET - 24 * PIXEL_SIZE), Colors.White, width: 1);
     }
 
