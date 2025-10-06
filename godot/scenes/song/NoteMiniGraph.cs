@@ -3,7 +3,6 @@ using murph9.TabPlayer.scenes.Services;
 using murph9.TabPlayer.Songs;
 using murph9.TabPlayer.Songs.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace murph9.TabPlayer.scenes.song;
@@ -11,9 +10,10 @@ namespace murph9.TabPlayer.scenes.song;
 public partial class NoteMiniGraph : Node2D {
 
     private const float BUCKET_SIZE = 2; // seconds
-    private const int BUCKET_BOTTOM_OFFSET = 20; // px
-    private const int PIXEL_SIZE = 3;
-    private const float SCREEN_SPREAD = 0.8f;
+    private const int BUCKET_BOTTOM_OFFSET = 30; // px
+    private const int PIXEL_SIZE = 3; // px
+    private const float NOTE_CHART_PADDING_FRACT = 0.1f; // fraction
+    private static int NOTE_OFFSET(float windowSizeX) => (int)((1 - NOTE_CHART_PADDING_FRACT * 2) * windowSizeX);
 
     private SongState _songState;
     private IAudioStreamPosition _audio;
@@ -28,12 +28,16 @@ public partial class NoteMiniGraph : Node2D {
 
     public override void _Ready() {
         var stringColours = SettingsService.Settings().StringColours.ToArray();
-
         var windowSize = GetViewport().GetVisibleRect();
+
+        var leftOffset = (int)(NOTE_CHART_PADDING_FRACT * windowSize.End.X);
+        var noteOffset = NOTE_OFFSET(windowSize.End.X);
+
         var image = Image.CreateEmpty((int)windowSize.End.X, (int)windowSize.End.Y, false, Image.Format.Rgba8);
+        image.FillRect(new Rect2I(leftOffset, (int)windowSize.End.Y - BUCKET_BOTTOM_OFFSET - 25 * PIXEL_SIZE, noteOffset, (int)windowSize.End.Y - BUCKET_BOTTOM_OFFSET), new Color(Colors.White, 0.05f));
 
         foreach (var noteBlock in _songState.Instrument.Notes) {
-            var posX = ((1 - SCREEN_SPREAD) + SCREEN_SPREAD * noteBlock.Time / (_songState.Instrument.LastNoteTime + 4)) * (int)windowSize.End.X;
+            var posX = leftOffset + noteOffset * noteBlock.Time / (_songState.Instrument.LastNoteTime + 4);
 
             if (noteBlock.IsChord) {
                 for (var i = noteBlock.FretWindowStart * PIXEL_SIZE; i < (noteBlock.FretWindowStart + noteBlock.FretWindowLength) * PIXEL_SIZE; i++) {
@@ -65,10 +69,10 @@ public partial class NoteMiniGraph : Node2D {
             var chordCount = bucket.Count(x => x.IsChord);
             var noteCount = bucket.Count(x => !x.IsChord);
 
-            var posX = ((1 - SCREEN_SPREAD) + SCREEN_SPREAD * i / (_songState.Instrument.LastNoteTime + 4)) * (int)windowSize.End.X;
+            var posX = leftOffset + noteOffset * i / (_songState.Instrument.LastNoteTime + 4);
             var posY = (int)windowSize.End.Y - BUCKET_BOTTOM_OFFSET + PIXEL_SIZE;
 
-            var posXNext = ((1 - SCREEN_SPREAD) + SCREEN_SPREAD * (i + BUCKET_SIZE) / (_songState.Instrument.LastNoteTime + 4)) * (int)windowSize.End.X;
+            var posXNext = leftOffset + noteOffset * (i + BUCKET_SIZE) / (_songState.Instrument.LastNoteTime + 4);
 
             DrawRectPixels(image, new Color(Colors.Black, 0.4f), new Vector2I((int)posX, posY), new Vector2I((int)posXNext, posY + bucket.Count()));
         }
@@ -82,7 +86,8 @@ public partial class NoteMiniGraph : Node2D {
         DrawTexture(_notePlotImage, Vector2.Zero);
 
         var windowSize = GetViewport().GetVisibleRect();
-        var posX = (1 - SCREEN_SPREAD + SCREEN_SPREAD * (float)_audio.GetSongPosition() / (_songState.Instrument.LastNoteTime + 4)) * (int)windowSize.End.X;
+        var leftOffset = (int)(NOTE_CHART_PADDING_FRACT * windowSize.End.X);
+        var posX = leftOffset + NOTE_OFFSET(windowSize.End.X) * (float)_audio.GetSongPosition() / (_songState.Instrument.LastNoteTime + 4);
         DrawLine(new Vector2(posX, (int)windowSize.End.Y - BUCKET_BOTTOM_OFFSET), new Vector2(posX, (int)windowSize.End.Y - BUCKET_BOTTOM_OFFSET - 24 * PIXEL_SIZE), Colors.White, width: 1);
     }
 
@@ -102,7 +107,10 @@ public partial class NoteMiniGraph : Node2D {
     }
 
     private static void DrawRectPixels(Image image, Color colour, Vector2I start, Vector2I end) {
-        if (start.X > end.X || start.Y > end.Y) GD.Print("Error with " + start + "," + end + " rect draw");
+        if (start.X > end.X || start.Y > end.Y) {
+            GD.Print("Error with " + start + "," + end + " rect draw");
+            return;
+        }
 
         for (var i = start.X; i < end.X; i++) {
             for (var j = start.Y; j < end.Y; j++) {
