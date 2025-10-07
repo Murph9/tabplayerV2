@@ -12,7 +12,7 @@ public class NoteGenerator {
         var notePos = new Vector3(time * config.NoteSpeed, DisplayConst.CalcNoteHeightY(note.StringNum), notePosZ);
 
         var colour = note.StringNum != 255 ? SettingsService.GetColorFromStringNum(note.StringNum) : Colors.HotPink;
-        
+
         if (note.FretNum == 0) {
             // open note
             var lineStartZ = DisplayConst.CalcFretPosZ(fretWindowStart - 1);
@@ -21,7 +21,7 @@ public class NoteGenerator {
 
             return MeshGenerator.BoxLine(colour, lineStart, lineStart + across);
         }
-        
+
         // normal note
         return MeshGenerator.Box(colour, notePos);
     }
@@ -36,7 +36,7 @@ public class NoteGenerator {
                 // open note
                 var lineStartZ = DisplayConst.CalcFretPosZ(noteBlock.FretWindowStart - 1);
                 var across = new Vector3(0, 0, DisplayConst.CalcFretWidthZ(noteBlock.FretWindowStart, noteBlock.FretWindowLength));
-            
+
                 var start = new Vector3(noteBlock.Time * config.NoteSpeed, DisplayConst.CalcNoteHeightY(note.StringNum), lineStartZ);
                 yield return MeshGenerator.BoxLine(colour, start, start + across);
             } else {
@@ -67,28 +67,29 @@ public class NoteGenerator {
         if (!note.Type.Contains(NoteType.SUSTAIN)) {
             yield break;
         }
-        
+
         if (note.Length == 0) {
             Console.WriteLine("Found sustain without a length: " + noteBlock.Time);
             yield break;
         }
 
         var noteColour = SettingsService.GetColorFromStringNum(note.StringNum);
-        var finalLinePos = notePos + new Vector3(config.NoteSpeed*note.Length, 0, 0);
+        var finalLinePos = notePos + new Vector3(config.NoteSpeed * note.Length, 0, 0);
         if (note.Type.Contains(NoteType.BEND) && note.Bends.Any()) {
             var lastPos = notePos;
             if (Math.Abs(note.Bends.First().Time - noteBlock.Time) > 1e-3) {
                 lastPos = notePos; // TODO probably wrong
             }
-            
+
             foreach (var b in note.Bends) {
-                var endPos = new Vector3(b.Time*config.NoteSpeed, notePos.Y + DisplayConst.STRING_DISTANCE_APART*b.Step, notePos.Z);
-                yield return MeshGenerator.BoxLine(noteColour, lastPos, endPos);
+                var endPos = new Vector3(b.Time * config.NoteSpeed, notePos.Y + DisplayConst.STRING_DISTANCE_APART * b.Step, notePos.Z);
+                if (lastPos != endPos)
+                    yield return MeshGenerator.BoxLine(noteColour, lastPos, endPos);
                 lastPos = endPos;
             }
 
             if (noteBlock.Time + note.Length > note.Bends.Last().Time) {
-                var endPos2 = new Vector3((noteBlock.Time + note.Length)*config.NoteSpeed, notePos.Y, notePos.Z);
+                var endPos2 = new Vector3((noteBlock.Time + note.Length) * config.NoteSpeed, notePos.Y, notePos.Z);
                 yield return MeshGenerator.BoxLine(noteColour, lastPos, endPos2);
             }
             finalLinePos = lastPos;
@@ -103,7 +104,7 @@ public class NoteGenerator {
 
         } else {
             if (!note.Type.Contains(NoteType.VIBRATO)) {
-                yield return MeshGenerator.BoxLine(noteColour, notePos, notePos + new Vector3(config.NoteSpeed*note.Length, 0, 0));
+                yield return MeshGenerator.BoxLine(noteColour, notePos, notePos + new Vector3(config.NoteSpeed * note.Length, 0, 0));
             } else {
                 // wibble and wobble the line (on both axis for visual help)
                 int wibbleWobble = 0;
