@@ -6,10 +6,11 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "C:\\Program Files\\Godot\\Godot_v4.5-stable_mono_win64\\Godot_v4.5-stable_mono_win64.exe",
+      "program": "/usr/lib/godot-mono/godot.linuxbsd.editor.x86_64.mono",
       "args": ["--verbose"],
       "cwd": "${workspaceFolder}/godot",
-      "stopAtEntry": false
+      "stopAtEntry": false,
+      "console": "integratedTerminal"
     }
   ]
 }

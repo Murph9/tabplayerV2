@@ -7,5 +7,5 @@
   "editor.formatOnSave": true,
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
-  "godotTools.editorPath.godot4": "C:\\Program Files\\Godot\\Godot_v4.4-stable_mono_win64\\Godot_v4.4-stable_mono_win64.exe"
+  "godotTools.editorPath.godot4": "/usr/lib/godot-mono/godot.linuxbsd.editor.x86_64.mono"
 }
